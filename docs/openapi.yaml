@@ -1,0 +1,642 @@
+openapi: 3.0.2
+info:
+  title: LapakUMKM
+  version: 1.0.0
+  description: An API for LapakUMKM Project 
+
+servers:
+  - url: https://api.server.test/v1
+
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/UMARUUUN11_1/ALTA-LapakUMKM/1.0.0
+
+paths:
+  /discussions:
+    post:
+      tags: 
+        - Discussion
+      summary: discuss about products
+      description: add discussions
+      security:
+        - JWTAuth: []
+      requestBody:
+        description: add a question to seller
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Discussion"
+            example:
+              product_id: 1
+              discussion: "barang ini ready gan?"
+                
+      responses:
+        201:
+          description: "success insert data"
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                "data": {
+                    "id": 1,
+                    "discussion": "barang ini ready gan?"
+                    }
+                "message": "success add discussion"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+
+    get:
+      tags:
+        - Discussion
+      summary: get all discussions 
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get all discussions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                    "data": [
+                    {
+                        "id": 1,
+                        "product_id": 2,
+                        "discussion": "barangnya ready gan?"
+                    },
+                    {
+                        "id": 2,
+                        "parent_id": 1,
+                        "product_id": 2,
+                        "discussion": "ready kak"
+                    },
+                    {
+                        "id": 3,
+                        "product_id": 3,
+                        "discussion": "boleh nego gan?"
+                    },
+                    {
+                        "id": 4,
+                        "parent_id": 3,
+                        "product_id": 3,
+                        "discussion": "gak. harga pas"
+                    },
+                  ],                
+                    "message": "success get all discussions"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500" 
+
+  /discussion/{id}:
+    parameters:
+      - $ref: "#/components/parameters/paramId"
+    get:
+      tags:
+        - Discussion
+      summary: get a discussion by id
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get a discussion by ID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                    "data": {
+                        "id": 1,
+                        "product_id": 2,
+                        "discussion": "barang ini ready gan?"
+                    },
+                    "message": "success get discussion detail"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - Discussion
+      summary: update a discussion
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Discussion"
+            example:
+              product_id: 2
+              discussion: "boleh nego kak?"
+      responses:
+        200:
+          description: "get an updated feedback"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                    "data": {
+                        "id": 2,
+                        "product_id": 2,
+                        "discussion": "boleh nego kak?"
+                    },
+                    "message": "success get updated discussion"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"  
+
+    delete:
+      tags:
+        - Discussion
+      summary: delete a discussion
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: success delete data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "succes delete a discussion"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500" 
+      
+
+  /products/{id}/discussions:
+    parameters:
+      - $ref: "#/components/parameters/paramId"
+    get:
+      tags:
+        - Discussion
+      summary: get discussions by produst id
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get a discussions by product id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                  "data": [
+                      {
+                          "id": 1,
+                          "discussion": "barangnya ready gan?",
+                          "user": [
+                            {
+                          "username": "jamal",
+                          "profile_picture": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                            }
+                          ]
+                      },
+                      {
+                          "id": 2,
+                          "discussion": "boleh nego kak?",
+                          "user": [
+                            {
+                          "username": "jamal",
+                          "profile_picture": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                            }
+                          ]
+                      },
+                    ],
+                  "message": "success get product's feedbacks"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+
+  /feedbacks:
+    post:
+      tags: 
+        - Feedback
+      summary: feedbacks for the products
+      description: add feedbacks
+      security:
+        - JWTAuth: []
+      requestBody:
+        description: add a feedback for the product
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Feedback"
+            example:
+              product_id: 1
+              discussion: "bahannya lembut"
+                
+      responses:
+        201:
+          description: "success insert data"
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                "data": {
+                    "id": 1,
+                    "feedback": "bahannya lembut"
+                    }
+                "message": "success add feedback"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+
+    get:
+      tags:
+        - Feedback
+      summary: get all feedbacks 
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get all feedbacks"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                    "data": [
+                    {
+                        "id": 1,
+                        "product_id": 2,
+                        "rating": 4,
+                        "feedback": "bahannya lembut"
+                    },
+                    {
+                        "id": 2,
+                        "parent_id": 1,
+                        "product_id": 2,
+                        "feedback": "terima kasih sudah berbelanja di toko kami"
+                    },
+                    {
+                        "id": 3,
+                        "product_id": 3,
+                        "rating": 5,
+                        "feedback": "harganya sesuai, suka deh sama produknya"
+                    },
+                    {
+                        "id": 4,
+                        "parent_id": 2,
+                        "product_id": 3,
+                        "feedback": "terima kasih sudah berbelanja di toko kami"
+                    },
+                  ],                
+                    "message": "success get all feedbacks"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"    
+
+  /feedbacks/{id}:
+    parameters:
+      - $ref: "#/components/parameters/paramId"
+    get:
+      tags:
+        - Feedback
+      summary: get a feedback by id
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get a feedback by ID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                    "data": {
+                        "id": 1,
+                        "product_id": 2,
+                        "rating": 4,
+                        "feedback": "bahannya lembut"
+                    },
+                    "message": "success get feedback detail"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+
+    put:
+      tags:
+        - Feedback
+      summary: update a feedback
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Feedback"
+            example:
+              product_id: 2
+              rating: 1
+              feedback: "kainnya cepet rusak"
+      responses:
+        200:
+          description: "get an updated feedback"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                    "data": {
+                        "id": 1,
+                        "product_id": 2,
+                        "rating": 1,
+                        "feedback": "kainnya cepet rusak"
+                    },
+                    "message": "success get updated feedback"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"  
+
+    delete:
+      tags:
+        - Feedback
+      summary: delete a feedback
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: success delete data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "succes delete a feedback"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500" 
+      
+
+  /products/{id}/feedbacks:
+    parameters:
+      - $ref: "#/components/parameters/paramId"
+    get:
+      tags:
+        - Feedback
+      summary: get feedbacks by produst id
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get a feedbacks by product id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                  "data": [
+                      {
+                          "id": 1,
+                          "rating": 3,
+                          "feedback": "barangnya bagus",
+                          "user": [
+                            {
+                          "username": "jamal",
+                          "profile_picture": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                            }
+                          ]
+                      },
+                      {
+                          "id": 2,
+                          "rating": 4.5,
+                          "feedback": "barangnya lumayan",
+                          "user": [
+                            {
+                          "username": "jamal",
+                          "profile_picture": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                            }
+                          ]
+                      },
+                    ],
+                  "message": "success get product's feedbacks"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+
+    
+
+components:
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+  schemas:
+    responseObject:
+      type: object
+      properties:
+        data:
+          type: object
+        message:
+          type: string
+
+    Discussion:
+      type: object
+      required:
+        - product_id
+        - parent_id
+        - discussion
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: the ID of the discussions
+        product_id:
+          type: integer
+          format: int64
+          description: the ID of the products
+        parent_id: 
+          type: integer
+          format: int64
+          description: the ID of the discussions
+        discussion: 
+          type: string
+          description: the content of the discussion
+
+    Feedback:
+      type: object
+      required:
+        - product_id
+        - parent_id
+        - Feedback
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: the ID of the feedbacks
+        product_id:
+          type: integer
+          format: int64
+          description: the ID of the products
+        parent_id: 
+          type: integer
+          format: int64
+          description: the ID of the feedbacks
+        feedback: 
+          type: string
+          description: the content of the feedbacks
+
+    Product_Type:
+      type: object
+      required:
+        - product_id
+        - product_type
+      properties:
+        id: 
+          type: integer
+          format: int64
+          description: the ID of the product types
+        product_id: 
+          type: integer
+          format: int64
+          description: the ID of the products
+        Product_Type:
+          type: string
+          description: types of products
+        
+  parameters:
+    paramId:
+      name: id
+      in: path
+      required: true
+      schema: 
+        type: integer
+        example: 1
+
+    productId:
+      name: id_product
+      in: path
+      required: true
+      schema: 
+        type: integer
+        example: 1
+
+
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+          example:
+            status: false
+            message: "error in your request"
+
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+          example:
+            status: false
+            message: "request does not contain a valid token"
+
+    '404':
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+          example:
+            status: false
+            message: "data not found"
+
+    '204':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+          example:
+            status: true
+            message: "Delete data success"
+            data : []
+
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+          example:
+            status: false
+            message: "internal server error"
