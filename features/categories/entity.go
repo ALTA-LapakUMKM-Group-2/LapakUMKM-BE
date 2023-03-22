@@ -1,10 +1,12 @@
 package categories
 
-import "time"
+import (
+	"time"
+)
 
 type CategoryEntity struct {
 	Id        uint
-	Category  string
+	Category  string `validate:"required"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
