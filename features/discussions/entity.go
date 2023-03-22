@@ -21,4 +21,6 @@ type DiscussionServiceInterface interface {
 
 type DiscussionDataInterface interface {
 	Insert(discussionEntity DiscussionEntity) (uint, error)
+	SelectById(id uint) (DiscussionEntity, error)
+
 }
