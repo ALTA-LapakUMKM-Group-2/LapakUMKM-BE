@@ -21,6 +21,5 @@ func AuthRouter(db *gorm.DB, e *echo.Echo) {
 	// g.POST("/forget-password", handler.Create)
 
 	g.Use(middlewares.Authentication)
-	g.GET("/users", handler.GetUserLogin)
 	g.POST("/change-password", handler.ChangePassword)
 }

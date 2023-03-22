@@ -10,7 +10,6 @@ type UserResponse struct {
 	FullName    string `json:"full_name"`
 	Email       string `json:"email,omitempty"`
 	Role        string `json:"role,omitempty"`
-	Status      bool   `json:"status"`
 	PhoneNumber string `json:"phone_number,omitempty"`
 	Address     string `json:"address,omitempty"`
 }

@@ -48,6 +48,8 @@ func (h *UserHandler) Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
 	}
 
+	formInput.Role = "user"
+
 	h.validate = validator.New()
 	errValidate := h.validate.Struct(formInput)
 	if errValidate != nil {

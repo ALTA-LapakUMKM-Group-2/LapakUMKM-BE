@@ -46,11 +46,6 @@ func (q *query) Edit(userEntity users.UserEntity, id uint) (uint, error) {
 		return 0, err.Error
 	}
 
-	inputForStatus := map[string]interface{}{"status": user.Status}
-	if err := q.db.Model(&user).Where("id", id).Updates(inputForStatus); err.Error != nil {
-		return 0, err.Error
-	}
-
 	return id, nil
 }
 

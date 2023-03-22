@@ -7,11 +7,13 @@ import (
 	"lapakUmkm/utils/helpers"
 	"net/http"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
 
 type AuthHandler struct {
-	Service auth.AuthServiceInterface
+	Service  auth.AuthServiceInterface
+	validate *validator.Validate
 }
 
 func New(s auth.AuthServiceInterface) *AuthHandler {
@@ -26,35 +28,39 @@ func (u *AuthHandler) Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
 	}
 
-	token, err := u.Service.Login(loginRequest.Email, loginRequest.Password)
+	token, user, err := u.Service.Login(loginRequest.Email, loginRequest.Password)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, helpers.ResponseFail("User not found"))
+		return c.JSON(http.StatusUnauthorized, helpers.ResponseFail(err.Error()))
 	}
 
 	tokesResponse := map[string]any{
 		"token": token,
+		"user":  delivery.UserEntityToUserResponse(user),
 	}
 
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Login Success", tokesResponse))
 }
 
-func (u *AuthHandler) Register(c echo.Context) error {
+func (h *AuthHandler) Register(c echo.Context) error {
 	registerRequest := delivery.UserRequest{}
 	if err := c.Bind(&registerRequest); err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
 	}
-	user := delivery.UserRequestToUserEntity(registerRequest)
 
-	if err := u.Service.Register(user); err != nil {
+	registerRequest.Role = "user"
+
+	h.validate = validator.New()
+	errValidate := h.validate.Struct(registerRequest)
+	if errValidate != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(errValidate.Error()))
+	}
+
+	user := delivery.UserRequestToUserEntity(registerRequest)
+	if err := h.Service.Register(user); err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", registerRequest))
-}
-
-func (u *AuthHandler) GetUserLogin(c echo.Context) error {
-	tokenClaim := middlewares.ClaimsToken(c)
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", tokenClaim))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Register Success", registerRequest))
 }
 
 func (u *AuthHandler) ChangePassword(c echo.Context) error {
