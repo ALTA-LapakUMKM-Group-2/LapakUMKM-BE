@@ -30,6 +30,8 @@ require (
 require (
 	github.com/go-playground/validator/v10 v10.12.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/jinzhu/copier v0.3.5
+	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo-jwt/v4 v4.1.0
 	github.com/labstack/gommon v0.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
