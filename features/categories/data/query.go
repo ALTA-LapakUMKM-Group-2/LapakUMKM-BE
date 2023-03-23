@@ -18,7 +18,7 @@ func New(db *gorm.DB) categories.CategoryDataInterface {
 
 func (q *query) SelectAll() ([]categories.CategoryEntity, error) {
 	var categories []Category
-	if err := q.db.Preload("User").Find(&categories); err.Error != nil {
+	if err := q.db.Find(&categories); err.Error != nil {
 		return nil, err.Error
 	}
 	return ListCategoryToCategoryEntity(categories), nil
@@ -26,7 +26,7 @@ func (q *query) SelectAll() ([]categories.CategoryEntity, error) {
 
 func (q *query) SelectById(id uint) (categories.CategoryEntity, error) {
 	var category Category
-	if err := q.db.Preload("User").First(&category, id); err.Error != nil {
+	if err := q.db.First(&category, id); err.Error != nil {
 		return categories.CategoryEntity{}, err.Error
 	}
 	return CategoryToCategoryEntity(category), nil
