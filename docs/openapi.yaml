@@ -15,6 +15,49 @@ paths:
 ####################################
 #  AUTH
 ####################################
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: register
+      description: register akun 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                {
+                  fullname: "reza2",
+                  email: "reza2@mail.com",
+                  address: "pekanbaru",
+                  phone_number: "0888888"
+                }
+      responses:
+        '200':
+          description: Register success.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: "Register success"
+                  data:
+                    {
+                      id: 1,
+                      fullname: "reza2",
+                      email: "reza2@mail.com",
+                      address: "pekanbaru",
+                      phone_number: "0888888",
+                      role: "user"
+                    }
+        '401' :
+          $ref: '#/components/responses/401'
+        '400':
+          $ref: '#/components/responses/400'
+  
   /auth/login:
     post:
       tags:
@@ -46,32 +89,6 @@ paths:
           $ref: '#/components/responses/401'
         '400':
           $ref: '#/components/responses/400'
-
-  /auth/users:
-    get:
-      tags:
-        - Auth
-      summary: Claim Token
-      description: Claim Token
-      security:
-        - JWTAuth: [] 
-      responses:
-        '200':
-          description: Claim success.
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: true
-                  message: "-"
-                  data:
-                      id : 2
-                      role : "user"
-                      exp : 1678488436
-        '401' :
-          $ref: '#/components/responses/401'
-
   /auth/change-password:
     post:
       tags:
@@ -126,139 +143,35 @@ paths:
     get:
       tags:
         - Users
-      summary: get all users
-      description: Melihat seluruh data user
+      summary: get users login
+      description: get users login
 
       responses:
         '200':
-          description: A list of users
+          description: get users login
           content:
             application/json:
               schema:
                 type: object
                 example:
                   status: true
-                  message: "success get all users"
+                  message: "-"
                   data:
-                    - id: 1
-                      team_id : 1,
-                      full_name: "reza"
-                      email: "reza@mail.com"
-                      role: "admin"
-                      status : true
-                      address: "pekanbaru"
-                      "team": {
-                          "id": 1,
-                          "name": "Admin"
-                      }
-                    - id: 2
-                      team_id : 1,
-                      full_name: "rischi"
-                      email: "rischi@mail.com"
-                      role: "admin"
-                      status : true
-                      address: "pekanbaru"
-                      "team": {
-                          "id": 1,
-                          "name": "Placement"
-                      }
+                    {
+                      id: 1,
+                      fullname: "reza2",
+                      email: "reza2@mail.com",
+                      address: "pekanbaru",
+                      phone_number: "0888888",
+                      role: "seller",
+                      photo_profile : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                      shop_name : "TOKO JAYA ABADI",
+                      shop_profile : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                    }
+
         '500':
           $ref: '#/components/responses/500'
-
-    post:
-      tags:
-        - Users
-      summary: add user
-      description: Menambah data User (register)
-      security:
-        - JWTAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                full_name: "reza yuda"
-                email: "reza@mail.com"
-                team_id: 2
-                password: "qwerty"
-                phone_number: "081234"
-                address: "pekanbaru"
-                role: "admin"
-      responses:
-        '201':
-          description: Register berhasil.
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: true
-                  message: "register berhasil"
-                  data:
-                    - id: 1
-                      team_id : 1,
-                      full_name: "reza"
-                      email: "reza@mail.com"
-                      role: "admin"
-                      status : true
-                      address: "pekanbaru"
-                      "team": {
-                          "id": 1,
-                          "name": "Admin"
-                      }
-        '401' :
-          $ref: '#/components/responses/401'
-        '500' :
-          $ref: '#/components/responses/500'
-
-  /users/{id}:
-    parameters:
-      - in: path
-        name: id
-        required: true
-        description: Id
-        schema:
-          type: integer
-    get:
-      tags:
-        - Users
-      summary: get users by id
-      security:
-        - JWTAuth: []
-      description: Mencari User dengan id
-
-      responses:
-        '200':
-          description: A list of users
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: true
-                  message: "success get all users"
-                  data:
-                    - id: 1
-                      team_id: 2
-                      full_name: "reza"
-                      email: "reza@mail.com"
-                      role : "admin"
-                      status : true
-                      phone_number : 0812345432
-                      address: "land of dawn"
-                      "team": {
-                          "id": 1,
-                          "name": "Placement"
-                      }
-        '404':
-          $ref: '#/components/responses/404'
-        '401' :
-          $ref: '#/components/responses/401'
-        '500' :
-          $ref: '#/components/responses/500'
-
+    
     put:
       tags:
         - Users
@@ -281,13 +194,11 @@ paths:
             schema:
               type: object
               example:
-                full_name: "reza yuda"
-                email: "reza@mail.com"
-                team_id: 2
-                phone_number: "081234"
-                address: "pekanbaru"
-                status: false
-                role: "admin"
+                {
+                  fullname: "reza2",
+                  address: "pekanbaru",
+                  phone_number: "0888888",
+                }
       responses:
         '200':
           description: A list of users
@@ -297,20 +208,19 @@ paths:
                 type: object
                 example:
                   status: true
-                  message: "success Update users"
-                  data: 
-                    - id: 1
-                      team_id: 2
-                      full_name: "reza"
-                      email: "reza@mail.com"
-                      role : "admin"
-                      status : true
-                      phone_number : 0812345432
-                      address: "land of dawn"
-                      "team": {
-                          "id": 1,
-                          "name": "Placement"
-                      }
+                  message: "-"
+                  data:
+                    {
+                      id: 1,
+                      fullname: "reza2",
+                      email: "reza2@mail.com",
+                      address: "pekanbaru",
+                      phone_number: "0888888",
+                      role: "seller",
+                      photo_profile : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                      shop_name : "TOKO JAYA ABADI",
+                      shop_profile : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                    }
 
         '404':
           $ref: '#/components/responses/404'
@@ -326,14 +236,6 @@ paths:
       description: menghapus akun user
       security:
         - JWTAuth: []
-      parameters:
-        - name: "user_id"
-          description: "user_id"
-          required: true
-          in: path
-          schema:
-            type: integer
-            example: 1
       responses:
         '204':
           $ref: '#/components/responses/204'
@@ -343,13 +245,704 @@ paths:
           $ref: '#/components/responses/401'
         '500' :
           $ref: '#/components/responses/500'
+  
+  /users/profile:
+    post:
+      tags:
+        - Users
+      summary: update users Profile
+      description: Mengubah data User
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                photo_profile:
+                  type: string
+                  format: binary
+            example:
+              photo_profile: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: "-"
+                  data:
+                    {
+                      id: 1,
+                      fullname: "reza2",
+                      email: "reza2@mail.com",
+                      address: "pekanbaru",
+                      phone_number: "0888888",
+                      role: "seller",
+                      photo_profile : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                      shop_name : "TOKO JAYA ABADI",
+                      shop_profile : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                    }
 
+        '404':
+          $ref: '#/components/responses/404'
+        '401' :
+          $ref: '#/components/responses/401'
+        '500' :
+          $ref: '#/components/responses/500'
+  
+  /users/update-seller:
+    post:
+      tags:
+        - Users
+      summary: upgrade to seller
+      description: Mengubah data User
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                shop_profile:
+                  type: string
+                  format: binary
+                shop_name:
+                  type: string
+            example:
+              shop_name : "TOKO JAYA ABADI"
+              shop_profile: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: "-"
+                  data:
+                    {
+                      id: 1,
+                      fullname: "reza2",
+                      email: "reza2@mail.com",
+                      address: "pekanbaru",
+                      phone_number: "0888888",
+                      role: "seller",
+                      photo_profile : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                      shop_name : "TOKO JAYA ABADI",
+                      shop_profile : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                    }
 
+        '404':
+          $ref: '#/components/responses/404'
+        '401' :
+          $ref: '#/components/responses/401'
+        '500' :
+          $ref: '#/components/responses/500'
+   
 ####################################
 #  PRODUCT
 ####################################
+  /products:
+    get:
+      tags:
+        - Products
+      summary: List all Products
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get all Products"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  [
+                    {
+                      "id": 1,
+                      "user_id": 1,
+                      "product_name": "Sepatu Barbie",
+                      "description": "warna merah",
+                      "price": 2000000,
+                      "stock_total": 10,
+                      "stock_sold": 8
+                    },
+                    {
+                      "id": 2,
+                      "user_id": 1,
+                      "product_name": "Sepatu Barbie",
+                      "description": "warna biru",
+                      "price": 3000000,
+                      "stock_total": 10,
+                      "stock_sold": 8
+                    }
+                  ]
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
 
+    post:
+      tags: 
+        - Products
+      summary: create products
+      description: create products
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/responseObject"
+            example:
+              product_name: "Sepatu Barbie"
+              description: "sepatu warna merah"
+              price: 2000000
+              stoct_total: 10
+                
+      responses:
+        201:
+          description: "success insert data"
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                data:
+                  [
+                    {
+                      "id": 1,
+                      "user_id": 1,
+                      "product_name": "Sepatu Barbie",
+                      "description": "warna merah",
+                      "price": 2000000,
+                      "stock_total": 10,
+                      "stock_sold": 0
+                    }
+                  ]
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
 
+  /products/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: The ID of the products
+        schema:
+          type: integer
+    get:
+      tags:
+        - Products
+      summary: get a product by id
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get a product by ID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  {
+                    "id": 1,
+                    "user_id": 1,
+                    "product_name": "Sepatu Barbie",
+                    "description": "warna merah",
+                    "price": 2000000,
+                    "stock_total": 10,
+                    "stock_sold": 0
+                  }
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+    
+    put:
+      tags:
+        - Products
+      summary: update a product
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/responseObject"
+            example:
+              product_name: "Sepatu Barbie"
+              description: "sepatu warna merah"
+              price: 2000000
+              stoct_total: 10
+      responses:
+        200:
+          description: "get an updated product"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  {
+                    "id": 1,
+                    "user_id": 1,
+                    "product_name": "Sepatu Barbie",
+                    "description": "warna merah",
+                    "price": 2000000,
+                    "stock_total": 10,
+                    "stock_sold": 0
+                  }
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"  
+
+    delete:
+      tags:
+        - Products
+      summary: delete a product
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: success delete data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500" 
+ 
+  /users/{id}/products:
+    parameters:
+      - $ref: "#/components/parameters/paramId"
+    get:
+      tags:
+        - Products
+      summary: get products by user id
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get products by user id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                example:
+                data:
+                  [
+                    {
+                      "id": 1,
+                      "user_id": 1,
+                      "product_name": "Sepatu Barbie",
+                      "description": "warna merah",
+                      "price": 2000000,
+                      "stock_total": 10,
+                      "stock_sold": 8
+                    },
+                    {
+                      "id": 2,
+                      "user_id": 1,
+                      "product_name": "Sepatu Barbie",
+                      "description": "warna biru",
+                      "price": 3000000,
+                      "stock_total": 10,
+                      "stock_sold": 8
+                    }
+                  ]
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - Discussion
+      summary: update a discussion
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Discussion"
+            example:
+              product_id: 2
+              discussion: "boleh nego kak?"
+      responses:
+        200:
+          description: "get an updated feedback"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                    "data": {
+                        "id": 2,
+                        "product_id": 2,
+                        "discussion": "boleh nego kak?"
+                    },
+                    "message": "success get updated discussion"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"  
+
+    delete:
+      tags:
+        - Discussion
+      summary: delete a discussion
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: success delete data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "succes delete a discussion"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500" 
+  
+  /categories/{id}/products:
+    parameters:
+      - $ref: "#/components/parameters/paramId"
+    get:
+      tags:
+        - Products
+      summary: get products by categories id
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get products by categories id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                example:
+                data:
+                  [
+                    {
+                      "id": 1,
+                      "user_id": 1,
+                      "product_name": "Sepatu Barbie",
+                      "description": "warna merah",
+                      "price": 2000000,
+                      "stock_total": 10,
+                      "stock_sold": 8
+                    },
+                    {
+                      "id": 2,
+                      "user_id": 1,
+                      "product_name": "Sepatu Barbie",
+                      "description": "warna biru",
+                      "price": 3000000,
+                      "stock_total": 10,
+                      "stock_sold": 8
+                    }
+                  ]
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+
+  /products/{id}/images:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: The ID of the products
+        schema:
+          type: integer
+    post:
+      tags:
+        - Products
+      summary: add a image of product
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                product_image:
+                  type: string
+                  format: binary
+            example:
+              product_image: "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg"
+      responses:
+        200:
+          description: "get an updated product"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  {
+                    "id": 1,
+                    "product_id": 1,
+                    "product_image": "https://kurabsent.s3.amazonaws.com/2022-07-06%2006%3A40%3A47.jpg",
+                  }
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"  
+
+    delete:
+      tags:
+        - Products
+      summary: delete a image of product
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: success delete data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500" 
+ 
+####################################
+#  CATEGORY
+####################################
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: List all Categories
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get all Categories"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  [
+                    {
+                      "id": 1,
+                      "category": "Tas",
+                    },
+                    {
+                      "id": 2,
+                      "category": "Sepatu",
+                    },
+                    {
+                      "id": 3,
+                      "category": "Barang",
+                    },
+                  ]
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+
+    post:
+      tags: 
+        - Categories
+      summary: create Categories
+      description: create Categories
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/responseObject"
+            example:
+              category: "Tas"
+                
+      responses:
+        201:
+          description: "success insert data"
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                data:
+                  {
+                    "id": 1,
+                    "category": 1,
+                  }
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+
+  /categories/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: The ID of the category
+        schema:
+          type: integer
+    get:
+      tags:
+        - Categories
+      summary: get a category by id
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get a category by ID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  {
+                    "id": 1,
+                    "category": 1,
+                  }
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+    
+    put:
+      tags:
+        - Categories
+      summary: update a category
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/responseObject"
+            example:
+              category: "Tas Edit"
+      responses:
+        200:
+          description: "get an updated categories"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  {
+                    "id": 1,
+                    "category": "Tas Edit",
+                  }
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"  
+
+    delete:
+      tags:
+        - Categories
+      summary: delete a category
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: success delete data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "-"
+                status: true
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500" 
+ 
+
+ 
 ####################################
 #  DISCUSSIONS
 ####################################
@@ -825,6 +1418,82 @@ components:
           type: object
         message:
           type: string
+
+    User:
+      type: object
+      required:
+        - fullname
+        - address
+        - email
+        - password
+        - role
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: the ID of the user
+        fullname:
+          type: string
+          description: fullname
+        address:
+          type: string
+          description: address
+        email:
+          type: string
+          description: email
+        password:
+          type: string
+          description: password
+        role:
+          type: string
+          description: role
+
+    Product:
+      type: object
+      required:
+        - user_id
+        - product_name
+        - description
+        - price
+        - stock_total
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: the ID of the discussions
+        user_id:
+          type: integer
+          format: int64
+          description: the ID of the user
+        product_name: 
+          type: string
+          description: the content of the product_name
+        description: 
+          type: string
+          description: the content of the description
+        price: 
+          type: integer
+          description: price
+        stock_total: 
+          type: integer
+          description: stock_total
+        stock_sold: 
+          type: integer
+          description: stock_sold
+
+    Category:
+      type: object
+      required:
+        - category
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: the ID of the discussions
+        category:
+          type: string
+          description: category
+
 
     Discussion:
       type: object
