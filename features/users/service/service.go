@@ -3,6 +3,10 @@ package service
 import (
 	"errors"
 	"lapakUmkm/features/users"
+	"lapakUmkm/utils/helpers"
+	"mime/multipart"
+	"strconv"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -90,6 +94,26 @@ func (s *userService) UpdateToSeller(id uint, request users.UserEntity) (users.U
 	return s.Data.SelectById(id)
 }
 
-func (s *userService) UpdateToProfile(id uint, request users.UserEntity) (users.UserEntity, error) {
-	panic("unimplemented")
+func (s *userService) UpdateToProfile(id uint, file *multipart.FileHeader) (string, error) {
+	blobFile, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+
+	usersData, _ := s.Data.SelectById(id)
+	if usersData.PhotoProfile != "" {
+		helpers.DeletePhotoProfile(usersData.PhotoProfile)
+	}
+
+	timestamp := strconv.FormatInt(time.Now().UTC().UnixNano(), 10)
+	newFileName := timestamp + "_" + strconv.Itoa(int(id)) + ".png"
+	helpers.UploadPhotoProfile(blobFile, newFileName)
+
+	var request users.UserEntity
+	request.PhotoProfile = newFileName
+	if _, err := s.Data.Edit(request, id); err != nil {
+		return "", err
+	}
+
+	return "https://storage.googleapis.com/images_lapak_umkm/profile/" + newFileName, nil
 }

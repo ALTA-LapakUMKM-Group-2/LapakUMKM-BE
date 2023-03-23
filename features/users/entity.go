@@ -1,6 +1,7 @@
 package users
 
 import (
+	"mime/multipart"
 	"time"
 )
 
@@ -22,7 +23,7 @@ type UserServiceInterface interface {
 	GetUser(id uint) (UserEntity, error)
 	Update(id uint, userEntity UserEntity) (UserEntity, error)
 	Delete(id uint) error
-	UpdateToProfile(id uint, userEntity UserEntity) (UserEntity, error)
+	UpdateToProfile(id uint, file *multipart.FileHeader) (string, error)
 	UpdateToSeller(id uint, userEntity UserEntity) (UserEntity, error)
 }
 

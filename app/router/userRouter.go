@@ -21,7 +21,6 @@ func UserRouter(db *gorm.DB, e *echo.Echo) {
 	g.POST("", handler.Update)
 	g.DELETE("", handler.Delete)
 	g.POST("/update-to-seller", handler.UpdateToSeller)
-
-	// g.POST("/photo-profile", handler.Update)
+	g.POST("/update-photo-profile", handler.UpdateToProfile)
 	//
 }

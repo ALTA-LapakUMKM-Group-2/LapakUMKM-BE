@@ -6,13 +6,11 @@ import (
 	"lapakUmkm/utils/helpers"
 	"net/http"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
 
 type UserHandler struct {
-	Service  users.UserServiceInterface
-	validate *validator.Validate
+	Service users.UserServiceInterface
 }
 
 func New(s users.UserServiceInterface) *UserHandler {
@@ -69,4 +67,22 @@ func (h *UserHandler) UpdateToSeller(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Update Data Success", UserEntityToUserResponse(users)))
+}
+
+func (h *UserHandler) UpdateToProfile(c echo.Context) error {
+	userId := middlewares.ClaimsToken(c).Id
+	f, err := c.FormFile("photo_profile")
+	if err != nil {
+		return err
+	}
+
+	newUrlProfile, err1 := h.Service.UpdateToProfile(uint(userId), f)
+	if err1 != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+	}
+
+	data := map[string]any{
+		"photo_profile": newUrlProfile,
+	}
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success update profile", data))
 }

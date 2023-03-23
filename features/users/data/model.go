@@ -8,13 +8,14 @@ import (
 
 type User struct {
 	gorm.Model
-	FullName    string
-	Email       string `gorm:"unique"`
-	Password    string
-	Role        string
-	PhoneNumber string
-	Address     string
-	ShopName    string
+	FullName     string
+	Email        string `gorm:"unique"`
+	Password     string
+	Role         string
+	PhoneNumber  string
+	Address      string
+	ShopName     string
+	PhotoProfile string
 }
 
 func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
