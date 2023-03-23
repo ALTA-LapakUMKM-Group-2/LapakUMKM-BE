@@ -1,27 +1,30 @@
 package users
 
 import (
+	"mime/multipart"
 	"time"
 )
 
 type UserEntity struct {
-	Id          uint
-	FullName    string `validate:"required"`
-	Email       string `validate:"required,email"`
-	Password    string `validate:"required"`
-	PhoneNumber string `validate:"required"`
-	Address     string `validate:"required"`
-	Role        string `validate:"required"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	Id           uint
+	FullName     string `validate:"required"`
+	Email        string `validate:"required,email"`
+	Password     string `validate:"required"`
+	PhoneNumber  string
+	Address      string
+	Role         string `validate:"required"`
+	ShopName     string
+	PhotoProfile string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 type UserServiceInterface interface {
-	GetAll() ([]UserEntity, error)
-	GetById(id uint) (UserEntity, error)
-	Create(userEntity UserEntity) (UserEntity, error)
-	Update(userEntity UserEntity, id uint) (UserEntity, error)
+	GetUser(id uint) (UserEntity, error)
+	Update(id uint, userEntity UserEntity) (UserEntity, error)
 	Delete(id uint) error
+	UpdateToProfile(id uint, file *multipart.FileHeader) (string, error)
+	UpdateToSeller(id uint, userEntity UserEntity) (UserEntity, error)
 }
 
 type UserDataInterface interface {

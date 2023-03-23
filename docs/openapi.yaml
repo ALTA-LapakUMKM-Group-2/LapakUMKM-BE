@@ -31,8 +31,7 @@ paths:
                 {
                   fullname: "reza2",
                   email: "reza2@mail.com",
-                  address: "pekanbaru",
-                  phone_number: "0888888"
+                  password: "pekanbaru"
                 }
       responses:
         '200':
@@ -49,8 +48,6 @@ paths:
                       id: 1,
                       fullname: "reza2",
                       email: "reza2@mail.com",
-                      address: "pekanbaru",
-                      phone_number: "0888888",
                       role: "user"
                     }
         '401' :

@@ -52,7 +52,7 @@ func (h *AuthHandler) Register(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Register Success", registerRequest))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Register Success", delivery.UserEntityToUserResponse(user)))
 }
 
 func (u *AuthHandler) ChangePassword(c echo.Context) error {

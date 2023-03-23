@@ -5,13 +5,15 @@ import (
 )
 
 type UserResponse struct {
-	Id          uint   `json:"id,omitempty"`
-	TeamId      uint   `json:"team_id,omitempty"`
-	FullName    string `json:"full_name"`
-	Email       string `json:"email,omitempty"`
-	Role        string `json:"role,omitempty"`
-	PhoneNumber string `json:"phone_number,omitempty"`
-	Address     string `json:"address,omitempty"`
+	Id           uint   `json:"id,omitempty"`
+	TeamId       uint   `json:"team_id,omitempty"`
+	FullName     string `json:"full_name"`
+	Email        string `json:"email,omitempty"`
+	Role         string `json:"role,omitempty"`
+	PhoneNumber  string `json:"phone_number,omitempty"`
+	Address      string `json:"address,omitempty"`
+	ShopName     string `json:"shop_name,omitempty"`
+	PhotoProfile string `json:"photo_profile,omitempty"`
 }
 
 func UserEntityToUserResponse(userEntity users.UserEntity) UserResponse {
@@ -22,6 +24,11 @@ func UserEntityToUserResponse(userEntity users.UserEntity) UserResponse {
 		Role:        userEntity.Role,
 		PhoneNumber: userEntity.PhoneNumber,
 		Address:     userEntity.Address,
+		ShopName:    userEntity.ShopName,
+	}
+
+	if userEntity.PhotoProfile != "" {
+		result.PhotoProfile = "https://storage.googleapis.com/images_lapak_umkm/profile/" + userEntity.PhotoProfile
 	}
 
 	return result
