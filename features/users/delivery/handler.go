@@ -1,10 +1,10 @@
 package delivery
 
 import (
+	"lapakUmkm/app/middlewares"
 	"lapakUmkm/features/users"
 	"lapakUmkm/utils/helpers"
 	"net/http"
-	"strconv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -21,75 +21,52 @@ func New(s users.UserServiceInterface) *UserHandler {
 	}
 }
 
-func (h *UserHandler) GetAll(c echo.Context) error {
-	users, err := h.Service.GetAll()
+func (h *UserHandler) GetUser(c echo.Context) error {
+	userId := middlewares.ClaimsToken(c).Id
+	users, err := h.Service.GetUser(uint(userId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", ListUserEntityToUserResponse(users)))
-}
-
-func (h *UserHandler) GetById(c echo.Context) error {
-	_id, _ := strconv.Atoi(c.Param("id"))
-	id := uint(_id)
-
-	user, err := h.Service.GetById(id)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
-	}
-
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", UserEntityToUserResponse(user)))
-}
-
-func (h *UserHandler) Create(c echo.Context) error {
-	var formInput UserRequest
-	if err := c.Bind(&formInput); err != nil {
-		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
-	}
-
-	formInput.Role = "user"
-
-	h.validate = validator.New()
-	errValidate := h.validate.Struct(formInput)
-	if errValidate != nil {
-		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(errValidate.Error()))
-	}
-
-	user, err := h.Service.Create(UserRequestToUserEntity(formInput))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
-	}
-
-	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", UserEntityToUserResponse(user)))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", UserEntityToUserResponse(users)))
 }
 
 func (h *UserHandler) Update(c echo.Context) error {
+	userId := middlewares.ClaimsToken(c).Id
 	var formInput UserRequest
 	if err := c.Bind(&formInput); err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
 	}
 
-	_id, _ := strconv.Atoi(c.Param("id"))
-	id := uint(_id)
-
-	_, err := h.Service.Update(UserRequestToUserEntity(formInput), id)
+	_, err := h.Service.Update(uint(userId), UserRequestToUserEntity(formInput))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
 
-	user, _ := h.Service.GetById(id)
+	user, _ := h.Service.GetUser(uint(userId))
 
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Update Data Success", UserEntityToUserResponse(user)))
 }
 
 func (h *UserHandler) Delete(c echo.Context) error {
-	_id, _ := strconv.Atoi(c.Param("id"))
-	id := uint(_id)
-
-	if err := h.Service.Delete(id); err != nil {
+	userId := middlewares.ClaimsToken(c).Id
+	if err := h.Service.Delete(uint(userId)); err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
-
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Delete Data Success", nil))
+}
+
+func (h *UserHandler) UpdateToSeller(c echo.Context) error {
+	userId := middlewares.ClaimsToken(c).Id
+	var formInput UserRequest
+	if err := c.Bind(&formInput); err != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
+	}
+
+	users, err := h.Service.UpdateToSeller(uint(userId), UserRequestToUserEntity(formInput))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Update Data Success", UserEntityToUserResponse(users)))
 }

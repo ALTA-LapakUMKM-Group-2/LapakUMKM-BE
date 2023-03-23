@@ -12,6 +12,7 @@ func UserEntityToUser(userEntity users.UserEntity) User {
 		PhoneNumber: userEntity.PhoneNumber,
 		Address:     userEntity.Address,
 		Role:        userEntity.Role,
+		ShopName:    userEntity.ShopName,
 	}
 }
 
@@ -25,6 +26,7 @@ func UserToUserEntity(user User) users.UserEntity {
 		PhoneNumber: user.PhoneNumber,
 		Address:     user.Address,
 		Role:        user.Role,
+		ShopName:    user.ShopName,
 		CreatedAt:   user.CreatedAt,
 		UpdatedAt:   user.UpdatedAt,
 	}

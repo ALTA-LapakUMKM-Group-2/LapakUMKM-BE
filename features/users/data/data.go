@@ -18,7 +18,7 @@ func New(db *gorm.DB) users.UserDataInterface {
 
 func (q *query) SelectAll() ([]users.UserEntity, error) {
 	var users []User
-	if err := q.db.Preload("Team").Find(&users); err.Error != nil {
+	if err := q.db.Find(&users); err.Error != nil {
 		return nil, err.Error
 	}
 	return ListUserToUserEntity(users), nil
@@ -26,7 +26,7 @@ func (q *query) SelectAll() ([]users.UserEntity, error) {
 
 func (q *query) SelectById(id uint) (users.UserEntity, error) {
 	var user User
-	if err := q.db.Preload("Team").First(&user, id); err.Error != nil {
+	if err := q.db.First(&user, id); err.Error != nil {
 		return users.UserEntity{}, err.Error
 	}
 	return UserToUserEntity(user), nil

@@ -12,6 +12,7 @@ type UserResponse struct {
 	Role        string `json:"role,omitempty"`
 	PhoneNumber string `json:"phone_number,omitempty"`
 	Address     string `json:"address,omitempty"`
+	ShopName    string `json:"shop_name,omitempty"`
 }
 
 func UserEntityToUserResponse(userEntity users.UserEntity) UserResponse {
@@ -22,6 +23,7 @@ func UserEntityToUserResponse(userEntity users.UserEntity) UserResponse {
 		Role:        userEntity.Role,
 		PhoneNumber: userEntity.PhoneNumber,
 		Address:     userEntity.Address,
+		ShopName:    userEntity.ShopName,
 	}
 
 	return result

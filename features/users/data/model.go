@@ -14,6 +14,7 @@ type User struct {
 	Role        string
 	PhoneNumber string
 	Address     string
+	ShopName    string
 }
 
 func (user *User) BeforeCreate(tx *gorm.DB) (err error) {

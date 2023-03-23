@@ -17,9 +17,11 @@ func UserRouter(db *gorm.DB, e *echo.Echo) {
 
 	g := e.Group("/users")
 	g.Use(middlewares.Authentication)
-	g.GET("", handler.GetAll)
-	g.GET("/:id", handler.GetById)
-	g.POST("", handler.Create)
-	g.PUT("/:id", handler.Update)
-	g.DELETE("/:id", handler.Delete)
+	g.GET("", handler.GetUser)
+	g.POST("", handler.Update)
+	g.DELETE("", handler.Delete)
+	g.POST("/update-to-seller", handler.UpdateToSeller)
+
+	// g.POST("/photo-profile", handler.Update)
+	//
 }

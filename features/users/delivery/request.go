@@ -1,7 +1,6 @@
 package delivery
 
 import (
-	"fmt"
 	"lapakUmkm/features/users"
 )
 
@@ -12,10 +11,10 @@ type UserRequest struct {
 	PhoneNumber string `json:"phone_number" form:"phone_number"`
 	Address     string `json:"address" form:"address"`
 	Role        string `json:"role" form:"role"`
+	ShopName    string `json:"shop_name" form:"shop_name"`
 }
 
 func UserRequestToUserEntity(userRequest UserRequest) users.UserEntity {
-	fmt.Println("TES Req", userRequest.Role)
 	return users.UserEntity{
 		FullName:    userRequest.FullName,
 		Email:       userRequest.Email,
@@ -23,5 +22,6 @@ func UserRequestToUserEntity(userRequest UserRequest) users.UserEntity {
 		PhoneNumber: userRequest.PhoneNumber,
 		Address:     userRequest.Address,
 		Role:        userRequest.Role,
+		ShopName:    userRequest.ShopName,
 	}
 }
