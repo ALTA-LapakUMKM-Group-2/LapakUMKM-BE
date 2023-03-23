@@ -7,13 +7,11 @@ import (
 	"lapakUmkm/utils/helpers"
 	"net/http"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
 
 type AuthHandler struct {
-	Service  auth.AuthServiceInterface
-	validate *validator.Validate
+	Service auth.AuthServiceInterface
 }
 
 func New(s auth.AuthServiceInterface) *AuthHandler {
@@ -48,12 +46,6 @@ func (h *AuthHandler) Register(c echo.Context) error {
 	}
 
 	registerRequest.Role = "user"
-
-	h.validate = validator.New()
-	errValidate := h.validate.Struct(registerRequest)
-	if errValidate != nil {
-		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(errValidate.Error()))
-	}
 
 	user := delivery.UserRequestToUserEntity(registerRequest)
 	if err := h.Service.Register(user); err != nil {

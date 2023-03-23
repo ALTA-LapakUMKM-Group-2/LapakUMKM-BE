@@ -6,15 +6,19 @@ import (
 	"lapakUmkm/features/auth"
 	"lapakUmkm/features/users"
 	"lapakUmkm/utils/helpers"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type authService struct {
-	data auth.AuthDataInterface
+	data     auth.AuthDataInterface
+	validate *validator.Validate
 }
 
 func New(u auth.AuthDataInterface) auth.AuthServiceInterface {
 	return &authService{
-		data: u,
+		data:     u,
+		validate: validator.New(),
 	}
 }
 
@@ -37,8 +41,12 @@ func (u *authService) Login(email, password string) (string, users.UserEntity, e
 	return token, user, nil
 }
 
-func (u *authService) Register(request users.UserEntity) error {
-	return u.data.Register(request)
+func (h *authService) Register(request users.UserEntity) error {
+	h.validate = validator.New()
+	if errValidate := h.validate.Struct(request); errValidate != nil {
+		return errValidate
+	}
+	return h.data.Register(request)
 }
 
 func (u *authService) ChangePassword(id uint, oldPassword, newPassword, confirmPssword string) error {
