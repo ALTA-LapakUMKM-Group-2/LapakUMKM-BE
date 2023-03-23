@@ -171,7 +171,15 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
-    
+  
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: The ID of the users
+        schema:
+          type: integer
     put:
       tags:
         - Users
@@ -179,14 +187,7 @@ paths:
       description: Mengubah data User
       security:
         - JWTAuth: []
-      parameters:
-        - name: user_id
-          description: "id user"
-          required: true
-          in: path
-          schema:
-            type: integer
-            example: 1
+
       requestBody:
         required: true
         content:
@@ -593,64 +594,6 @@ paths:
         400:
           $ref: "#/components/responses/400"
         500:
-          $ref: "#/components/responses/500"
-    put:
-      tags:
-        - Discussion
-      summary: update a discussion
-      security:
-        - JWTAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Discussion"
-            example:
-              product_id: 2
-              discussion: "boleh nego kak?"
-      responses:
-        200:
-          description: "get an updated feedback"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/responseObject"
-              example:
-                {
-                    "data": {
-                        "id": 2,
-                        "product_id": 2,
-                        "discussion": "boleh nego kak?"
-                    },
-                    "message": "success get updated discussion"
-                }
-        400:
-          $ref: "#/components/responses/400"
-        500:
-          $ref: "#/components/responses/500"  
-
-    delete:
-      tags:
-        - Discussion
-      summary: delete a discussion
-      security:
-        - JWTAuth: []
-      responses:
-        200:
-          description: success delete data
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-              example:
-                message: "succes delete a discussion"
-        400:
-          $ref: "#/components/responses/400"
-        500:
           $ref: "#/components/responses/500" 
   
   /categories/{id}/products:
@@ -940,8 +883,270 @@ paths:
           $ref: "#/components/responses/400"
         500:
           $ref: "#/components/responses/500" 
- 
 
+####################################
+#  BASKETS
+####################################
+  /baskets:
+    post:
+      tags: 
+        - Basket
+      summary: add to basket
+      description: add product to basket
+      security:
+        - JWTAuth: []
+      requestBody:
+        description: add a product to basket
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Basket"
+            example:
+              product_id: 1
+      responses:
+        201:
+          description: "success insert data"
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                "data": {
+                    "id": 1,
+                    "product_id": 1,
+                    "product_pcs": 1,
+                    }
+                "message": "success add product to basket"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+    get:
+      tags:
+        - Basket
+      summary: get all basket
+      description: get all basket by user id
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get all basket"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                    "data": [
+                    {
+                      "id": 1,
+                      "product_id": 2,
+                      "product_name": "Beras",
+                      "product_pcs": 1,
+                      "product_price": 150000,
+                      "product_picture": "beras.jpg",
+                      "user_id": 1,
+                      "lapak_name": "Toko Kelontong",
+                      "lapak_adress": "Jakarta"
+                    },
+                    {
+                      "id": 2,
+                      "product_id": 4,
+                      "product_name": "Telur",
+                      "product_pcs": 1,
+                      "product_price": 60000,
+                      "product_picture": "telur.jpg",
+                      "user_id": 1,
+                      "lapak_name": "Toko Kelontong",
+                      "lapak_adress": "Jakarta"
+                    },
+                    {
+                      "id": 3,
+                      "product_id": 12,
+                      "product_name": "Sepatu",
+                      "product_pcs": 1,
+                      "product_price": 300000,
+                      "product_picture": "sepatu.jpg",
+                      "user_id": 2,
+                      "lapak_name": "Toko Fashion",
+                      "lapak_adress": "Medan"
+                    },
+                    {
+                      "id": 4,
+                      "product_id": 15,
+                      "product_name": "Celana",
+                      "product_pcs": 1,
+                      "product_price": 250000,
+                      "product_picture": "celana.jpg",
+                      "user_id": 2,
+                      "lapak_name": "Toko Fashion",
+                      "lapak_adress": "Medan"
+                    },
+                  ],                
+                    "message": "success get all basket"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+  /baskets/{id}:
+    parameters:
+      - $ref: "#/components/parameters/paramId"
+    put:
+      tags:
+        - Basket
+      summary: update a basket
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Basket"
+            example:
+              product_pcs: 2
+      responses:
+        200:
+          description: "get an updated basket"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                    "data": {
+                        "id": 1,
+                        "product_pcs": 2
+                    },
+                    "message": "success get updated basket"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - Basket
+      summary: delete a basket
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: success delete data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "succes delete a basket"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500" 
+
+####################################
+#  TRANSACTIONS
+####################################
+  /transactions:
+    post:
+      tags: 
+        - Transaction
+      summary: add transaction
+      description: add transaction product from the basket
+      security:
+        - JWTAuth: []
+      requestBody:
+        description: transaction
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Transaction"
+            example:
+              basket_id: 1
+      responses:
+        201:
+          description: "success insert data"
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                "data": {
+                    "id": 1,
+                    "order_id": "LAPAK-0981276378388656",
+                    "payment_status": "pending",
+                    "payment_link": "https://www.midtrans.com",
+                    "total_payment": 320000
+                    }
+                "message": "success add product to basket"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+    get:
+      tags:
+        - Transaction
+      summary: get all transaction
+      description: get all transaction by user id
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "get all transaction"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                {
+                    "data": [
+                    {
+                      "id": 1,
+                      "order_id": "LAPAK-0981276378388656",
+                      "payment_status": "pending",
+                      "payment_link": "https://www.midtrans.com",
+                      "total_payment": 320000
+                    },
+                    {
+                      "id": 2,
+                      "order_id": "LAPAK-0981276312388656",
+                      "payment_status": "success",
+                      "payment_link": "https://www.midtrans.com",
+                      "total_payment": 125000
+                    },
+                    {
+                      "id": 3,
+                      "order_id": "LAPAK-0983216378388656",
+                      "payment_status": "failure",
+                      "payment_link": "https://www.midtrans.com",
+                      "total_payment": 99000
+                    },
+                    {
+                      "id": 4,
+                      "order_id": "LAPAK-098127637578656",
+                      "payment_status": "success",
+                      "payment_link": "https://www.midtrans.com",
+                      "total_payment": 45000
+                    },
+                  ],                
+                    "message": "success get all transaction"
+                }
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
  
 ####################################
 #  DISCUSSIONS
@@ -1004,24 +1209,29 @@ paths:
                     "data": [
                     {
                         "id": 1,
+                        "parent_id": 0,
                         "product_id": 2,
+                        "user_id": 1,
                         "discussion": "barangnya ready gan?"
                     },
                     {
                         "id": 2,
                         "parent_id": 1,
                         "product_id": 2,
+                        "user_id": 3,
                         "discussion": "ready kak"
                     },
                     {
                         "id": 3,
                         "product_id": 3,
+                        "user_id": 4,
                         "discussion": "boleh nego gan?"
                     },
                     {
                         "id": 4,
                         "parent_id": 3,
                         "product_id": 3,
+                        "user_id": 3,
                         "discussion": "gak. harga pas"
                     },
                   ],                
@@ -1052,7 +1262,9 @@ paths:
                 {
                     "data": {
                         "id": 1,
+                        "parent_id": 0,
                         "product_id": 2,
+                        "user_id": 1,
                         "discussion": "barang ini ready gan?"
                     },
                     "message": "success get discussion detail"
@@ -1118,8 +1330,7 @@ paths:
         400:
           $ref: "#/components/responses/400"
         500:
-          $ref: "#/components/responses/500" 
-      
+          $ref: "#/components/responses/500"       
 
   /products/{id}/discussions:
     parameters:
@@ -1145,6 +1356,7 @@ paths:
                           "discussion": "barangnya ready gan?",
                           "user": [
                             {
+                          "id": 1,
                           "username": "jamal",
                           "profile_picture": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                             }
@@ -1155,13 +1367,14 @@ paths:
                           "discussion": "boleh nego kak?",
                           "user": [
                             {
+                          "id": "1",
                           "username": "jamal",
                           "profile_picture": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                             }
                           ]
                       },
                     ],
-                  "message": "success get product's feedbacks"
+                  "message": "success get product's discussions"
                 }
         400:
           $ref: "#/components/responses/400"
@@ -1188,7 +1401,8 @@ paths:
               $ref: "#/components/schemas/Feedback"
             example:
               product_id: 1
-              discussion: "bahannya lembut"
+              rating: 4
+              feedback: "bahannya lembut"
                 
       responses:
         201:
@@ -1203,6 +1417,7 @@ paths:
               example:
                 "data": {
                     "id": 1,
+                    "rating": 4,
                     "feedback": "bahannya lembut"
                     }
                 "message": "success add feedback"
@@ -1229,6 +1444,8 @@ paths:
                     "data": [
                     {
                         "id": 1,
+                        "parent_id": 0,
+                        "user_id": 1,
                         "product_id": 2,
                         "rating": 4,
                         "feedback": "bahannya lembut"
@@ -1236,11 +1453,14 @@ paths:
                     {
                         "id": 2,
                         "parent_id": 1,
+                        "user_id": 3,
                         "product_id": 2,
                         "feedback": "terima kasih sudah berbelanja di toko kami"
                     },
                     {
                         "id": 3,
+                        "parent_id": 0,
+                        "user_id": 4,
                         "product_id": 3,
                         "rating": 5,
                         "feedback": "harganya sesuai, suka deh sama produknya"
@@ -1248,6 +1468,7 @@ paths:
                     {
                         "id": 4,
                         "parent_id": 2,
+                        "user_id": 3,
                         "product_id": 3,
                         "feedback": "terima kasih sudah berbelanja di toko kami"
                     },
@@ -1280,6 +1501,8 @@ paths:
                     "data": {
                         "id": 1,
                         "product_id": 2,
+                        "parent_id": 0,
+                        "user_id": 1,
                         "rating": 4,
                         "feedback": "bahannya lembut"
                     },
@@ -1377,6 +1600,7 @@ paths:
                           "feedback": "barangnya bagus",
                           "user": [
                             {
+                          "id": 1,
                           "username": "jamal",
                           "profile_picture": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                             }
@@ -1388,6 +1612,7 @@ paths:
                           "feedback": "barangnya lumayan",
                           "user": [
                             {
+                          "id": 1,
                           "username": "jamal",
                           "profile_picture": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                             }
@@ -1402,7 +1627,9 @@ paths:
           $ref: "#/components/responses/500"
 
     
-
+####################################
+#  COMPONENTS
+####################################
 components:
   securitySchemes:
     JWTAuth:
@@ -1500,6 +1727,7 @@ components:
       required:
         - product_id
         - parent_id
+        - user_id
         - discussion
       properties:
         id:
@@ -1514,6 +1742,10 @@ components:
           type: integer
           format: int64
           description: the ID of the discussions
+        user_id:
+          type: integer
+          format: int64
+          description: the ID of the user who starts discussion
         discussion: 
           type: string
           description: the content of the discussion
@@ -1523,6 +1755,7 @@ components:
       required:
         - product_id
         - parent_id
+        - user_id
         - Feedback
       properties:
         id:
@@ -1533,6 +1766,10 @@ components:
           type: integer
           format: int64
           description: the ID of the products
+        user_id:
+          type: integer
+          format: int64
+          description: the ID of the user who gives feedbacks
         parent_id: 
           type: integer
           format: int64
@@ -1558,6 +1795,68 @@ components:
         Product_Type:
           type: string
           description: types of products
+
+    Basket:
+      type: object
+      required:
+        - product_id
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: the ID of the basket
+        product_id:
+          type: integer
+          format: int64
+          description: the ID of the products
+        product_name: 
+          type: string
+          description: name of product
+        product_pcs:
+          type: integer
+          format: int64
+          description: number of packs purchased
+        product_price: 
+          type: integer
+          format: int64
+          description: price of product
+        product_picture: 
+          type: string
+          description: picture of product
+        user_id:
+          type: integer
+          format: int64
+          description: the ID of the user
+        lapak_name:
+          type: string
+          description: name of lapak
+        lapak_adress:
+          type: string
+          description: address of lapak
+          
+    Transaction:
+      type: object
+      required:
+        - basket_id
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: the ID of the transaction
+        order_id:
+          type: integer
+          format: int64
+          description: the ID of the order
+        payment_status: 
+          type: string
+          description: status of payment
+        payment_link: 
+          type: string
+          description: link of payment
+        total_payment:
+          type: integer
+          format: int64
+          description: total of payment
         
   parameters:
     paramId:
