@@ -9,7 +9,7 @@ type DiscussionEntity struct {
 	Id         uint
 	ProductId  uint
 	Product    products.ProductEntity
-	ParentID   uint
+	ParentId   uint
 	Discussion string `validate:"required"`
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
@@ -22,5 +22,4 @@ type DiscussionServiceInterface interface {
 type DiscussionDataInterface interface {
 	Insert(discussionEntity DiscussionEntity) (uint, error)
 	SelectById(id uint) (DiscussionEntity, error)
-
 }
