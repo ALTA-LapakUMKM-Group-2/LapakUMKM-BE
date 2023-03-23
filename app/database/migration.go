@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	baskets "lapakUmkm/features/baskets/data"
+	carts "lapakUmkm/features/carts/data"
 	categories "lapakUmkm/features/categories/data"
 	discussions "lapakUmkm/features/discussions/data"
 	feedbacks "lapakUmkm/features/feedbacks/data"
@@ -19,7 +19,7 @@ func InitMigration(db *gorm.DB) {
 		&categories.Category{},
 		&products.Product{},
 		&productTransactions.ProductTransaction{},
-		&baskets.Basket{},
+		&carts.Cart{},
 		&feedbacks.Feedback{},
 		&discussions.Discussion{},
 	)
