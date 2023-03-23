@@ -12,6 +12,347 @@ servers:
     url: https://virtserver.swaggerhub.com/UMARUUUN11_1/ALTA-LapakUMKM/1.0.0
 
 paths:
+####################################
+#  AUTH
+####################################
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      description: Login akun 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: "rischi@mail.com"
+                password: "123456"
+      responses:
+        '200':
+          description: Login success.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: "Login success"
+                  data:
+                      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+        '401' :
+          $ref: '#/components/responses/401'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /auth/users:
+    get:
+      tags:
+        - Auth
+      summary: Claim Token
+      description: Claim Token
+      security:
+        - JWTAuth: [] 
+      responses:
+        '200':
+          description: Claim success.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: "-"
+                  data:
+                      id : 2
+                      role : "user"
+                      exp : 1678488436
+        '401' :
+          $ref: '#/components/responses/401'
+
+  /auth/change-password:
+    post:
+      tags:
+        - Auth
+      summary: Change Password
+      description: Change Password
+      security:
+        - JWTAuth: []
+      requestBody:
+        description: Change Password
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - old_password
+                - new_password
+                - confirm_password
+              properties:
+                old_password:
+                  type: string
+                  description: old password
+                new_password:
+                  type: string
+                  description: new password 
+                confirm_password:
+                  type: string
+                  description: confirm password 
+      responses:
+        '200':
+          description: Change Password success.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: "-"
+                  data: null
+        '400':
+          $ref: '#/components/responses/400'
+        '401' :
+          $ref: '#/components/responses/401'
+        '500' :
+          $ref: '#/components/responses/500'
+
+####################################
+#  USERS
+####################################
+  /users:
+    get:
+      tags:
+        - Users
+      summary: get all users
+      description: Melihat seluruh data user
+
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: "success get all users"
+                  data:
+                    - id: 1
+                      team_id : 1,
+                      full_name: "reza"
+                      email: "reza@mail.com"
+                      role: "admin"
+                      status : true
+                      address: "pekanbaru"
+                      "team": {
+                          "id": 1,
+                          "name": "Admin"
+                      }
+                    - id: 2
+                      team_id : 1,
+                      full_name: "rischi"
+                      email: "rischi@mail.com"
+                      role: "admin"
+                      status : true
+                      address: "pekanbaru"
+                      "team": {
+                          "id": 1,
+                          "name": "Placement"
+                      }
+        '500':
+          $ref: '#/components/responses/500'
+
+    post:
+      tags:
+        - Users
+      summary: add user
+      description: Menambah data User (register)
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                full_name: "reza yuda"
+                email: "reza@mail.com"
+                team_id: 2
+                password: "qwerty"
+                phone_number: "081234"
+                address: "pekanbaru"
+                role: "admin"
+      responses:
+        '201':
+          description: Register berhasil.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: "register berhasil"
+                  data:
+                    - id: 1
+                      team_id : 1,
+                      full_name: "reza"
+                      email: "reza@mail.com"
+                      role: "admin"
+                      status : true
+                      address: "pekanbaru"
+                      "team": {
+                          "id": 1,
+                          "name": "Admin"
+                      }
+        '401' :
+          $ref: '#/components/responses/401'
+        '500' :
+          $ref: '#/components/responses/500'
+
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Id
+        schema:
+          type: integer
+    get:
+      tags:
+        - Users
+      summary: get users by id
+      security:
+        - JWTAuth: []
+      description: Mencari User dengan id
+
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: "success get all users"
+                  data:
+                    - id: 1
+                      team_id: 2
+                      full_name: "reza"
+                      email: "reza@mail.com"
+                      role : "admin"
+                      status : true
+                      phone_number : 0812345432
+                      address: "land of dawn"
+                      "team": {
+                          "id": 1,
+                          "name": "Placement"
+                      }
+        '404':
+          $ref: '#/components/responses/404'
+        '401' :
+          $ref: '#/components/responses/401'
+        '500' :
+          $ref: '#/components/responses/500'
+
+    put:
+      tags:
+        - Users
+      summary: update users
+      description: Mengubah data User
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: user_id
+          description: "id user"
+          required: true
+          in: path
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                full_name: "reza yuda"
+                email: "reza@mail.com"
+                team_id: 2
+                phone_number: "081234"
+                address: "pekanbaru"
+                status: false
+                role: "admin"
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: "success Update users"
+                  data: 
+                    - id: 1
+                      team_id: 2
+                      full_name: "reza"
+                      email: "reza@mail.com"
+                      role : "admin"
+                      status : true
+                      phone_number : 0812345432
+                      address: "land of dawn"
+                      "team": {
+                          "id": 1,
+                          "name": "Placement"
+                      }
+
+        '404':
+          $ref: '#/components/responses/404'
+        '401' :
+          $ref: '#/components/responses/401'
+        '500' :
+          $ref: '#/components/responses/500'
+    
+    delete:
+      tags:
+        - Users
+      summary: Delete Users
+      description: menghapus akun user
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: "user_id"
+          description: "user_id"
+          required: true
+          in: path
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '404':
+          $ref: '#/components/responses/404'
+        '401' :
+          $ref: '#/components/responses/401'
+        '500' :
+          $ref: '#/components/responses/500'
+
+
+####################################
+#  PRODUCT
+####################################
+
+
+####################################
+#  DISCUSSIONS
+####################################
   /discussions:
     post:
       tags: 
@@ -234,6 +575,9 @@ paths:
         500:
           $ref: "#/components/responses/500"
 
+####################################
+#  FEEDBACKS
+####################################
   /feedbacks:
     post:
       tags: 

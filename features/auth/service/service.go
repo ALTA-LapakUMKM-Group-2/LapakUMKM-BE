@@ -18,23 +18,23 @@ func New(u auth.AuthDataInterface) auth.AuthServiceInterface {
 	}
 }
 
-func (u *authService) Login(email, password string) (string, error) {
+func (u *authService) Login(email, password string) (string, users.UserEntity, error) {
 	if email == "" || password == "" {
-		return "", errors.New("email and password must be fill")
+		return "", users.UserEntity{}, errors.New("email and password must be fill")
 	}
 
 	user, err := u.data.GetUserByEmailOrId(email, 0)
 	if err != nil || !helpers.CheckPasswordHash(password, user.Password) {
-		return "", errors.New("user and password not found")
+		return "", users.UserEntity{}, errors.New("user and password not found")
 	}
 
 	//make jwt
 	token, errToken := middlewares.CreateToken(int(user.Id), user.Role)
 	if errToken != nil {
-		return "", errToken
+		return "", users.UserEntity{}, errToken
 	}
 
-	return token, nil
+	return token, user, nil
 }
 
 func (u *authService) Register(request users.UserEntity) error {

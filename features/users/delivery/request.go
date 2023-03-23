@@ -1,6 +1,9 @@
 package delivery
 
-import "lapakUmkm/features/users"
+import (
+	"fmt"
+	"lapakUmkm/features/users"
+)
 
 type UserRequest struct {
 	FullName    string `json:"full_name" form:"full_name"`
@@ -12,6 +15,7 @@ type UserRequest struct {
 }
 
 func UserRequestToUserEntity(userRequest UserRequest) users.UserEntity {
+	fmt.Println("TES Req", userRequest.Role)
 	return users.UserEntity{
 		FullName:    userRequest.FullName,
 		Email:       userRequest.Email,

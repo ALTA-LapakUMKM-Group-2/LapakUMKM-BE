@@ -5,7 +5,7 @@ import (
 )
 
 type AuthServiceInterface interface {
-	Login(email, password string) (string, error)
+	Login(email, password string) (string, users.UserEntity, error)
 	Register(request users.UserEntity) error
 	ChangePassword(id uint, old, new, confirm string) error
 }
