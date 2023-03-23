@@ -15,6 +15,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/", index)
 	AuthRouter(db, e)
 	UserRouter(db, e)
+	CartRouter(db, e)
 }
 
 func index(c echo.Context) error {
