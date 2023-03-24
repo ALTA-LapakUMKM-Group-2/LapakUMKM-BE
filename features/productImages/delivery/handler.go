@@ -30,7 +30,7 @@ func (h *ProductImagesHandler) Create(c echo.Context) error {
 	if err1 != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success add image", data))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success add image", ProductImagesEntityToProductImagesResponse(data)))
 }
 
 func (h *ProductImagesHandler) Delete(c echo.Context) error {
@@ -39,4 +39,13 @@ func (h *ProductImagesHandler) Delete(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success delete image", nil))
+}
+
+func (h *ProductImagesHandler) GetByProductId(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	data, err := h.Service.GetByProductId(uint(id))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+	}
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", ListResponse(data)))
 }

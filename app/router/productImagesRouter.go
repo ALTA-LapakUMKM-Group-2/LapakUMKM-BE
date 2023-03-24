@@ -17,6 +17,7 @@ func ProductImagesRouter(db *gorm.DB, e *echo.Echo) {
 
 	g := e.Group("/products")
 	g.Use(middlewares.Authentication)
+	g.GET("/:id/images", handler.GetByProductId)
 	g.POST("/:id/upload-photo", handler.Create)
 	g.DELETE("/:id/delete-photo/:photo_id", handler.Delete)
 }
