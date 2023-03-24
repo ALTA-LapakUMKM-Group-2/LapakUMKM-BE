@@ -19,8 +19,8 @@ func New(data products.ProductDataInterface) products.ProductServiceInterface {
 	}
 }
 
-func (s *productService) GetAll() ([]products.ProductEntity, error) {
-	return s.Data.SelectAll()
+func (s *productService) GetAll(productFilter products.ProductFilter) ([]products.ProductEntity, error) {
+	return s.Data.SelectAll(productFilter)
 }
 
 func (s *productService) GetById(id uint) (products.ProductEntity, error) {

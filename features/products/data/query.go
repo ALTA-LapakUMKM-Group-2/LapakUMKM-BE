@@ -16,9 +16,23 @@ func New(db *gorm.DB) products.ProductDataInterface {
 	}
 }
 
-func (q *query) SelectAll() ([]products.ProductEntity, error) {
+func (q *query) SelectAll(productFilter products.ProductFilter) ([]products.ProductEntity, error) {
 	var products []Product
-	if err := q.db.Preload("User").Preload("Category").Find(&products); err.Error != nil {
+
+	query := q.db.Preload("User").Preload("Category")
+	if productFilter.PriceMin != 0 {
+		query.Where("products.price >= ?", productFilter.PriceMin)
+	}
+
+	if productFilter.PriceMax != 0 {
+		query.Where("products.price <= ?", productFilter.PriceMax)
+	}
+
+	if productFilter.CategoryId != 0 {
+		query.Where("products.category_id = ?", productFilter.CategoryId)
+	}
+
+	if err := query.Find(&products); err.Error != nil {
 		return nil, err.Error
 	}
 	return ListProductToProductEntity(products), nil

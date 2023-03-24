@@ -21,7 +21,19 @@ func New(srv products.ProductServiceInterface) *ProductHandler {
 }
 
 func (h *ProductHandler) GetAll(c echo.Context) error {
-	products, err := h.Service.GetAll()
+	priceMin, _ := strconv.Atoi(c.QueryParam("price_min"))
+	priceMax, _ := strconv.Atoi(c.QueryParam("price_max"))
+	rating, _ := strconv.Atoi(c.QueryParam("rating"))
+	categoryId, _ := strconv.Atoi(c.QueryParam("category_id"))
+
+	productFilter := products.ProductFilter{
+		PriceMin:   priceMin,
+		PriceMax:   priceMax,
+		Rating:     float64(rating),
+		CategoryId: uint(categoryId),
+	}
+
+	products, err := h.Service.GetAll(productFilter)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}

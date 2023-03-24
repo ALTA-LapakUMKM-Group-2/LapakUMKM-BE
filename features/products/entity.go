@@ -24,8 +24,15 @@ type ProductEntity struct {
 	ProductImage   []productImages.ProductImagesEntity
 }
 
+type ProductFilter struct {
+	PriceMin   int
+	PriceMax   int
+	CategoryId uint
+	Rating     float64
+}
+
 type ProductServiceInterface interface {
-	GetAll() ([]ProductEntity, error)
+	GetAll(productFilter ProductFilter) ([]ProductEntity, error)
 	GetById(id uint) (ProductEntity, error)
 	Create(productEntity ProductEntity) (ProductEntity, error)
 	Update(productEntity ProductEntity, id, userId uint) (ProductEntity, error)
@@ -35,7 +42,7 @@ type ProductServiceInterface interface {
 }
 
 type ProductDataInterface interface {
-	SelectAll() ([]ProductEntity, error)
+	SelectAll(productFilter ProductFilter) ([]ProductEntity, error)
 	SelectById(id uint) (ProductEntity, error)
 	Store(productEntity ProductEntity) (uint, error)
 	Edit(productEntity ProductEntity, id uint) error
