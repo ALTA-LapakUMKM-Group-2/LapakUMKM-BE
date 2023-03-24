@@ -1,7 +1,7 @@
 package router
 
 import (
-	// "lapakUmkm/app/middlewares"
+	"lapakUmkm/app/middlewares"
 	cartData "lapakUmkm/features/carts/data"
 	cartHandler "lapakUmkm/features/carts/delivery"
 	cartService "lapakUmkm/features/carts/service"
@@ -16,6 +16,7 @@ func CartRouter(db *gorm.DB, e *echo.Echo) {
 	handler := cartHandler.New(service)
 
 	g := e.Group("/carts")
-	// g.Use(middlewares.Authentication)
+	g.Use(middlewares.Authentication)
 	g.POST("", handler.Add)
+	g.GET("", handler.MyCart)
 }
