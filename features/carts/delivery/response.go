@@ -19,3 +19,8 @@ type GetResponse struct {
 }
 
 type ListCartResponse []GetResponse
+
+type UpdateResponse struct {
+	Id           uint   `json:"id"`
+	ProductPcs   int    `json:"product_pcs"`
+}
