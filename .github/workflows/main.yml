@@ -1,0 +1,25 @@
+on:
+  push:
+    branches:
+      - deployment
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to server using SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /home/findryankpradana/lapakumkm
+            sudo git pull origin deployment
+            sudo docker stop containerlapakumkm
+            sudo docker rm containerlapakumkm
+            sudo docker rmi imagelapakumkm
+            sudo docker build -t imagelapakumkm:latest .
+            sudo docker run -d -p 8081:8080 --name containerlapakumkm imagelapakumkm:latest
