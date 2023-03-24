@@ -39,3 +39,21 @@ func (cs *CartService) MyCart(userID uint) ([]carts.Core, error) {
 	}
 	return tmp, nil
 }
+
+// Update implements carts.CartService
+func (cs *CartService) Update(updateCart carts.Core) (carts.Core, error) {
+	tmp, err := cs.data.Update(updateCart)
+	if err != nil {
+		return carts.Core{}, err
+	}
+	return tmp, nil
+}
+
+// Delete implements carts.CartService
+func (cs *CartService) Delete(userID, cartID uint) error {
+	err := cs.data.Delete(userID, cartID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -5,6 +5,7 @@ import (
 	"lapakUmkm/features/carts"
 	"lapakUmkm/utils/helpers"
 	"net/http"
+	"strconv"
 
 	"github.com/jinzhu/copier"
 	"github.com/labstack/echo/v4"
@@ -48,4 +49,35 @@ func (ch *CartHandler) MyCart(c echo.Context) error {
 	res := ListCartResponse{}
 	copier.Copy(&res, &data)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success show your cart", res))
+}
+
+func (ch *CartHandler) Update(c echo.Context) error {
+	var formInput UpdateCartRequest
+	claim := middlewares.ClaimsToken(c)
+	formInput.UserId = uint(claim.Id)
+	cartId, _ := strconv.Atoi(c.Param("id"))
+	if err := c.Bind(&formInput); err != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
+	}
+	formInput.Id = uint(cartId)
+	updateCart := carts.Core{}
+	copier.Copy(&updateCart, &formInput)
+	data, err := ch.srv.Update(updateCart)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+	}
+	res := UpdateResponse{}
+	copier.Copy(&res, &data)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success update quantity", res))
+}
+
+func (ch *CartHandler) Delete(c echo.Context) error {
+	claim := middlewares.ClaimsToken(c)
+	userId := uint(claim.Id)
+	cartId, _ := strconv.Atoi(c.Param("id"))
+	err := ch.srv.Delete(uint(userId), uint(cartId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+	}
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success delete item from product", nil))
 }

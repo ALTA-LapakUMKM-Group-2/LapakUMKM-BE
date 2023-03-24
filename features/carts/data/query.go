@@ -3,7 +3,6 @@ package data
 import (
 	"errors"
 	"lapakUmkm/features/carts"
-	"log"
 
 	"gorm.io/gorm"
 )
@@ -31,12 +30,12 @@ func (baq *CartQuery) Add(newCart carts.Core) (carts.Core, error) {
 // MyCart implements carts.CartData
 func (cq *CartQuery) MyCart(userID uint) ([]carts.Core, error) {
 	tmp := []Cart{}
-	tx := cq.db.Where("carts.user_id = ?", userID).Select("carts.id, carts.user_id, carts.product_id, carts.product_pcs, products.product_name AS product_name, products.price AS product_price, users.full_name AS lapak_name, users.address AS lapak_address").Joins("JOIN users ON carts.user_id = users.id").Joins("JOIN products ON carts.product_id = products.id").Find(&tmp)
+	tx := cq.db.Where("carts.user_id = ?", userID).Select("carts.id, carts.user_id, carts.product_id, carts.product_pcs, products.product_name AS product_name, products.price AS product_price, MIN(product_images.image) AS product_image, users.shop_name AS lapak_name, users.address AS lapak_address").Joins("JOIN products ON carts.product_id = products.id").Joins("JOIN users ON products.user_id = users.id").Joins("JOIN product_images ON carts.product_id = product_images.product_id").Group("carts.id").Find(&tmp)
+
 
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
-	log.Println(tmp)
 	listFeedback := ListCartToCore(tmp)
 	return listFeedback, nil
 }
