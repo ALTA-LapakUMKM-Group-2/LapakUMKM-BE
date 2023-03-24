@@ -14,3 +14,5 @@ func ResponseFail(message string) map[string]any {
 		"message": message,
 	}
 }
+
+//
