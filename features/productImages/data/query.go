@@ -16,6 +16,14 @@ func New(db *gorm.DB) productImages.ProductDataInterface {
 	}
 }
 
+func (q *query) SelectById(id uint) (productImages.ProductImagesEntity, error) {
+	var productImage ProductImages
+	if err := q.db.First(&productImage, id); err.Error != nil {
+		return productImages.ProductImagesEntity{}, err.Error
+	}
+	return ProductImagesToProductImagesEntity(productImage), nil
+}
+
 func (q *query) Store(productImagesEntity productImages.ProductImagesEntity) (uint, error) {
 	data := ProductImagesEntityToProductImages(productImagesEntity)
 	if err := q.db.Create(&data); err.Error != nil {
@@ -32,7 +40,11 @@ func (q *query) Destroy(id uint) error {
 	return nil
 }
 
-// SelectByProductId implements productsimages.ProductDataInterface
-func (*query) SelectByProductId(productId uint) (productImages.ProductImagesEntity, error) {
-	panic("unimplemented")
+func (q *query) SelectByProductId(productId uint) ([]productImages.ProductImagesEntity, error) {
+	var data []ProductImages
+	if err := q.db.Find(&data); err.Error != nil {
+		return nil, err.Error
+	}
+
+	return ToListEntity(data), nil
 }

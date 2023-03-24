@@ -30,5 +30,13 @@ func (h *ProductImagesHandler) Create(c echo.Context) error {
 	if err1 != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success update profile", data))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success add image", data))
+}
+
+func (h *ProductImagesHandler) Delete(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("photo_id"))
+	if err := h.Service.Delete(uint(id)); err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+	}
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success delete image", nil))
 }

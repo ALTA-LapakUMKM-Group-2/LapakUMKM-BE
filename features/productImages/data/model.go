@@ -30,10 +30,11 @@ func ProductImagesToProductImagesEntity(p ProductImages) productImages.ProductIm
 	return result
 }
 
-func ListClassToClassEntity(p []ProductImages) []productImages.ProductImagesEntity {
+func ToListEntity(pImage []ProductImages) []productImages.ProductImagesEntity {
 	var images []productImages.ProductImagesEntity
-	for _, v := range p {
+	for _, v := range pImage {
 		images = append(images, ProductImagesToProductImagesEntity(v))
 	}
+
 	return images
 }

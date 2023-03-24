@@ -31,21 +31,31 @@ func (s *ProductImagesService) Create(productId uint, file *multipart.FileHeader
 
 	var request = productImages.ProductImagesEntity{
 		ProductId: productId,
-		Image:     "https://storage.googleapis.com/images_lapak_umkm/product/" + newFileName,
+		Image:     newFileName,
 	}
 
-	if _, err := s.Data.Store(request); err != nil {
+	id, err := s.Data.Store(request)
+	if err != nil {
 		return empty, err
 	}
 
-	return request, nil
+	return s.Data.SelectById(id)
 }
 
 func (s *ProductImagesService) Delete(id uint) error {
+	dataImage, err := s.Data.SelectById(id)
+	if err != nil {
+		return err
+	}
+
+	if err := helpers.DeletePhotoProduct(dataImage.Image); err != nil {
+		return err
+	}
+
 	return s.Data.Destroy(id)
 }
 
 // GetByProductId implements productImages.ProductServiceInterface
-func (*ProductImagesService) GetByProductId(productId uint) (productImages.ProductImagesEntity, error) {
-	panic("unimplemented")
+func (s *ProductImagesService) GetByProductId(productId uint) ([]productImages.ProductImagesEntity, error) {
+	return s.Data.SelectByProductId(productId)
 }
