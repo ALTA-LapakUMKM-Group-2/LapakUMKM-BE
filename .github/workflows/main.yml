@@ -22,4 +22,4 @@ jobs:
             sudo docker rm containerlapakumkm
             sudo docker rmi imagelapakumkm
             sudo docker build -t imagelapakumkm:latest .
-            sudo docker run -d -p 8081:8080 --name containerlapakumkm imagelapakumkm:latest
+            sudo docker run -d -p 8081:80 --name containerlapakumkm imagelapakumkm:latest
