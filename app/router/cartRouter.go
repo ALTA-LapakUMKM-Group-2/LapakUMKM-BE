@@ -19,4 +19,6 @@ func CartRouter(db *gorm.DB, e *echo.Echo) {
 	g.Use(middlewares.Authentication)
 	g.POST("", handler.Add)
 	g.GET("", handler.MyCart)
+	g.PUT("/:id", handler.Update)
+	g.DELETE("/:id", handler.Delete)
 }
