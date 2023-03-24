@@ -44,6 +44,7 @@ func (h *ProductHandler) Create(c echo.Context) error {
 	if err := c.Bind(&formInput); err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
 	}
+
 	userId := middlewares.ClaimsToken(c).Id
 	userEntity := ProductRequestToProductEntity(&formInput)
 	userEntity.UserId = uint(userId)

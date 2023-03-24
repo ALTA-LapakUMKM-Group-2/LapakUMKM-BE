@@ -33,6 +33,7 @@ func ProductEntityToProductResponse(productEntity products.ProductEntity) Produc
 		Price:          productEntity.Price,
 		StockRemaining: productEntity.StockRemaining,
 		StockSold:      productEntity.StockSold,
+		Size:           productEntity.Size,
 	}
 
 	if !reflect.ValueOf(productEntity.User).IsZero() {

@@ -15,9 +15,10 @@ func ProductRouter(db *gorm.DB, e *echo.Echo) {
 	service := _productsService.New(data)
 	handler := _productsHandler.New(service)
 
+	e.GET("/products", handler.GetAll)
+	e.GET("/products/:id", handler.GetById)
+
 	g := e.Group("/products")
-	g.GET("", handler.GetAll)
-	g.GET("/:id", handler.GetById)
 	g.POST("", handler.Create, middlewares.Authentication)
 	g.PUT("/:id", handler.Update, middlewares.Authentication)
 	g.DELETE("/:id", handler.Delete, middlewares.Authentication)
