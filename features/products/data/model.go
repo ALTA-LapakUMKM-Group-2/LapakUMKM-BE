@@ -20,6 +20,7 @@ type Product struct {
 	Category       *category.Category `gorm:"foreignKey:CategoryId"`
 	ProductName    string
 	Description    string
+	Size           string
 	Price          int
 	StockRemaining int
 	StockSold      int
@@ -35,6 +36,7 @@ func ProductEntityToProduct(productEntity products.ProductEntity) Product {
 		Price:          productEntity.Price,
 		StockRemaining: productEntity.StockRemaining,
 		StockSold:      productEntity.StockSold,
+		Size:           productEntity.Size,
 	}
 }
 
@@ -48,6 +50,7 @@ func ProductToProductEntity(product Product) products.ProductEntity {
 		Price:          product.Price,
 		StockRemaining: product.StockRemaining,
 		StockSold:      product.StockSold,
+		Size:           product.Size,
 		CreatedAt:      product.CreatedAt,
 		UpdatedAt:      product.UpdatedAt,
 	}

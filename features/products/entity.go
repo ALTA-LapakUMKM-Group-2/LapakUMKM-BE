@@ -13,6 +13,7 @@ type ProductEntity struct {
 	CategoryId     uint
 	ProductName    string
 	Description    string
+	Size           string
 	Price          int
 	StockRemaining int
 	StockSold      int

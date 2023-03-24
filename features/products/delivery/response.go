@@ -14,6 +14,7 @@ type ProductResponse struct {
 	CategoryId     uint                                  `json:"category_id"`
 	ProductName    string                                `json:"product_name"`
 	Description    string                                `json:"description"`
+	Size           string                                `json:"size"`
 	Price          int                                   `json:"price"`
 	StockRemaining int                                   `json:"stock_remaining"`
 	StockSold      int                                   `json:"stock_sold"`
