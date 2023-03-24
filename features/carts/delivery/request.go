@@ -5,3 +5,9 @@ type NewCartRequest struct {
 	ProductId  uint `json:"product_id" form:"product_id"`
 	ProductPcs int  `json:"product_pcs" form:"product_pcs"`
 }
+
+type UpdateCartRequest struct {
+	Id         uint
+	UserId     uint
+	ProductPcs int `json:"product_pcs" form:"product_pcs"`
+}
