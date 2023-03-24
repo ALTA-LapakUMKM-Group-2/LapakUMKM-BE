@@ -3,7 +3,7 @@ package delivery
 import "lapakUmkm/features/categories"
 
 type CategoryResponse struct {
-	Id       uint   `json:"id"`
+	Id       uint   `json:"id,omitempty"`
 	Category string `json:"category" form:"category"`
 }
 

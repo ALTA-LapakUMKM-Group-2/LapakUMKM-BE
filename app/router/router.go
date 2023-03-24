@@ -16,6 +16,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	AuthRouter(db, e)
 	UserRouter(db, e)
 	CategoryRouter(db, e)
+	ProductRouter(db, e)
 	CartRouter(db, e)
 }
 
