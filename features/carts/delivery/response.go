@@ -17,3 +17,5 @@ type GetResponse struct {
 	LapakName    string `json:"lapak_name"`
 	LapakAddress string `json:"lapak_address"`
 }
+
+type ListCartResponse []GetResponse
