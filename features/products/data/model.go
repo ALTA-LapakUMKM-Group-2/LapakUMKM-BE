@@ -57,8 +57,10 @@ func ProductToProductEntity(product Product) products.ProductEntity {
 
 	if !reflect.ValueOf(product.User).IsZero() {
 		result.User = users.UserEntity{
-			FullName: product.User.FullName,
-			Address:  product.User.Address,
+			FullName:     product.User.FullName,
+			Address:      product.User.Address,
+			ShopName:     product.User.ShopName,
+			PhotoProfile: product.User.PhotoProfile,
 		}
 	}
 

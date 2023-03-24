@@ -38,8 +38,10 @@ func ProductEntityToProductResponse(productEntity products.ProductEntity) Produc
 
 	if !reflect.ValueOf(productEntity.User).IsZero() {
 		productResponse.User = user.UserResponse{
-			FullName: productEntity.User.FullName,
-			Address:  productEntity.User.Address,
+			FullName:     productEntity.User.FullName,
+			Address:      productEntity.User.Address,
+			ShopName:     productEntity.User.ShopName,
+			PhotoProfile: productEntity.User.PhotoProfile,
 		}
 	}
 
