@@ -6,6 +6,7 @@ import (
 	categories "lapakUmkm/features/categories/data"
 	discussions "lapakUmkm/features/discussions/data"
 	feedbacks "lapakUmkm/features/feedbacks/data"
+	productImages "lapakUmkm/features/productImages/data"
 	productTransactions "lapakUmkm/features/productTransactions/data"
 	products "lapakUmkm/features/products/data"
 	user "lapakUmkm/features/users/data"
@@ -22,6 +23,7 @@ func InitMigration(db *gorm.DB) {
 		&carts.Cart{},
 		&feedbacks.Feedback{},
 		&discussions.Discussion{},
+		&productImages.ProductImages{},
 	)
 
 	if err != nil {

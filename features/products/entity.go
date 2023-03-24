@@ -2,7 +2,7 @@ package products
 
 import (
 	"lapakUmkm/features/categories"
-	productsimages "lapakUmkm/features/productsImages"
+	"lapakUmkm/features/productImages"
 	"lapakUmkm/features/users"
 	"time"
 )
@@ -20,7 +20,7 @@ type ProductEntity struct {
 	UpdatedAt      time.Time
 	User           users.UserEntity
 	Category       categories.CategoryEntity
-	ProductImage   []productsimages.ProductImages
+	ProductImage   []productImages.ProductImagesEntity
 }
 
 type ProductServiceInterface interface {

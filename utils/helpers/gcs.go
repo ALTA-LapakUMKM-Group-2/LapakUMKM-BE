@@ -62,7 +62,7 @@ func DeletePhotoProfile(fileName string) error {
 
 func UploadPhotoProduct(file multipart.File, fileNameInGCS string) error {
 	bucketName := "images_lapak_umkm"
-	pathFile := "products/" + fileNameInGCS
+	pathFile := "product/" + fileNameInGCS
 
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx, option.WithCredentialsFile("filecred.json"))

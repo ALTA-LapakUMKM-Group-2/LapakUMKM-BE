@@ -2,8 +2,8 @@ package delivery
 
 import (
 	category "lapakUmkm/features/categories/delivery"
+	productsimage "lapakUmkm/features/productImages/delivery"
 	"lapakUmkm/features/products"
-	productsimage "lapakUmkm/features/productsimages/delivery"
 	user "lapakUmkm/features/users/delivery"
 	"reflect"
 )

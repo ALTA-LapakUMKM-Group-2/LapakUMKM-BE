@@ -3,8 +3,8 @@ package data
 import (
 	"lapakUmkm/features/categories"
 	category "lapakUmkm/features/categories/data"
+	"lapakUmkm/features/productImages/data"
 	"lapakUmkm/features/products"
-	"lapakUmkm/features/productsImages/data"
 	"lapakUmkm/features/users"
 	user "lapakUmkm/features/users/data"
 	"reflect"
