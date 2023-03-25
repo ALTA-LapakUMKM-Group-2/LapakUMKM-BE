@@ -56,7 +56,7 @@ func ProductEntityToProductResponse(productEntity products.ProductEntity) Produc
 	for _, v := range productEntity.ProductImage {
 		var image = productsimage.ProductImagesResponse{
 			Id:    v.Id,
-			Image: v.Image,
+			Image: "https://storage.googleapis.com/images_lapak_umkm/product/" + v.Image,
 		}
 		productResponse.ProductImage = append(productResponse.ProductImage, image)
 	}
