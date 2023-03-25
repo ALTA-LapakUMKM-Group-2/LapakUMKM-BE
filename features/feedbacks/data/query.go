@@ -48,3 +48,18 @@ func (qf *query) Destroy(id uint) error{
 	}
 	return nil
 }
+
+func (qf *query) SelectFeedbackByProductId(productId uint) ([]feedbacks.FeedbackEntity, error) {
+	feedback := []Feedback{}
+	// if err := qf.db.Where("product_id = ?", productId).Select("feedbacks.*, users.full_name as username, users.photo_profile").Joins("inner join users ON users.id = feedbacks.user_id").Find(&feedbacks); err.Error != nil {
+	if err := qf.db.Where("product_id = ?", productId).Preload("User").Order("created_at desc").Find(&feedback).Error; err != nil {
+		return []feedbacks.FeedbackEntity{} , err
+	}
+	res := []feedbacks.FeedbackEntity{}
+	for _, v := range feedback {
+		if v.ParentId == 0 {
+			res = append(res, FeedbackToFeedbackEntity(v))
+		}
+	}
+	return res, nil
+}
