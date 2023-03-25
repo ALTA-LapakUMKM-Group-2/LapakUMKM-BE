@@ -51,3 +51,14 @@ func (sd *DiscussionService) Update(discussionEntity discussions.DiscussionEntit
 	}
 	return sd.Data.SelectById(id)
 }
+
+func (sd *DiscussionService) Delete(id uint, userId uint) error {
+	checkDataExist, err := sd.Data.SelectById(id)
+	if err != nil {
+		return nil
+	}
+	if checkDataExist.UserId != userId {
+		return errors.New("access denied")
+	}
+	return sd.Data.Destroy(id)
+}

@@ -21,7 +21,7 @@ type DiscussionEntity struct {
 type DiscussionServiceInterface interface {
 	Create(discussionEntity DiscussionEntity) (DiscussionEntity, error)
 	Update(discussionEntity DiscussionEntity, id, userId uint) (DiscussionEntity, error)
-	// Delete(id, userId uint) error
+	Delete(id, userId uint) error
 	// GetFeedbackByProductId(productId uint) ([]DiscussionEntity, error)
 	// GetAll() ([]DiscussionEntity, error)
 	// GetById(id uint) (DiscussionEntity, error)
@@ -31,7 +31,7 @@ type DiscussionDataInterface interface {
 	SelectById(id uint) (DiscussionEntity, error)
 	Store(discussionEntity DiscussionEntity) (uint, error)
 	Edit(discussionEntity DiscussionEntity, id uint) error
-	// Destroy(id uint) error
+	Destroy(id uint) error
 	// SelectFeedbackByProductId(productId uint) ([]DiscussionEntity, error)
 	// SelectAll() ([]DiscussionEntity, error)
 
