@@ -19,7 +19,7 @@ func New(db *gorm.DB) products.ProductDataInterface {
 func (q *query) SelectAll(productFilter products.ProductFilter) ([]products.ProductEntity, error) {
 	var products []Product
 
-	query := q.db.Preload("User").Preload("Category")
+	query := q.db.Preload("User").Preload("Category").Preload("ProductImage")
 	if productFilter.PriceMin != 0 {
 		query.Where("products.price >= ?", productFilter.PriceMin)
 	}
@@ -40,7 +40,8 @@ func (q *query) SelectAll(productFilter products.ProductFilter) ([]products.Prod
 
 func (q *query) SelectById(id uint) (products.ProductEntity, error) {
 	var product Product
-	if err := q.db.Preload("User").Preload("Category").First(&product, id); err.Error != nil {
+	if err := q.db.Preload("User").Preload("Category").Preload("ProductImages").
+		First(&product, id); err.Error != nil {
 		return products.ProductEntity{}, err.Error
 	}
 	return ProductToProductEntity(product), nil
