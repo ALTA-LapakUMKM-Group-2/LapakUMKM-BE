@@ -10,7 +10,7 @@ COPY ./ /app
 
 RUN go mod tidy
 
-EXPOSE 8081
+EXPOSE 8080
 
 # create executable
 RUN go build -o api15
