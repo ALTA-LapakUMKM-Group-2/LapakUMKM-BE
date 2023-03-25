@@ -24,3 +24,11 @@ func (qf *query) Store(feedbackEntity feedbacks.FeedbackEntity) (uint, error) {
 	feedbackEntity.ProductId = feedback.ProductId
 	return feedback.ID, nil
 }
+
+func (qf *query) SelectById(id uint) (feedbacks.FeedbackEntity, error) {
+	var feedback Feedback
+	if err := qf.db.Preload("User").Preload("Product").First(&feedback, id); err.Error != nil {
+		return feedbacks.FeedbackEntity{}, err.Error
+	}
+	return FeedbackToFeedbackEntity(feedback), nil
+}
