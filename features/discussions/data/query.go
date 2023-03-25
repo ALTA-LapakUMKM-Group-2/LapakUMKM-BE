@@ -61,3 +61,4 @@ func (qd *query) SelectDiscussionByProductId(productId uint) ([]discussions.Disc
 	}
 	return res, nil
 }
+
