@@ -33,3 +33,20 @@ func (sf *feedbackService) Create(feedbackEntity feedbacks.FeedbackEntity) (feed
 	}
 	return sf.Data.SelectById(feedbackId)
 }
+
+func (sf *feedbackService) Update(feedbackEntity feedbacks.FeedbackEntity, id, userId uint) (feedbacks.FeedbackEntity, error) {
+	checkDataExist, errData := sf.Data.SelectById(id)
+	if errData != nil {
+		return checkDataExist, errData
+	}
+
+	if checkDataExist.UserId != userId {
+		return feedbacks.FeedbackEntity{} , errors.New("data can't be updated")
+	}
+
+	err := sf.Data.Edit(feedbackEntity, id)
+	if err != nil {
+		return feedbacks.FeedbackEntity{}, err
+	}
+	return sf.Data.SelectById(id)
+}
