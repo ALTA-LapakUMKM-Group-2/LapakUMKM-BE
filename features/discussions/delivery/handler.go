@@ -72,3 +72,22 @@ func (hd *DiscussionHandler) GetDiscussionByProductId(c echo.Context) error {
 	listDiscussionsResponse := ListDiscussionToDiscussionGetResponse(discussions)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedback by product id", listDiscussionsResponse))
 }
+
+func (hd *DiscussionHandler) GetAll(c echo.Context) error {
+	feedbackEntity, err := hd.Service.GetAll()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
+	}
+	listDiscussionsResponse := ListDiscussionEntityToDiscussionResponse(feedbackEntity)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all feedbacks", listDiscussionsResponse))
+}
+
+func (hd *DiscussionHandler) GetById(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	discussionEntity, err := hd.Service.GetById(uint(id))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data not found"))
+	}
+	discussionResponse := DiscussionEntityToDiscussionGetResponse(discussionEntity)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedbacks detail", discussionResponse))
+}
