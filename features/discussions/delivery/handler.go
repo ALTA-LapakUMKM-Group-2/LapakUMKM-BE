@@ -62,3 +62,13 @@ func (hd *DiscussionHandler) Delete(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Delete Data Success", nil))
 }
+
+func (hd *DiscussionHandler) GetDiscussionByProductId(c echo.Context) error {
+	productId, _ := strconv.Atoi(c.Param("id"))
+	discussions, err := hd.Service.GetDiscussionByProductId(uint(productId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
+	}
+	listDiscussionsResponse := ListDiscussionToDiscussionGetResponse(discussions)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedback by product id", listDiscussionsResponse))
+}
