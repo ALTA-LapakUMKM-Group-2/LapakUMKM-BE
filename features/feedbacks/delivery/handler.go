@@ -73,3 +73,13 @@ func (hf *FeedbackHandler) GetFeedbackByProductId(c echo.Context) error {
 	listFeedbacksResponse := ListFeedbackToFeedbackGetResponse(feedbacks)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedback by product id", listFeedbacksResponse))
 }
+
+func (hf *FeedbackHandler) GetById(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	feedbackEntity, err := hf.service.GetById(uint(id))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data not found"))
+	}
+	feedbackResponse := FeedbackEntityToFeedbackGetResponse(feedbackEntity)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedbacks detail", feedbackResponse))
+}
