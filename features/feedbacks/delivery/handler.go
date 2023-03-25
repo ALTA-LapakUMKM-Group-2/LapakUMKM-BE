@@ -92,3 +92,23 @@ func (hf *FeedbackHandler) GetAll(c echo.Context) error {
 	listFeedbackResponse := ListFeedbackGetAllToFeedbackGetResponse(feedbackEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all feedbacks", listFeedbackResponse))
 }
+
+func (hf *FeedbackHandler) GetRating(productId uint) (uint, error) {
+	sum := uint(0)
+	rFeedback, err := hf.service.GetFeedbackByProductId(productId)
+	if err != nil {
+		return 0, err
+	}
+	for _, feedback := range rFeedback {
+		sum += uint(feedback.Rating)
+		if len(rFeedback) == 0 {
+			log.Println("No ratings found.")
+			return 0, nil
+		}
+	}
+
+	if sum == 0 {
+		return 0, nil
+	}
+	return uint(sum) / uint(len(rFeedback)), nil
+}
