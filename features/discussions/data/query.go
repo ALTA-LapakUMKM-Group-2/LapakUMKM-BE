@@ -39,3 +39,11 @@ func (qd *query) Edit(discussionEntity discussions.DiscussionEntity, id uint) er
 	}
 	return nil
 }
+
+func (qd *query) Destroy(id uint) error {
+	var discussion Discussion
+	if err := qd.db.Delete(&discussion, id); err.Error != nil {
+		return err.Error
+	}
+	return nil
+}
