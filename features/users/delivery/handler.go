@@ -1,7 +1,6 @@
 package delivery
 
 import (
-	"errors"
 	"lapakUmkm/app/middlewares"
 	"lapakUmkm/features/users"
 	"lapakUmkm/utils/helpers"
@@ -76,21 +75,22 @@ func (h *UserHandler) UpdateToProfile(c echo.Context) error {
 	userId := middlewares.ClaimsToken(c).Id
 
 	const maxFileSize = 1024 * 1024
-	err1 := c.Request().ParseMultipartForm(maxFileSize)
-	if err1 != nil {
-		return errors.New("file to large, max 1 MB")
-	}
 
 	file, err := c.FormFile("photo_profile")
 	if err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
+	}
+
+	size := file.Size
+	if size > maxFileSize {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("file too large (max 1 MB)"))
 	}
 
 	fileExtension := filepath.Ext(file.Filename)
 	fileExtension = strings.ToLower(fileExtension)
 
-	if fileExtension == ".jpg" || fileExtension == ".png" || fileExtension == ".jpeg" {
-		return nil
+	if fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".jpeg" {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("only image extention (png,jpg, or jpeg)"))
 	}
 
 	newUrlProfile, err1 := h.Service.UpdateToProfile(uint(userId), file)

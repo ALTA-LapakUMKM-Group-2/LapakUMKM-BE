@@ -1,7 +1,6 @@
 package delivery
 
 import (
-	"errors"
 	"lapakUmkm/features/productImages"
 	"lapakUmkm/utils/helpers"
 	"net/http"
@@ -26,21 +25,22 @@ func (h *ProductImagesHandler) Create(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	const maxFileSize = 1024 * 1024
-	err1 := c.Request().ParseMultipartForm(maxFileSize)
-	if err1 != nil {
-		return errors.New("file to large, max 1 MB")
-	}
 
 	file, err := c.FormFile("photo_product")
 	if err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
+	}
+
+	size := file.Size
+	if size > maxFileSize {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("file too large (max 1 MB)"))
 	}
 
 	fileExtension := filepath.Ext(file.Filename)
 	fileExtension = strings.ToLower(fileExtension)
 
-	if fileExtension == ".jpg" || fileExtension == ".png" || fileExtension == ".jpeg" {
-		return nil
+	if fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".jpeg" {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("only image extention (png,jpg, or jpeg)"))
 	}
 
 	data, err1 := h.Service.Create(uint(id), file)
