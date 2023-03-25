@@ -61,3 +61,13 @@ func (sf *feedbackService) Delete(id, userId uint) error {
 	}
 	return sf.Data.Destroy(id)
 }
+
+func (sf *feedbackService) GetFeedbackByProductId(productId uint) ([]feedbacks.FeedbackEntity, error){
+	// return sf.Data.SelectFeedbackByProductId(productId)
+	res, err := sf.Data.SelectFeedbackByProductId(productId)
+	if err != nil {
+		log.Println("query error", err.Error())
+		return []feedbacks.FeedbackEntity{}, errors.New("internal problem")
+	}
+	return res, nil
+}
