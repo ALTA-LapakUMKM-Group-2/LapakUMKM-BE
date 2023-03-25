@@ -1,10 +1,13 @@
 package delivery
 
 import (
+	"errors"
 	"lapakUmkm/features/productImages"
 	"lapakUmkm/utils/helpers"
 	"net/http"
+	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -21,12 +24,26 @@ func New(srv productImages.ProductServiceInterface) *ProductImagesHandler {
 
 func (h *ProductImagesHandler) Create(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	f, err := c.FormFile("photo_product")
+
+	const maxFileSize = 1024 * 1024
+	err1 := c.Request().ParseMultipartForm(maxFileSize)
+	if err1 != nil {
+		return errors.New("file to large, max 1 MB")
+	}
+
+	file, err := c.FormFile("photo_product")
 	if err != nil {
 		return err
 	}
 
-	data, err1 := h.Service.Create(uint(id), f)
+	fileExtension := filepath.Ext(file.Filename)
+	fileExtension = strings.ToLower(fileExtension)
+
+	if fileExtension == ".jpg" || fileExtension == ".png" || fileExtension == ".jpeg" {
+		return nil
+	}
+
+	data, err1 := h.Service.Create(uint(id), file)
 	if err1 != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}
