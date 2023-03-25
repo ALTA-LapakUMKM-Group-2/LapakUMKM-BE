@@ -40,3 +40,11 @@ func (qf *query) Edit(feedbackEntity feedbacks.FeedbackEntity, id uint) error {
 	}
 	return nil
 }
+
+func (qf *query) Destroy(id uint) error{
+	var feedback Feedback
+	if err := qf.db.Delete(&feedback, id); err.Error != nil {
+		return err.Error
+	}
+	return nil
+}
