@@ -23,8 +23,8 @@ type DiscussionServiceInterface interface {
 	Update(discussionEntity DiscussionEntity, id, userId uint) (DiscussionEntity, error)
 	Delete(id, userId uint) error
 	GetDiscussionByProductId(productId uint) ([]DiscussionEntity, error)
-	// GetAll() ([]DiscussionEntity, error)
-	// GetById(id uint) (DiscussionEntity, error)
+	GetAll() ([]DiscussionEntity, error)
+	GetById(id uint) (DiscussionEntity, error)
 }
 
 type DiscussionDataInterface interface {
@@ -33,6 +33,6 @@ type DiscussionDataInterface interface {
 	Edit(discussionEntity DiscussionEntity, id uint) error
 	Destroy(id uint) error
 	SelectDiscussionByProductId(productId uint) ([]DiscussionEntity, error)
-	// SelectAll() ([]DiscussionEntity, error)
+	SelectAll() ([]DiscussionEntity, error)
 
 }
