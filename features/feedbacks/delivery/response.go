@@ -82,11 +82,8 @@ func ListFeedbackToFeedbackGetResponse(feedbackEntity []feedbacks.FeedbackEntity
 
 func ListFeedbackGetAllToFeedbackGetResponse(feedbackEntity []feedbacks.FeedbackEntity) []FeedbackPostResponse {
 	var dataRes []FeedbackPostResponse
-	// var fb feedbacks.FeedbackEntity
 	for _, v := range feedbackEntity {
-		// if fb.ParentId == 0 {
 			dataRes = append(dataRes, FeedbackEntityToFeedbackPostResponse(v))
-		// }
 	}
 	return dataRes
 }
