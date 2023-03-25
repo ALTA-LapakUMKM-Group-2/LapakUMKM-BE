@@ -17,3 +17,4 @@ RUN go build -o api15
 
 # menjalankan file executablenya
 CMD ["./api15"]
+

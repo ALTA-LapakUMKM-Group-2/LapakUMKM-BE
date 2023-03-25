@@ -26,6 +26,7 @@ type Product struct {
 	StockRemaining int
 	StockSold      int
 	ProductImage   []data.ProductImages
+	Rating         float64
 }
 
 func ProductEntityToProduct(productEntity products.ProductEntity) Product {
@@ -52,6 +53,7 @@ func ProductToProductEntity(product Product) products.ProductEntity {
 		StockRemaining: product.StockRemaining,
 		StockSold:      product.StockSold,
 		Size:           product.Size,
+		Rating:         product.Rating,
 		CreatedAt:      product.CreatedAt,
 		UpdatedAt:      product.UpdatedAt,
 	}

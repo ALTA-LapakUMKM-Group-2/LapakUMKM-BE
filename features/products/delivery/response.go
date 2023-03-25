@@ -21,6 +21,7 @@ type ProductResponse struct {
 	User           user.UserResponse                     `json:"user"`
 	Category       category.CategoryResponse             `json:"category"`
 	ProductImage   []productsimage.ProductImagesResponse `json:"product_image"`
+	Rating         float64                               `json:"rating"`
 }
 
 func ProductEntityToProductResponse(productEntity products.ProductEntity) ProductResponse {
@@ -34,6 +35,7 @@ func ProductEntityToProductResponse(productEntity products.ProductEntity) Produc
 		StockRemaining: productEntity.StockRemaining,
 		StockSold:      productEntity.StockSold,
 		Size:           productEntity.Size,
+		Rating:         productEntity.Rating,
 	}
 
 	if !reflect.ValueOf(productEntity.User).IsZero() {

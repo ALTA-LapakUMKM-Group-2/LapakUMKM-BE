@@ -19,7 +19,11 @@ func New(db *gorm.DB) products.ProductDataInterface {
 func (q *query) SelectAll(productFilter products.ProductFilter) ([]products.ProductEntity, error) {
 	var products []Product
 
-	query := q.db.Preload("User").Preload("Category").Preload("ProductImage")
+	query := q.db.Preload("User").Preload("Category").Preload("ProductImage").
+		Select("products.*, CASE WHEN avg(feedbacks.rating) IS NULL THEN 0 ELSE avg(feedbacks.rating) END AS rating").
+		Joins("left join feedbacks ON feedbacks.product_id = products.id").
+		Group("products.id")
+
 	if productFilter.PriceMin != 0 {
 		query.Where("products.price >= ?", productFilter.PriceMin)
 	}
@@ -36,6 +40,10 @@ func (q *query) SelectAll(productFilter products.ProductFilter) ([]products.Prod
 		query.Where("products.user_id = ?", productFilter.UserId)
 	}
 
+	if productFilter.Rating != 0 {
+		query.Having("avg(feedbacks.rating) >= ?", productFilter.Rating)
+	}
+
 	if err := query.Find(&products); err.Error != nil {
 		return nil, err.Error
 	}
@@ -44,7 +52,7 @@ func (q *query) SelectAll(productFilter products.ProductFilter) ([]products.Prod
 
 func (q *query) SelectById(id uint) (products.ProductEntity, error) {
 	var product Product
-	if err := q.db.Preload("User").Preload("Category").Preload("ProductImages").
+	if err := q.db.Preload("User").Preload("Category").Preload("ProductImage").
 		First(&product, id); err.Error != nil {
 		return products.ProductEntity{}, err.Error
 	}

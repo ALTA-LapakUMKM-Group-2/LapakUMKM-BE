@@ -22,6 +22,7 @@ type ProductEntity struct {
 	User           users.UserEntity
 	Category       categories.CategoryEntity
 	ProductImage   []productImages.ProductImagesEntity
+	Rating         float64
 }
 
 type ProductFilter struct {

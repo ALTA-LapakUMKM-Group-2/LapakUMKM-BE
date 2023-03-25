@@ -47,7 +47,8 @@ func (h *ProductHandler) GetById(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	productEntity, err := h.Service.GetById(uint(id))
 	if err != nil {
-		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data not found"))
+		str := err.Error()
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(str))
 	}
 	productResponse := ProductEntityToProductResponse(productEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", productResponse))
