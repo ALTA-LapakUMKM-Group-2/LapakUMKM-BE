@@ -63,3 +63,13 @@ func (hf *FeedbackHandler) Delete(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Delete Data Success", nil))
 }
+
+func (hf *FeedbackHandler) GetFeedbackByProductId(c echo.Context) error {
+	productId, _ := strconv.Atoi(c.Param("id"))
+	feedbacks, err := hf.service.GetFeedbackByProductId(uint(productId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
+	}
+	listFeedbacksResponse := ListFeedbackToFeedbackGetResponse(feedbacks)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedback by product id", listFeedbacksResponse))
+}
