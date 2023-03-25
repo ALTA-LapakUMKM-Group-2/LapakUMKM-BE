@@ -83,3 +83,12 @@ func (hf *FeedbackHandler) GetById(c echo.Context) error {
 	feedbackResponse := FeedbackEntityToFeedbackGetResponse(feedbackEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedbacks detail", feedbackResponse))
 }
+
+func (hf *FeedbackHandler) GetAll(c echo.Context) error {
+	feedbackEntity, err := hf.service.GetAll()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
+	}
+	listFeedbackResponse := ListFeedbackGetAllToFeedbackGetResponse(feedbackEntity)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all feedbacks", listFeedbackResponse))
+}
