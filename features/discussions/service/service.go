@@ -1,7 +1,9 @@
 package service
 
 import (
+	// "errors"
 	"lapakUmkm/features/discussions"
+	// "log"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -21,14 +23,14 @@ func New(data discussions.DiscussionDataInterface) discussions.DiscussionService
 func (sd *DiscussionService) Create(discussionEntity discussions.DiscussionEntity) (discussions.DiscussionEntity, error) {
 	//validation
 	sd.validate = validator.New()
-	errValidate := sd.validate.StructExcept(discussionEntity, "User", "Product")
+	errValidate := sd.validate.StructExcept(discussionEntity, "Product", "User")
 	if errValidate != nil {
 		return discussions.DiscussionEntity{}, errValidate
 	}
 	//insertion
-	user_id, err := sd.Data.Insert(discussionEntity)
+	discussionId, err := sd.Data.Store(discussionEntity)
 	if err != nil {
 		return discussions.DiscussionEntity{}, err 
 	}
-	return sd.Data.SelectById(user_id)
+	return sd.Data.SelectById(discussionId)
 }
