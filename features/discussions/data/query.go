@@ -62,3 +62,10 @@ func (qd *query) SelectDiscussionByProductId(productId uint) ([]discussions.Disc
 	return res, nil
 }
 
+func (qd *query) SelectAll() ([]discussions.DiscussionEntity, error) {
+	var discussions []Discussion
+	if err := qd.db.Find(&discussions); err.Error != nil {
+		return nil, err.Error
+	}
+	return ListDiscussionToDiscussionEntity(discussions), nil
+}
