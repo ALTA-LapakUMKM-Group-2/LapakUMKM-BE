@@ -19,6 +19,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	ProductRouter(db, e)
 	ProductImagesRouter(db, e)
 	CartRouter(db, e)
+	FeedbackRouter(db, e)
 }
 
 func index(c echo.Context) error {
