@@ -63,3 +63,11 @@ func (qf *query) SelectFeedbackByProductId(productId uint) ([]feedbacks.Feedback
 	}
 	return res, nil
 }
+
+func (qf *query) SelectAll() ([]feedbacks.FeedbackEntity, error) {
+	var feedbacks []Feedback
+	if err := qf.db.Find(&feedbacks); err.Error != nil {
+		return nil, err.Error
+	}
+	return ListFeedbackProductToFeedbackEntity(feedbacks), nil
+}
