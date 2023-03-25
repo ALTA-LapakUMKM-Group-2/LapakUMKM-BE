@@ -50,3 +50,14 @@ func (sf *feedbackService) Update(feedbackEntity feedbacks.FeedbackEntity, id, u
 	}
 	return sf.Data.SelectById(id)
 }
+
+func (sf *feedbackService) Delete(id, userId uint) error {
+	checkDataExist, err := sf.Data.SelectById(id)
+	if err != nil {
+		return nil
+	}
+	if checkDataExist.UserId != userId {
+		return errors.New("access denied")
+	}
+	return sf.Data.Destroy(id)
+}
