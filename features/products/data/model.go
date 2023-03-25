@@ -3,6 +3,7 @@ package data
 import (
 	"lapakUmkm/features/categories"
 	category "lapakUmkm/features/categories/data"
+	"lapakUmkm/features/productImages"
 	"lapakUmkm/features/productImages/data"
 	"lapakUmkm/features/products"
 	"lapakUmkm/features/users"
@@ -68,6 +69,14 @@ func ProductToProductEntity(product Product) products.ProductEntity {
 		result.Category = categories.CategoryEntity{
 			Category: product.Category.Category,
 		}
+	}
+
+	for _, v := range product.ProductImage {
+		var image = productImages.ProductImagesEntity{
+			Id:    v.ID,
+			Image: v.Image,
+		}
+		result.ProductImage = append(result.ProductImage, image)
 	}
 
 	return result

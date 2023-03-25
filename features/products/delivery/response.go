@@ -51,6 +51,14 @@ func ProductEntityToProductResponse(productEntity products.ProductEntity) Produc
 		}
 	}
 
+	for _, v := range productEntity.ProductImage {
+		var image = productsimage.ProductImagesResponse{
+			Id:    v.Id,
+			Image: v.Image,
+		}
+		productResponse.ProductImage = append(productResponse.ProductImage, image)
+	}
+
 	return productResponse
 }
 

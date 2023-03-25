@@ -1,10 +1,13 @@
 package delivery
 
 import (
+	"errors"
 	"lapakUmkm/app/middlewares"
 	"lapakUmkm/features/users"
 	"lapakUmkm/utils/helpers"
 	"net/http"
+	"path/filepath"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -71,12 +74,26 @@ func (h *UserHandler) UpdateToSeller(c echo.Context) error {
 
 func (h *UserHandler) UpdateToProfile(c echo.Context) error {
 	userId := middlewares.ClaimsToken(c).Id
-	f, err := c.FormFile("photo_profile")
+
+	const maxFileSize = 1024 * 1024
+	err1 := c.Request().ParseMultipartForm(maxFileSize)
+	if err1 != nil {
+		return errors.New("file to large, max 1 MB")
+	}
+
+	file, err := c.FormFile("photo_profile")
 	if err != nil {
 		return err
 	}
 
-	newUrlProfile, err1 := h.Service.UpdateToProfile(uint(userId), f)
+	fileExtension := filepath.Ext(file.Filename)
+	fileExtension = strings.ToLower(fileExtension)
+
+	if fileExtension == ".jpg" || fileExtension == ".png" || fileExtension == ".jpeg" {
+		return nil
+	}
+
+	newUrlProfile, err1 := h.Service.UpdateToProfile(uint(userId), file)
 	if err1 != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}
