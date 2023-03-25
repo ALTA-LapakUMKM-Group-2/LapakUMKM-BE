@@ -36,3 +36,19 @@ func (hf *FeedbackHandler) Create(c echo.Context) error {
 	}
 	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", FeedbackEntityToFeedbackPostResponse(feedback)))
 }
+
+func (hf *FeedbackHandler) Update(c echo.Context) error {
+	var formInput FeedbackPutRequest
+	if err := c.Bind(&formInput); err != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
+	}
+	id, _ := strconv.Atoi(c.Param("id"))
+	userId := middlewares.ClaimsToken(c).Id
+
+	feedback, err := hf.service.Update(FeedbackPutRequestToFeedbackEntity(&formInput), uint(id), uint(userId))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Update Data Success", FeedbackEntityToFeedbackPutResponse(feedback)))
+}
