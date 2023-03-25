@@ -71,3 +71,11 @@ func (sf *feedbackService) GetFeedbackByProductId(productId uint) ([]feedbacks.F
 	}
 	return res, nil
 }
+
+func (sf *feedbackService) GetAll() ([]feedbacks.FeedbackEntity, error) {
+	return sf.Data.SelectAll()
+}
+
+func (sf *feedbackService) GetById(id uint) (feedbacks.FeedbackEntity, error) {
+	return sf.Data.SelectById(id)
+}
