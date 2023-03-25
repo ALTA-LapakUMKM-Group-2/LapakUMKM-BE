@@ -34,3 +34,20 @@ func (sd *DiscussionService) Create(discussionEntity discussions.DiscussionEntit
 	}
 	return sd.Data.SelectById(discussionId)
 }
+
+func (sd *DiscussionService) Update(discussionEntity discussions.DiscussionEntity, id uint, userId uint) (discussions.DiscussionEntity, error) {
+	checkDataExist, errData := sd.Data.SelectById(id)
+	if errData != nil {
+		return checkDataExist, errData
+	}
+
+	if checkDataExist.UserId != userId {
+		return discussions.DiscussionEntity{} , errors.New("data can't be updated")
+	}
+
+	err := sd.Data.Edit(discussionEntity, id)
+	if err != nil {
+		return discussions.DiscussionEntity{}, err
+	}
+	return sd.Data.SelectById(id)
+}
