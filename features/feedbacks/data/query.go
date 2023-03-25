@@ -32,3 +32,11 @@ func (qf *query) SelectById(id uint) (feedbacks.FeedbackEntity, error) {
 	}
 	return FeedbackToFeedbackEntity(feedback), nil
 }
+
+func (qf *query) Edit(feedbackEntity feedbacks.FeedbackEntity, id uint) error {
+	feedback := FeedbackEntityToFeedback(feedbackEntity)
+	if err := qf.db.Where("id", id).Updates(&feedback); err.Error != nil {
+		return err.Error
+	}
+	return nil
+}
