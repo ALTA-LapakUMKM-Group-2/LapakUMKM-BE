@@ -29,6 +29,7 @@ type ProductFilter struct {
 	PriceMax   int
 	CategoryId uint
 	Rating     float64
+	UserId     uint
 }
 
 type ProductServiceInterface interface {
@@ -37,8 +38,6 @@ type ProductServiceInterface interface {
 	Create(productEntity ProductEntity) (ProductEntity, error)
 	Update(productEntity ProductEntity, id, userId uint) (ProductEntity, error)
 	Delete(id, userId uint) error
-	GetProductByUserId(userId uint)
-	GetProductByCategoryId(userId uint)
 }
 
 type ProductDataInterface interface {

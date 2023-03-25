@@ -25,12 +25,14 @@ func (h *ProductHandler) GetAll(c echo.Context) error {
 	priceMax, _ := strconv.Atoi(c.QueryParam("price_max"))
 	rating, _ := strconv.Atoi(c.QueryParam("rating"))
 	categoryId, _ := strconv.Atoi(c.QueryParam("category_id"))
+	userId, _ := strconv.Atoi(c.QueryParam("userId"))
 
 	productFilter := products.ProductFilter{
 		PriceMin:   priceMin,
 		PriceMax:   priceMax,
 		Rating:     float64(rating),
 		CategoryId: uint(categoryId),
+		UserId:     uint(userId),
 	}
 
 	products, err := h.Service.GetAll(productFilter)

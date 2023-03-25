@@ -32,6 +32,10 @@ func (q *query) SelectAll(productFilter products.ProductFilter) ([]products.Prod
 		query.Where("products.category_id = ?", productFilter.CategoryId)
 	}
 
+	if productFilter.UserId != 0 {
+		query.Where("products.user_id = ?", productFilter.UserId)
+	}
+
 	if err := query.Find(&products); err.Error != nil {
 		return nil, err.Error
 	}

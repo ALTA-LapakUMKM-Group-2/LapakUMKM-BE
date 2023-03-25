@@ -71,13 +71,3 @@ func (s *productService) Delete(id, userId uint) error {
 
 	return s.Data.Destroy(id)
 }
-
-// GetProductByCategoryId implements products.ProductServiceInterface
-func (*productService) GetProductByCategoryId(userId uint) {
-	panic("unimplemented")
-}
-
-// GetProductByUserId implements products.ProductServiceInterface
-func (*productService) GetProductByUserId(userId uint) {
-	panic("unimplemented")
-}
