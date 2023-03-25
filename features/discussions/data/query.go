@@ -47,3 +47,17 @@ func (qd *query) Destroy(id uint) error {
 	}
 	return nil
 }
+
+func (qd *query) SelectDiscussionByProductId(productId uint) ([]discussions.DiscussionEntity, error) {
+	discussion := []Discussion{}
+	if err := qd.db.Where("product_id = ?", productId).Preload("User").Order("created_at desc").Find(&discussion).Error; err != nil {
+		return []discussions.DiscussionEntity{}, err
+	}
+	res := []discussions.DiscussionEntity{}
+	for _, v := range discussion {
+		if v.ParentId == 0 {
+			res = append(res, DiscussionToDiscussionEntity(v))
+		}
+	}
+	return res, nil
+}

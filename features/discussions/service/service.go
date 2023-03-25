@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 	"lapakUmkm/features/discussions"
-	// "log"
+	"log"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -61,4 +61,13 @@ func (sd *DiscussionService) Delete(id uint, userId uint) error {
 		return errors.New("access denied")
 	}
 	return sd.Data.Destroy(id)
+}
+
+func (sd *DiscussionService) GetDiscussionByProductId(productId uint) ([]discussions.DiscussionEntity, error){
+	res, err := sd.Data.SelectDiscussionByProductId(productId)
+	if err != nil {
+		log.Println("query error", err.Error())
+		return []discussions.DiscussionEntity{}, errors.New("internal problem")
+	}
+	return res, nil
 }
