@@ -72,8 +72,8 @@ func (sd *DiscussionService) GetDiscussionByProductId(productId uint) ([]discuss
 	return res, nil
 }
 
-func (sd *DiscussionService) GetAll() ([]discussions.DiscussionEntity, error) {
-	return sd.Data.SelectAll()
+func (sd *DiscussionService) GetAll(myId, userId uint) ([]discussions.DiscussionEntity, error) {
+	return sd.Data.SelectAll(userId)
 }
 
 func (sd *DiscussionService) GetById(id uint) (discussions.DiscussionEntity, error) {
