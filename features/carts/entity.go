@@ -5,8 +5,9 @@ type Core struct {
 	UserId       uint
 	ProductId    uint `validate:"required"`
 	ProductName  string
-	ProductPcs   int `validate:"required"`
+	ProductPcs   int64 `validate:"required"`
 	ProductPrice int64
+	SubTotal     int64
 	ProductImage string
 	LapakName    string
 	LapakAddress string
