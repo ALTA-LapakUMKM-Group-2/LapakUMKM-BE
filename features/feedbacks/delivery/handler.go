@@ -90,7 +90,7 @@ func (hf *FeedbackHandler) MyAllFeedback(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
-	listFeedbackResponse := ListFeedbackToFeedbackGetResponse(feedbackEntity)
+	listFeedbackResponse := ListFeedbackToFeedbackResponse(feedbackEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your feedbacks", listFeedbackResponse))
 }
 
