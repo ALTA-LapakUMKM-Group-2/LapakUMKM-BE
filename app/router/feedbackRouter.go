@@ -15,7 +15,7 @@ func FeedbackRouter(db *gorm.DB, e *echo.Echo) {
 	service := _feedbacksService.New(data)
 	handler := _feedbacksHandler.New(service)
 
-	e.GET("/feedbacks", handler.GetAll)
+	e.GET("/feedbacks", handler.MyAllFeedback)
 	e.GET("/feedbacks/:id", handler.GetById)
 	e.GET("/products/:id/feedbacks", handler.GetFeedbackByProductId)
 
