@@ -69,17 +69,19 @@ func (hd *DiscussionHandler) GetDiscussionByProductId(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
-	listDiscussionsResponse := ListDiscussionToDiscussionGetResponse(discussions)
+	listDiscussionsResponse := ListDiscussionEntityToDiscussionResponse(discussions)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedback by product id", listDiscussionsResponse))
 }
 
 func (hd *DiscussionHandler) GetAll(c echo.Context) error {
-	feedbackEntity, err := hd.Service.GetAll()
+	myId := middlewares.ClaimsToken(c).Id
+	userId, _ := strconv.Atoi(c.Param("id"))
+	feedbackEntity, err := hd.Service.GetAll(uint(userId), uint(myId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
 	listDiscussionsResponse := ListDiscussionEntityToDiscussionResponse(feedbackEntity)
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all feedbacks", listDiscussionsResponse))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your discussions", listDiscussionsResponse))
 }
 
 func (hd *DiscussionHandler) GetById(c echo.Context) error {
@@ -88,6 +90,6 @@ func (hd *DiscussionHandler) GetById(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data not found"))
 	}
-	discussionResponse := DiscussionEntityToDiscussionGetResponse(discussionEntity)
+	discussionResponse := DiscussionEntityToDiscussionResponse(discussionEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedbacks detail", discussionResponse))
 }
