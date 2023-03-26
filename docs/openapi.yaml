@@ -1431,6 +1431,7 @@ paths:
             example:
               parent_id: 0
               product_id: 1
+              transaction_id: 1
               rating: 4
               feedback: "bahannya lembut"
                 
@@ -1447,11 +1448,15 @@ paths:
               example:
                 "data": {
                     "id": 1,
+                    "parent_id": 0,
                     "product_id": 1,
+                    "transaction_id": 1,
+                    "user_id": 1,
                     "rating": 4,
                     "feedback": "bahannya lembut"
                     }
                 "message": "success add feedback"
+                "status": true
         400:
           $ref: "#/components/responses/400"
         500:
@@ -1478,6 +1483,7 @@ paths:
                         "parent_id": 0,
                         "user_id": 1,
                         "product_id": 2,
+                        "transaction_id": 1,
                         "rating": 4,
                         "feedback": "bahannya lembut"
                     },
@@ -1486,6 +1492,7 @@ paths:
                         "parent_id": 1,
                         "user_id": 3,
                         "product_id": 2,
+                        "transaction_id": 1,
                         "feedback": "terima kasih sudah berbelanja di toko kami"
                     },
                     {
@@ -1493,6 +1500,7 @@ paths:
                         "parent_id": 0,
                         "user_id": 4,
                         "product_id": 3,
+                        "transaction_id": 1,
                         "rating": 5,
                         "feedback": "harganya sesuai, suka deh sama produknya"
                     },
@@ -1501,10 +1509,12 @@ paths:
                         "parent_id": 2,
                         "user_id": 3,
                         "product_id": 3,
+                        "transaction_id": 1,
                         "feedback": "terima kasih sudah berbelanja di toko kami"
                     },
                   ],                
-                    "message": "success get all feedbacks"
+                    "message": "success get all feedbacks",
+                    "status": true
                 }
         400:
           $ref: "#/components/responses/400"
@@ -1532,12 +1542,14 @@ paths:
                     "data": {
                         "id": 1,
                         "product_id": 2,
+                        "transaction_id": 1,
                         "parent_id": 0,
                         "user_id": 1,
                         "rating": 4,
                         "feedback": "bahannya lembut"
                     },
-                    "message": "success get feedback detail"
+                    "message": "success get feedback detail",
+                    "status": true
                 }
         400:
           $ref: "#/components/responses/400"
@@ -1572,10 +1584,13 @@ paths:
                     "data": {
                         "id": 1,
                         "product_id": 2,
+                        "transaction_id": 1,
+                        "parent_id": 0,
                         "rating": 1,
                         "feedback": "kainnya cepet rusak"
                     },
-                    "message": "success get updated feedback"
+                    "message": "success get updated feedback",
+                    "status": true
                 }
         400:
           $ref: "#/components/responses/400"
@@ -1602,6 +1617,7 @@ paths:
                     type: string
               example:
                 message: "succes delete a feedback"
+                status: true
         400:
           $ref: "#/components/responses/400"
         404:
@@ -1631,6 +1647,9 @@ paths:
                   "data": [
                       {
                           "id": 1,
+                          "product_id": 2,
+                          "transaction_id": 1,
+                          "parent_id": 0,
                           "rating": 3,
                           "feedback": "barangnya bagus",
                           "user": [
@@ -1643,6 +1662,9 @@ paths:
                       },
                       {
                           "id": 2,
+                          "product_id": 2,
+                          "transaction_id": 1,
+                          "parent_id": 0,
                           "rating": 4.5,
                           "feedback": "barangnya lumayan",
                           "user": [
@@ -1790,8 +1812,10 @@ components:
       required:
         - product_id
         - parent_id
+        - transaction_id
         - user_id
-        - Feedback
+        - rating
+        - feedback
       properties:
         id:
           type: integer
@@ -1809,27 +1833,17 @@ components:
           type: integer
           format: int64
           description: the ID of the feedbacks
+        transaction_id:
+          type: integer
+          format: int64
+          description: the ID of the transactions
+        rating: 
+          type: integer
+          format: float64
+          description: rate of the products
         feedback: 
           type: string
           description: the content of the feedbacks
-
-    Product_Type:
-      type: object
-      required:
-        - product_id
-        - product_type
-      properties:
-        id: 
-          type: integer
-          format: int64
-          description: the ID of the product types
-        product_id: 
-          type: integer
-          format: int64
-          description: the ID of the products
-        Product_Type:
-          type: string
-          description: types of products
 
     Cart:
       type: object
