@@ -24,4 +24,7 @@ type ProductTransactionServiceInterface interface {
 
 type ProductTransactionDataInterface interface {
 	Store(transctionEntity ProductTransactionEntity) (uint, error)
+	SelectById(id uint) (ProductTransactionEntity, error)
+	SelectProductPcs(transctionEntity ProductTransactionEntity) ([]ProductTransactionEntity, error)
+	Edit(transactionEntity ProductTransactionEntity, id uint) error
 }
