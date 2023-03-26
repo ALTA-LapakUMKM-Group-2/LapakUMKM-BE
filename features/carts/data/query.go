@@ -55,7 +55,7 @@ func (cq *CartQuery) Add(newCart carts.Core) (carts.Core, error) {
 // MyCart implements carts.CartData
 func (cq *CartQuery) MyCart(userID uint) ([]carts.Core, error) {
 	tmp := []Cart{}
-	tx := cq.db.Where("carts.user_id = ?", userID).Select("carts.id, carts.user_id, carts.product_id, carts.product_pcs, products.product_name AS product_name, products.price AS product_price, MIN(product_images.image) AS product_image, users.lapak_name AS lapak_name, users.address AS lapak_address").Joins("JOIN products ON carts.product_id = products.id").Joins("JOIN users ON products.user_id = users.id").Joins("JOIN product_images ON carts.product_id = product_images.product_id").Group("carts.id").Find(&tmp)
+	tx := cq.db.Where("carts.user_id = ?", userID).Select("carts.id, carts.user_id, carts.product_id, carts.product_pcs, products.product_name AS product_name, products.price AS product_price, MIN(product_images.image) AS product_image, users.shop_name AS lapak_name, users.address AS lapak_address").Joins("JOIN products ON carts.product_id = products.id").Joins("JOIN users ON products.user_id = users.id").Joins("JOIN product_images ON carts.product_id = product_images.product_id").Group("carts.id").Find(&tmp)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -65,6 +65,14 @@ func (cq *CartQuery) MyCart(userID uint) ([]carts.Core, error) {
 // Update implements carts.CartData
 func (cq *CartQuery) Update(updateCart carts.Core) (carts.Core, error) {
 	data := CoreToCart(updateCart)
+	var product product.Product
+	if err := cq.db.Joins("JOIN carts ON carts.product_id = products.id").Where("carts.id = ?", data.ID).Find(&product).Error; err != nil {
+		return carts.Core{}, err
+	}
+	if data.ProductPcs > int64(product.StockRemaining) {
+		return carts.Core{}, errors.New("quantity exceeds available stock")
+	}
+	data.SubTotal = data.ProductPcs * int64(product.Price)
 	tx := cq.db.Model(&Cart{}).Where("id = ? AND user_id = ?", data.ID, data.UserId).Updates(&data)
 	if tx.RowsAffected < 1 {
 		return carts.Core{}, errors.New("data not found")
