@@ -8,7 +8,7 @@ import (
 
 type DiscussionEntity struct {
 	Id         uint
-	ProductId  uint
+	ProductId  uint `validate:"required"`
 	Product    products.ProductEntity
 	ParentId   uint
 	Discussion string `validate:"required"`
