@@ -31,7 +31,8 @@ paths:
                 {
                   fullname: "reza2",
                   email: "reza2@mail.com",
-                  password: "pekanbaru"
+                  address: "pekanbaru",
+                  phone_number: "0888888"
                 }
       responses:
         '200':
@@ -48,6 +49,8 @@ paths:
                       id: 1,
                       fullname: "reza2",
                       email: "reza2@mail.com",
+                      address: "pekanbaru",
+                      phone_number: "0888888",
                       role: "user"
                     }
         '401' :
@@ -518,8 +521,8 @@ paths:
                   }
                 message: "-"
                 status: true
-        400:
-          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"  
 
@@ -542,8 +545,8 @@ paths:
               example:
                 message: "-"
                 status: true
-        400:
-          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500" 
  
@@ -854,6 +857,8 @@ paths:
                 status: true
         400:
           $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"  
 
@@ -878,29 +883,32 @@ paths:
                 status: true
         400:
           $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500" 
 
 ####################################
-#  BASKETS
+#  CARTS
 ####################################
-  /baskets:
+  /carts:
     post:
       tags: 
-        - Basket
-      summary: add to basket
-      description: add product to basket
+        - Cart
+      summary: add to cart
+      description: add product to cart
       security:
         - JWTAuth: []
       requestBody:
-        description: add a product to basket
+        description: add a product to cart
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Basket"
+              $ref: "#/components/schemas/Cart"
             example:
               product_id: 1
+              product_pcs: 1
       responses:
         201:
           description: "success insert data"
@@ -917,21 +925,21 @@ paths:
                     "product_id": 1,
                     "product_pcs": 1,
                     }
-                "message": "success add product to basket"
+                "message": "success add product to cart"
         400:
           $ref: "#/components/responses/400"
         500:
           $ref: "#/components/responses/500"
     get:
       tags:
-        - Basket
-      summary: get all basket
-      description: get all basket by user id
+        - Cart
+      summary: get all cart
+      description: get all cart by user id
       security:
         - JWTAuth: []
       responses:
         200:
-          description: "get all basket"
+          description: "get all cart"
           content:
             application/json:
               schema:
@@ -984,19 +992,19 @@ paths:
                       "lapak_adress": "Medan"
                     },
                   ],                
-                    "message": "success get all basket"
+                    "message": "success get all cart"
                 }
         400:
           $ref: "#/components/responses/400"
         500:
           $ref: "#/components/responses/500"
-  /baskets/{id}:
+  /carts/{id}:
     parameters:
       - $ref: "#/components/parameters/paramId"
     put:
       tags:
-        - Basket
-      summary: update a basket
+        - Cart
+      summary: update a cart
       security:
         - JWTAuth: []
       requestBody:
@@ -1004,12 +1012,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Basket"
+              $ref: "#/components/schemas/Cart"
             example:
               product_pcs: 2
       responses:
         200:
-          description: "get an updated basket"
+          description: "get an updated cart"
           content:
             application/json:
               schema:
@@ -1020,16 +1028,18 @@ paths:
                         "id": 1,
                         "product_pcs": 2
                     },
-                    "message": "success get updated basket"
+                    "message": "success get updated cart"
                 }
         400:
           $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
     delete:
       tags:
-        - Basket
-      summary: delete a basket
+        - Cart
+      summary: delete a cart
       security:
         - JWTAuth: []
       responses:
@@ -1043,9 +1053,11 @@ paths:
                   message:
                     type: string
               example:
-                message: "succes delete a basket"
+                message: "succes delete a cart"
         400:
           $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500" 
 
@@ -1057,7 +1069,7 @@ paths:
       tags: 
         - Transaction
       summary: add transaction
-      description: add transaction product from the basket
+      description: add transaction product from the cart
       security:
         - JWTAuth: []
       requestBody:
@@ -1068,7 +1080,7 @@ paths:
             schema:
               $ref: "#/components/schemas/Transaction"
             example:
-              basket_id: 1
+              cart_id: 1
       responses:
         201:
           description: "success insert data"
@@ -1087,7 +1099,7 @@ paths:
                     "payment_link": "https://www.midtrans.com",
                     "total_payment": 320000
                     }
-                "message": "success add product to basket"
+                "message": "success add product to cart"
         400:
           $ref: "#/components/responses/400"
         500:
@@ -1164,6 +1176,7 @@ paths:
             schema:
               $ref: "#/components/schemas/Discussion"
             example:
+              parent_id: 0
               product_id: 1
               discussion: "barang ini ready gan?"
                 
@@ -1180,9 +1193,18 @@ paths:
               example:
                 "data": {
                     "id": 1,
-                    "discussion": "barang ini ready gan?"
-                    }
+                    "parent_id": 0,
+                    "user_id": 2,
+                    "product_id": 1,
+                    "discussion": "barang ini ready gan?",
+                    "user": {
+                        "id": 1,
+                        "username": "jamal",
+                        "profile_picture": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                    }                          
+                }
                 "message": "success add discussion"
+                "status": true
         400:
           $ref: "#/components/responses/400"
         500:
@@ -1191,12 +1213,12 @@ paths:
     get:
       tags:
         - Discussion
-      summary: get all discussions 
+      summary: get all login users discussions 
       security:
         - JWTAuth: []
       responses:
         200:
-          description: "get all discussions"
+          description: "all your discussions"
           content:
             application/json:
               schema:
@@ -1220,6 +1242,7 @@ paths:
                     },
                     {
                         "id": 3,
+                        "parent_id": 0,
                         "product_id": 3,
                         "user_id": 4,
                         "discussion": "boleh nego gan?"
@@ -1232,7 +1255,8 @@ paths:
                         "discussion": "gak. harga pas"
                     },
                   ],                
-                    "message": "success get all discussions"
+                    "message": "success get all discussions",
+                    "status": true
                 }
         400:
           $ref: "#/components/responses/400"
@@ -1264,7 +1288,8 @@ paths:
                         "user_id": 1,
                         "discussion": "barang ini ready gan?"
                     },
-                    "message": "success get discussion detail"
+                    "message": "success get discussion detail",
+                    "status": true
                 }
         400:
           $ref: "#/components/responses/400"
@@ -1287,7 +1312,7 @@ paths:
               discussion: "boleh nego kak?"
       responses:
         200:
-          description: "get an updated feedback"
+          description: "get an updated discussion"
           content:
             application/json:
               schema:
@@ -1296,6 +1321,7 @@ paths:
                 {
                     "data": {
                         "id": 2,
+                        "parent_id": 0,
                         "product_id": 2,
                         "discussion": "boleh nego kak?"
                     },
@@ -1303,6 +1329,8 @@ paths:
                 }
         400:
           $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"  
 
@@ -1326,6 +1354,8 @@ paths:
                 message: "succes delete a discussion"
         400:
           $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"       
 
@@ -1350,6 +1380,7 @@ paths:
                   "data": [
                       {
                           "id": 1,
+                          "parent_id": 0,
                           "discussion": "barangnya ready gan?",
                           "user": [
                             {
@@ -1361,6 +1392,7 @@ paths:
                       },
                       {
                           "id": 2,
+                          "parent_id": 0,
                           "discussion": "boleh nego kak?",
                           "user": [
                             {
@@ -1397,7 +1429,9 @@ paths:
             schema:
               $ref: "#/components/schemas/Feedback"
             example:
+              parent_id: 0
               product_id: 1
+              transaction_id: 1
               rating: 4
               feedback: "bahannya lembut"
                 
@@ -1414,10 +1448,15 @@ paths:
               example:
                 "data": {
                     "id": 1,
+                    "parent_id": 0,
+                    "product_id": 1,
+                    "transaction_id": 1,
+                    "user_id": 1,
                     "rating": 4,
                     "feedback": "bahannya lembut"
                     }
                 "message": "success add feedback"
+                "status": true
         400:
           $ref: "#/components/responses/400"
         500:
@@ -1444,6 +1483,7 @@ paths:
                         "parent_id": 0,
                         "user_id": 1,
                         "product_id": 2,
+                        "transaction_id": 1,
                         "rating": 4,
                         "feedback": "bahannya lembut"
                     },
@@ -1452,6 +1492,7 @@ paths:
                         "parent_id": 1,
                         "user_id": 3,
                         "product_id": 2,
+                        "transaction_id": 1,
                         "feedback": "terima kasih sudah berbelanja di toko kami"
                     },
                     {
@@ -1459,6 +1500,7 @@ paths:
                         "parent_id": 0,
                         "user_id": 4,
                         "product_id": 3,
+                        "transaction_id": 1,
                         "rating": 5,
                         "feedback": "harganya sesuai, suka deh sama produknya"
                     },
@@ -1467,10 +1509,12 @@ paths:
                         "parent_id": 2,
                         "user_id": 3,
                         "product_id": 3,
+                        "transaction_id": 1,
                         "feedback": "terima kasih sudah berbelanja di toko kami"
                     },
                   ],                
-                    "message": "success get all feedbacks"
+                    "message": "success get all feedbacks",
+                    "status": true
                 }
         400:
           $ref: "#/components/responses/400"
@@ -1498,12 +1542,14 @@ paths:
                     "data": {
                         "id": 1,
                         "product_id": 2,
+                        "transaction_id": 1,
                         "parent_id": 0,
                         "user_id": 1,
                         "rating": 4,
                         "feedback": "bahannya lembut"
                     },
-                    "message": "success get feedback detail"
+                    "message": "success get feedback detail",
+                    "status": true
                 }
         400:
           $ref: "#/components/responses/400"
@@ -1538,13 +1584,18 @@ paths:
                     "data": {
                         "id": 1,
                         "product_id": 2,
+                        "transaction_id": 1,
+                        "parent_id": 0,
                         "rating": 1,
                         "feedback": "kainnya cepet rusak"
                     },
-                    "message": "success get updated feedback"
+                    "message": "success get updated feedback",
+                    "status": true
                 }
         400:
           $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"  
 
@@ -1566,8 +1617,11 @@ paths:
                     type: string
               example:
                 message: "succes delete a feedback"
+                status: true
         400:
           $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500" 
       
@@ -1593,6 +1647,9 @@ paths:
                   "data": [
                       {
                           "id": 1,
+                          "product_id": 2,
+                          "transaction_id": 1,
+                          "parent_id": 0,
                           "rating": 3,
                           "feedback": "barangnya bagus",
                           "user": [
@@ -1605,6 +1662,9 @@ paths:
                       },
                       {
                           "id": 2,
+                          "product_id": 2,
+                          "transaction_id": 1,
+                          "parent_id": 0,
                           "rating": 4.5,
                           "feedback": "barangnya lumayan",
                           "user": [
@@ -1752,8 +1812,10 @@ components:
       required:
         - product_id
         - parent_id
+        - transaction_id
         - user_id
-        - Feedback
+        - rating
+        - feedback
       properties:
         id:
           type: integer
@@ -1771,37 +1833,28 @@ components:
           type: integer
           format: int64
           description: the ID of the feedbacks
+        transaction_id:
+          type: integer
+          format: int64
+          description: the ID of the transactions
+        rating: 
+          type: integer
+          format: float64
+          description: rate of the products
         feedback: 
           type: string
           description: the content of the feedbacks
 
-    Product_Type:
+    Cart:
       type: object
       required:
         - product_id
-        - product_type
-      properties:
-        id: 
-          type: integer
-          format: int64
-          description: the ID of the product types
-        product_id: 
-          type: integer
-          format: int64
-          description: the ID of the products
-        Product_Type:
-          type: string
-          description: types of products
-
-    Basket:
-      type: object
-      required:
-        - product_id
+        - product_pcs
       properties:
         id:
           type: integer
           format: int64
-          description: the ID of the basket
+          description: the ID of the cart
         product_id:
           type: integer
           format: int64
@@ -1834,7 +1887,7 @@ components:
     Transaction:
       type: object
       required:
-        - basket_id
+        - cart_id
       properties:
         id:
           type: integer
