@@ -4,7 +4,6 @@ import (
 	"lapakUmkm/app/middlewares"
 	"lapakUmkm/features/feedbacks"
 	"lapakUmkm/utils/helpers"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -34,7 +33,7 @@ func (hf *FeedbackHandler) Create(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
-	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", FeedbackEntityToFeedbackPostResponse(feedback)))
+	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", FeedbackEntityToFeedbackResponse(feedback)))
 }
 
 func (hf *FeedbackHandler) Update(c echo.Context) error {
@@ -50,7 +49,7 @@ func (hf *FeedbackHandler) Update(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Update Data Success", FeedbackEntityToFeedbackPutResponse(feedback)))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Update Data Success", FeedbackEntityToFeedbackResponse(feedback)))
 }
 
 func (hf *FeedbackHandler) Delete(c echo.Context) error {
@@ -70,7 +69,7 @@ func (hf *FeedbackHandler) GetFeedbackByProductId(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
-	listFeedbacksResponse := ListFeedbackToFeedbackGetResponse(feedbacks)
+	listFeedbacksResponse := ListFeedbackToFeedbackResponse(feedbacks)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedback by product id", listFeedbacksResponse))
 }
 
@@ -80,35 +79,18 @@ func (hf *FeedbackHandler) GetById(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data not found"))
 	}
-	feedbackResponse := FeedbackEntityToFeedbackGetResponse(feedbackEntity)
+	feedbackResponse := FeedbackEntityToFeedbackResponse(feedbackEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedbacks detail", feedbackResponse))
 }
 
-func (hf *FeedbackHandler) GetAll(c echo.Context) error {
-	feedbackEntity, err := hf.service.GetAll()
+func (hf *FeedbackHandler) MyAllFeedback(c echo.Context) error {
+	myId := middlewares.ClaimsToken(c).Id
+	userId, _ := strconv.Atoi(c.Param("id"))
+	feedbackEntity, err := hf.service.MyAllFeedback(uint(userId), uint(myId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
-	listFeedbackResponse := ListFeedbackGetAllToFeedbackGetResponse(feedbackEntity)
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all feedbacks", listFeedbackResponse))
+	listFeedbackResponse := ListFeedbackToFeedbackResponse(feedbackEntity)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your feedbacks", listFeedbackResponse))
 }
 
-func (hf *FeedbackHandler) GetRating(productId uint) (uint, error) {
-	sum := uint(0)
-	rFeedback, err := hf.service.GetFeedbackByProductId(productId)
-	if err != nil {
-		return 0, err
-	}
-	for _, feedback := range rFeedback {
-		sum += uint(feedback.Rating)
-		if len(rFeedback) == 0 {
-			log.Println("No ratings found.")
-			return 0, nil
-		}
-	}
-
-	if sum == 0 {
-		return 0, nil
-	}
-	return uint(sum) / uint(len(rFeedback)), nil
-}
