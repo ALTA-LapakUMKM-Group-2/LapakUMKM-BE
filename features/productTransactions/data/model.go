@@ -57,3 +57,11 @@ func TransactionToTransactionEntity(transaction ProductTransaction) productTrans
 	}
 	return result
 }
+
+func ListTransactionToTransactionEntity(transaction []ProductTransaction) []productTransactions.ProductTransactionEntity{
+	var transactionEntity []productTransactions.ProductTransactionEntity
+	for _, v := range transaction {
+		transactionEntity = append(transactionEntity, TransactionToTransactionEntity(v))
+	}
+	return transactionEntity
+}
