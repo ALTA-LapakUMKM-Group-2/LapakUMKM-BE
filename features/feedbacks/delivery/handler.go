@@ -69,7 +69,7 @@ func (hf *FeedbackHandler) GetFeedbackByProductId(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
-	listFeedbacksResponse := ListFeedbackToFeedbackGetResponse(feedbacks)
+	listFeedbacksResponse := ListFeedbackToFeedbackResponse(feedbacks)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedback by product id", listFeedbacksResponse))
 }
 
@@ -79,7 +79,7 @@ func (hf *FeedbackHandler) GetById(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data not found"))
 	}
-	feedbackResponse := FeedbackEntityToFeedbackGetResponse(feedbackEntity)
+	feedbackResponse := FeedbackEntityToFeedbackResponse(feedbackEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedbacks detail", feedbackResponse))
 }
 
@@ -90,7 +90,7 @@ func (hf *FeedbackHandler) MyAllFeedback(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
-	listFeedbackResponse := ListFeedbackGetAllToFeedbackGetResponse(feedbackEntity)
+	listFeedbackResponse := ListFeedbackToFeedbackGetResponse(feedbackEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your feedbacks", listFeedbackResponse))
 }
 

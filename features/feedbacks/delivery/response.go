@@ -6,30 +6,34 @@ import (
 	"reflect"
 	// product "lapakUmkm/features/products/delivery"
 	user "lapakUmkm/features/users/delivery"
-	
 )
 
-type FeedbackPostResponse struct {
-	Id        uint                    `json:"id"`
-	ParentId uint `json:"parent_id"`
-	UserId    uint                    `json:"user_id"`
-	// User      user.UserResponse       `json:"user"`
-	ProductId uint `json:"product_id"`
-	// Product   product.ProductResponse `json:"product"`
-	Rating   float64 `json:"rating"`
-	Feedback string  `json:"feedback"`
+type FeedbackResponse struct {
+	Id            uint              `json:"id"`
+	ParentId      uint              `json:"parent_id"`
+	TransactionId uint              `json:"transaction_id"`
+	ProductId     uint              `json:"product_id"`
+	Rating        float64           `json:"rating"`
+	Feedback      string            `json:"feedback"`
+	User          user.UserResponse `json:"user"`
 }
 
-func FeedbackEntityToFeedbackPostResponse(feedbackEntity feedbacks.FeedbackEntity) FeedbackPostResponse {
-	feedbackPostResponse := FeedbackPostResponse{
-		Id:        feedbackEntity.Id,
-		ParentId: feedbackEntity.ParentId,
-		UserId:    feedbackEntity.UserId,
-		ProductId: feedbackEntity.ProductId,
-		Rating:    feedbackEntity.Rating,
-		Feedback:  feedbackEntity.Feedback,
+func FeedbackEntityToFeedbackResponse(feedbackEntity feedbacks.FeedbackEntity) FeedbackResponse {
+	feedbackResponse := FeedbackResponse{
+		Id:            feedbackEntity.Id,
+		ParentId:      feedbackEntity.ParentId,
+		TransactionId: feedbackEntity.TransactionId,
+		ProductId:     feedbackEntity.ProductId,
+		Rating:        feedbackEntity.Rating,
+		Feedback:      feedbackEntity.Feedback,
 	}
-	return feedbackPostResponse
+	if !reflect.ValueOf(feedbackEntity.User).IsZero() {
+		feedbackResponse.User = user.UserResponse{
+			FullName:     feedbackEntity.User.FullName,
+			PhotoProfile: feedbackEntity.User.PhotoProfile,
+		}
+	}
+	return feedbackResponse
 }
 
 type FeedbackPutResponse struct {
@@ -56,13 +60,13 @@ type FeedbackGetResponse struct {
 
 func FeedbackEntityToFeedbackGetResponse(feedbackEntity feedbacks.FeedbackEntity) FeedbackGetResponse {
 	feedbackGetResponse := FeedbackGetResponse{
-		Id: feedbackEntity.Id,
-		Rating: feedbackEntity.Rating,
+		Id:       feedbackEntity.Id,
+		Rating:   feedbackEntity.Rating,
 		Feedback: feedbackEntity.Feedback,
 	}
 	if !reflect.ValueOf(feedbackEntity.User).IsZero() {
 		feedbackGetResponse.User = user.UserResponse{
-			FullName: feedbackEntity.User.FullName,
+			FullName:     feedbackEntity.User.FullName,
 			PhotoProfile: feedbackEntity.User.PhotoProfile,
 		}
 	}
@@ -80,10 +84,12 @@ func ListFeedbackToFeedbackGetResponse(feedbackEntity []feedbacks.FeedbackEntity
 	return dataRes
 }
 
-func ListFeedbackGetAllToFeedbackGetResponse(feedbackEntity []feedbacks.FeedbackEntity) []FeedbackPostResponse {
-	var dataRes []FeedbackPostResponse
+func ListFeedbackToFeedbackResponse(feedbackEntity []feedbacks.FeedbackEntity) []FeedbackResponse {
+	var dataRes []FeedbackResponse
 	for _, v := range feedbackEntity {
-			dataRes = append(dataRes, FeedbackEntityToFeedbackPostResponse(v))
+		dataRes = append(dataRes, FeedbackEntityToFeedbackResponse(v))
 	}
 	return dataRes
 }
+
+
