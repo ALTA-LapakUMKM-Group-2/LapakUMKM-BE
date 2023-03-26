@@ -5,8 +5,9 @@ type Core struct {
 	UserId       uint
 	ProductId    uint `validate:"required"`
 	ProductName  string
-	ProductPcs   int
+	ProductPcs   int64 `validate:"required"`
 	ProductPrice int64
+	SubTotal     int64
 	ProductImage string
 	LapakName    string
 	LapakAddress string
@@ -14,8 +15,14 @@ type Core struct {
 
 type CartService interface {
 	Add(newCart Core) (Core, error)
+	MyCart(userID uint) ([]Core, error)
+	Update(updateCart Core) (Core, error)
+	Delete(userID, cartID uint) error
 }
 
 type CartData interface {
 	Add(newCart Core) (Core, error)
+	MyCart(userID uint) ([]Core, error)
+	Update(updateCart Core) (Core, error)
+	Delete(userID, cartID uint) error
 }

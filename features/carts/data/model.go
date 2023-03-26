@@ -15,8 +15,9 @@ type Cart struct {
 	ProductId    uint
 	Product      *dataProduct.Product `gorm:"foreignKey:ProductId"`
 	ProductName  string
-	ProductPcs   int
+	ProductPcs   int64
 	ProductPrice int64
+	SubTotal     int64
 	ProductImage string
 	LapakName    string
 	LapakAddress string
@@ -30,6 +31,7 @@ func CoreToCart(data carts.Core) Cart {
 		ProductName:  data.ProductName,
 		ProductPcs:   data.ProductPcs,
 		ProductPrice: data.ProductPrice,
+		SubTotal:     data.SubTotal,
 		ProductImage: data.ProductImage,
 		LapakName:    data.LapakName,
 		LapakAddress: data.LapakAddress,
@@ -44,8 +46,17 @@ func CartToCore(data Cart) carts.Core {
 		ProductName:  data.ProductName,
 		ProductPcs:   data.ProductPcs,
 		ProductPrice: data.ProductPrice,
+		SubTotal:     data.SubTotal,
 		ProductImage: data.ProductImage,
 		LapakName:    data.LapakName,
 		LapakAddress: data.LapakAddress,
 	}
+}
+
+func ListCartToCore(data []Cart) []carts.Core {
+	var dataCore []carts.Core
+	for _, v := range data {
+		dataCore = append(dataCore, CartToCore(v))
+	}
+	return dataCore
 }

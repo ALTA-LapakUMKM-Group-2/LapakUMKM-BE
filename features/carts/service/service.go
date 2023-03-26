@@ -19,15 +19,41 @@ func New(data carts.CartData) carts.CartService {
 }
 
 // Add implements carts.CartService
-func (bas *CartService) Add(newCart carts.Core) (carts.Core, error) {
-	// Check input validation
-	errVld := bas.vld.Struct(newCart)
+func (cs *CartService) Add(newCart carts.Core) (carts.Core, error) {
+	errVld := cs.vld.Struct(newCart)
 	if errVld != nil {
 		return carts.Core{}, errVld
 	}
-	tmp, err := bas.data.Add(newCart)
+	tmp, err := cs.data.Add(newCart)
 	if err != nil {
 		return carts.Core{}, err
 	}
 	return tmp, nil
+}
+
+// MyCart implements carts.CartService
+func (cs *CartService) MyCart(userID uint) ([]carts.Core, error) {
+	tmp, err := cs.data.MyCart(userID)
+	if err != nil {
+		return nil, err
+	}
+	return tmp, nil
+}
+
+// Update implements carts.CartService
+func (cs *CartService) Update(updateCart carts.Core) (carts.Core, error) {
+	tmp, err := cs.data.Update(updateCart)
+	if err != nil {
+		return carts.Core{}, err
+	}
+	return tmp, nil
+}
+
+// Delete implements carts.CartService
+func (cs *CartService) Delete(userID, cartID uint) error {
+	err := cs.data.Delete(userID, cartID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
