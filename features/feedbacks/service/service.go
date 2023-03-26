@@ -41,7 +41,7 @@ func (sf *feedbackService) Update(feedbackEntity feedbacks.FeedbackEntity, id, u
 	}
 
 	if checkDataExist.UserId != userId {
-		return feedbacks.FeedbackEntity{} , errors.New("data can't be updated")
+		return feedbacks.FeedbackEntity{} , errors.New("access denied")
 	}
 
 	err := sf.Data.Edit(feedbackEntity, id)
@@ -72,8 +72,8 @@ func (sf *feedbackService) GetFeedbackByProductId(productId uint) ([]feedbacks.F
 	return res, nil
 }
 
-func (sf *feedbackService) GetAll() ([]feedbacks.FeedbackEntity, error) {
-	return sf.Data.SelectAll()
+func (sf *feedbackService) MyAllFeedback(myId, userId uint) ([]feedbacks.FeedbackEntity, error) {
+	return sf.Data.SelectAll(userId)
 }
 
 func (sf *feedbackService) GetById(id uint) (feedbacks.FeedbackEntity, error) {
