@@ -4,8 +4,6 @@ import (
 	"errors"
 	"lapakUmkm/features/feedbacks"
 	"log"
-
-	// fb "lapakUmkm/features/feedbacks/data"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -63,7 +61,6 @@ func (sf *feedbackService) Delete(id, userId uint) error {
 }
 
 func (sf *feedbackService) GetFeedbackByProductId(productId uint) ([]feedbacks.FeedbackEntity, error){
-	// return sf.Data.SelectFeedbackByProductId(productId)
 	res, err := sf.Data.SelectFeedbackByProductId(productId)
 	if err != nil {
 		log.Println("query error", err.Error())
