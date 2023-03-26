@@ -1,30 +1,34 @@
 package feedbacks
 
 import (
+	"lapakUmkm/features/productTransactions"
 	"lapakUmkm/features/products"
 	"lapakUmkm/features/users"
 	"time"
 )
 
 type FeedbackEntity struct {
-	Id        uint
-	ParentId  uint
-	UserId    uint
-	User      users.UserEntity
-	ProductId uint
-	Product   products.ProductEntity
-	Rating    float64
-	Feedback  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	Id                 uint
+	ParentId           uint
+	UserId             uint
+	User               users.UserEntity
+	ProductId          uint
+	Product            products.ProductEntity
+	TransactionId      uint
+	ProductTransaction productTransactions.ProductTransactionEntity
+	Rating             float64
+	Feedback           string
+	CreatedAt          time.Time
+	UpdatedAt          time.Time
 }
+
 
 type FeedbackServiceInterface interface {
 	Create(feedbackEntity FeedbackEntity) (FeedbackEntity, error)
 	Update(feedbackEntity FeedbackEntity, id, userId uint) (FeedbackEntity, error)
 	Delete(id, userId uint) error
 	GetFeedbackByProductId(productId uint) ([]FeedbackEntity, error)
-	GetAll() ([]FeedbackEntity, error)
+	MyAllFeedback(myId, userId uint) ([]FeedbackEntity, error)
 	GetById(id uint) (FeedbackEntity, error)
 }
 
@@ -34,5 +38,5 @@ type FeedbackDataInterface interface {
 	Edit(feedbackEntity FeedbackEntity, id uint) error
 	Destroy(id uint) error
 	SelectFeedbackByProductId(productId uint) ([]FeedbackEntity, error)
-	SelectAll() ([]FeedbackEntity, error)
+	SelectAll(userId uint) ([]FeedbackEntity, error)
 }
