@@ -32,5 +32,5 @@ func (ht *TransactionHandler) Create(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
-	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", FeedbackEntityToFeedbackResponse(feedback)))
+	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", TransactionEntityToTransactionResponse(transaction)))
 }
