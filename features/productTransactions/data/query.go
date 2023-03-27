@@ -2,6 +2,7 @@ package data
 
 import (
 	"lapakUmkm/features/productTransactions"
+	// "lapakUmkm/features/products"
 
 	"gorm.io/gorm"
 )
@@ -18,6 +19,8 @@ func New(db *gorm.DB) productTransactions.ProductTransactionDataInterface{
 
 func (qt *query) Store(transactionEntity productTransactions.ProductTransactionEntity) (uint, error) {
 	transaction := TransactionEntityToTransaction(transactionEntity)
+	// var product 
+	// if 
 	if err := qt.db.Create(&transaction); err.Error != nil {
 		return 0, err.Error
 	}
@@ -38,13 +41,4 @@ func (qt *query) Edit(transactionEntity productTransactions.ProductTransactionEn
 		return err.Error
 	}
 	return nil
-}
-
-func (qt *query) SelectProductPcs(transactionEntity productTransactions.ProductTransactionEntity) ([]productTransactions.ProductTransactionEntity, error) {
-	var transactions []ProductTransaction
-	err := qt.db.Where("product_id = ? AND total_product = ?", transactionEntity.ProductId, transactionEntity.TotalProduct).Find(&transactions)
-	if err.Error != nil {
-		return nil, err.Error
-	}
-	return ListTransactionToTransactionEntity(transactions), nil
 }

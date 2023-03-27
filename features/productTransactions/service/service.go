@@ -2,25 +2,25 @@ package service
 
 import (
 	"lapakUmkm/features/productTransactions"
-	"lapakUmkm/utils/helpers"
-	"strconv"
+	// "lapakUmkm/utils/helpers"
+	// "strconv"
 
 	"github.com/go-playground/validator/v10"
 )
 
-type TransactionService struct {
+type transactionService struct {
 	Data     productTransactions.ProductTransactionDataInterface
 	validate *validator.Validate
 }
 
 func New(data productTransactions.ProductTransactionDataInterface) productTransactions.ProductTransactionServiceInterface {
-	return &TransactionService{
+	return &transactionService{
 		Data:     data,
 		validate: validator.New(),
 	}
 }
 
-func (st *TransactionService) Create(transactionEntity productTransactions.ProductTransactionEntity) (productTransactions.ProductTransactionEntity, error) {
+func (st *transactionService) Create(transactionEntity productTransactions.ProductTransactionEntity) (productTransactions.ProductTransactionEntity, error) {
 	st.validate = validator.New()
 	errValidate := st.validate.StructExcept(transactionEntity, "User", "Product")
 	if errValidate != nil {
@@ -31,33 +31,37 @@ func (st *TransactionService) Create(transactionEntity productTransactions.Produ
 		return productTransactions.ProductTransactionEntity{}, err
 	}
 
-	totalProduct := transactionEntity.TotalProduct
-	totalPayment := transactionEntity.TotalPayment
+	// totalProduct := transactionEntity.TotalProduct
+	// totalPayment := transactionEntity.TotalPayment
 
-	//call midtrans
-	postData := map[string]any{
-		"order_id":  "lapakumkm-" + strconv.Itoa(int(transactionId)),
-		"nominal":   totalPayment,
-		"firstname": "LapakUMKM",
-		"lastname":  "Room",
-		"email":     "email" + strconv.Itoa(int(transactionId)) + "@gmail.com",
-		"phone":     "000",
-	}
+	// //call midtrans
+	// postData := map[string]any{
+	// 	"order_id":  "lapakumkm-" + strconv.Itoa(int(transactionId)),
+	// 	"nominal":   totalPayment,
+	// 	"firstname": "LapakUMKM",
+	// 	"lastname":  "Product",
+	// 	"email":     "email" + strconv.Itoa(int(transactionId)) + "@gmail.com",
+	// 	"phone":     "000",
+	// }
 
-	paymentLink, err1 := helpers.PostMidtrans(postData)
-	if err1 != nil {
-		return productTransactions.ProductTransactionEntity{}, err
-	} else {
-		//midtrans
-		update := productTransactions.ProductTransactionEntity{
-			TotalProduct:  totalProduct,
-			TotalPayment:  totalPayment,
-			PaymentStatus: "pending",
-			PaymentLink:   paymentLink,
-		}
-		//if ok
-		st.Data.Edit(update, transactionId)
-	}
+	// paymentLink, err1 := helpers.PostMidtrans(postData)
+	// if err1 != nil {
+	// 	return productTransactions.ProductTransactionEntity{}, err
+	// } else {
+	// 	//midtrans
+	// 	update := productTransactions.ProductTransactionEntity{
+	// 		TotalProduct:  totalProduct,
+	// 		TotalPayment:  totalPayment,
+	// 		PaymentStatus: "pending",
+	// 		PaymentLink:   paymentLink,
+	// 	}
+	// 	//if ok
+	// 	st.Data.Edit(update, transactionId)
+	// }
 
 	return st.Data.SelectById(transactionId)
+}
+
+func (st *transactionService) MyTransactionHistory(myId, userId uint) ([]productTransactions.ProductTransactionEntity, error) {
+	return st.Data.SelectAll(userId)
 }

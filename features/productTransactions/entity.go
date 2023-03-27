@@ -20,11 +20,12 @@ type ProductTransactionEntity struct {
 
 type ProductTransactionServiceInterface interface {
 	Create(transctionEntity ProductTransactionEntity) (ProductTransactionEntity, error)
+	MyTransactionHistory(myId, userId uint) ([]ProductTransactionEntity, error)
 }
 
 type ProductTransactionDataInterface interface {
 	Store(transctionEntity ProductTransactionEntity) (uint, error)
 	SelectById(id uint) (ProductTransactionEntity, error)
-	SelectProductPcs(transctionEntity ProductTransactionEntity) ([]ProductTransactionEntity, error)
 	Edit(transactionEntity ProductTransactionEntity, id uint) error
+	SelectAll(userId uint) ([]ProductTransactionEntity, error)
 }

@@ -26,7 +26,7 @@ type ProductTransaction struct {
 
 func TransactionEntityToTransaction(transactionEntity productTransactions.ProductTransactionEntity) ProductTransaction {
 	return ProductTransaction{
-		UserId:        transactionEntity.Id,
+		UserId:        transactionEntity.UserId,
 		ProductId:     transactionEntity.ProductId,
 		TotalProduct:  transactionEntity.TotalProduct,
 		TotalPayment:  transactionEntity.TotalPayment,
