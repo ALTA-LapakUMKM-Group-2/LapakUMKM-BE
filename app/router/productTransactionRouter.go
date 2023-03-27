@@ -17,10 +17,9 @@ func TransactionRouter(db *gorm.DB, e *echo.Echo) {
 
 	e.GET("/transactions", handler.MyTransactionHistory, middlewares.Authentication)
 	e.GET("/transactions/:id", handler.GetById)
-	// e.GET("/products/:id/feedbacks", handler.GetFeedbackByProductId)
 
 	g := e.Group("/transactions")
 	g.POST("", handler.Create, middlewares.Authentication)
-	// g.PUT("/:id", handler.Update, middlewares.Authentication)
-	// g.DELETE("/:id", handler.Delete, middlewares.Authentication)
+
+	e.POST("reservations/midtrans/callback", handler.CallBackMidtrans)
 }

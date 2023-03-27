@@ -2,8 +2,8 @@ package service
 
 import (
 	"lapakUmkm/features/productTransactions"
-	// "lapakUmkm/utils/helpers"
-	// "strconv"
+	"lapakUmkm/utils/helpers"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -31,33 +31,33 @@ func (st *transactionService) Create(transactionEntity productTransactions.Produ
 		return productTransactions.ProductTransactionEntity{}, err
 	}
 
-	// totalProduct := transactionEntity.TotalProduct
-	// totalPayment := transactionEntity.TotalPayment
+	totalProduct := transactionEntity.TotalProduct
+	totalPayment := transactionEntity.TotalPayment
 
-	// //call midtrans
-	// postData := map[string]any{
-	// 	"order_id":  "lapakumkm-" + strconv.Itoa(int(transactionId)),
-	// 	"nominal":   totalPayment,
-	// 	"firstname": "LapakUMKM",
-	// 	"lastname":  "Product",
-	// 	"email":     "email" + strconv.Itoa(int(transactionId)) + "@gmail.com",
-	// 	"phone":     "000",
-	// }
+	//call midtrans
+	postData := map[string]any{
+		"order_id":  "lapakumkm-" + strconv.Itoa(int(transactionId)),
+		"nominal":   totalPayment,
+		"firstname": "LapakUMKM",
+		"lastname":  "Product",
+		"email":     "email" + strconv.Itoa(int(transactionId)) + "@gmail.com",
+		"phone":     "000",
+	}
 
-	// paymentLink, err1 := helpers.PostMidtrans(postData)
-	// if err1 != nil {
-	// 	return productTransactions.ProductTransactionEntity{}, err
-	// } else {
-	// 	//midtrans
-	// 	update := productTransactions.ProductTransactionEntity{
-	// 		TotalProduct:  totalProduct,
-	// 		TotalPayment:  totalPayment,
-	// 		PaymentStatus: "pending",
-	// 		PaymentLink:   paymentLink,
-	// 	}
-	// 	//if ok
-	// 	st.Data.Edit(update, transactionId)
-	// }
+	paymentLink, err1 := helpers.PostMidtrans(postData)
+	if err1 != nil {
+		return productTransactions.ProductTransactionEntity{}, err
+	} else {
+		//midtrans
+		update := productTransactions.ProductTransactionEntity{
+			TotalProduct:  totalProduct,
+			TotalPayment:  totalPayment,
+			PaymentStatus: "pending",
+			PaymentLink:   paymentLink,
+		}
+		//if ok
+		st.Data.Edit(update, transactionId)
+	}
 
 	return st.Data.SelectById(transactionId)
 }
