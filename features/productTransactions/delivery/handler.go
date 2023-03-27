@@ -6,6 +6,7 @@ import (
 	"lapakUmkm/utils/helpers"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -55,4 +56,22 @@ func (hf *TransactionHandler) GetById(c echo.Context) error {
 	}
 	transactioResponse := TransactionEntityToTransactionResponse(transactionEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedbacks detail", transactioResponse))
+}
+
+func (hf *TransactionHandler) CallBackMidtrans(c echo.Context) error {
+	var form helpers.ResponseFromCallbackMidtrans
+
+	if err := c.Bind(&form); err != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
+	}
+
+	idString := strings.Split(form.OrderId, "-")
+	orderId, _ := strconv.Atoi(idString[1])
+
+	err := hf.service.CallBackMidtrans(uint(orderId), form.TransactionStatus)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", ListTransactionToTransactionResponse(nil)))
 }

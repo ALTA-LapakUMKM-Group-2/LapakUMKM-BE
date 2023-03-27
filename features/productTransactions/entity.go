@@ -22,6 +22,7 @@ type ProductTransactionServiceInterface interface {
 	Create(transctionEntity ProductTransactionEntity) (ProductTransactionEntity, error)
 	MyTransactionHistory(myId, userId uint) ([]ProductTransactionEntity, error)
 	GetById(id uint) (ProductTransactionEntity, error)
+	CallBackMidtrans(id uint, status string) error
 }
 
 type ProductTransactionDataInterface interface {

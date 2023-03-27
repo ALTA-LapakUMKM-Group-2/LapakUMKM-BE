@@ -69,3 +69,14 @@ func (st *transactionService) MyTransactionHistory(myId, userId uint) ([]product
 func (st *transactionService) GetById(id uint) (productTransactions.ProductTransactionEntity, error) {
 	return st.Data.SelectById(id)
 }
+
+func (st *transactionService) CallBackMidtrans(id uint, status string) error {
+	transactions := productTransactions.ProductTransactionEntity{
+		PaymentStatus: status,
+	}
+	err := st.Data.Edit(transactions, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
