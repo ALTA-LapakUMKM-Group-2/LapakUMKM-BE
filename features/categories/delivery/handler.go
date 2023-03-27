@@ -48,7 +48,7 @@ func (t *CategoryHandler) Create(c echo.Context) error {
 
 	team, err := t.Service.Create(CategoryRequestToCategoryEntity(&formInput))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
 
 	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", CategoryEntityToCategoryResponse(team)))

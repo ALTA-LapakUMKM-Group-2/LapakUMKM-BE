@@ -8,7 +8,7 @@ import (
 
 type Category struct {
 	gorm.Model
-	Category string
+	Category string `gorm:"unique"`
 }
 
 func CategoryEntityToCategory(categoryEntity categories.CategoryEntity) Category {

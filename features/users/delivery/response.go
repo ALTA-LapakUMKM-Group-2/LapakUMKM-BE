@@ -28,7 +28,7 @@ func UserEntityToUserResponse(userEntity users.UserEntity) UserResponse {
 	}
 
 	if userEntity.PhotoProfile != "" {
-		result.PhotoProfile = "https://storage.googleapis.com/images_lapak_umkm/profile/" + userEntity.PhotoProfile
+		result.PhotoProfile = userEntity.PhotoProfile
 	}
 
 	return result

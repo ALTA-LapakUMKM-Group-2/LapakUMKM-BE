@@ -36,7 +36,7 @@ func (u *AuthHandler) Login(c echo.Context) error {
 		"user":  delivery.UserEntityToUserResponse(user),
 	}
 
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Login Success", tokesResponse))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("login success", tokesResponse))
 }
 
 func (h *AuthHandler) Register(c echo.Context) error {
@@ -52,7 +52,7 @@ func (h *AuthHandler) Register(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Register Success", delivery.UserEntityToUserResponse(user)))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("register success", delivery.UserEntityToUserResponse(user)))
 }
 
 func (u *AuthHandler) ChangePassword(c echo.Context) error {
@@ -60,12 +60,43 @@ func (u *AuthHandler) ChangePassword(c echo.Context) error {
 
 	r := ChangePasswordRequest{}
 	if err := c.Bind(&r); err != nil {
-		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("Error bind data"))
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("rrror bind data"))
 	}
 
 	if err := u.Service.ChangePassword(uint(user_id), r.OldPassword, r.NewPassword, r.ConfirmPassword); err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Change password Success", nil))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("change password Success", nil))
+}
+
+func (u *AuthHandler) GetSSOGoogleUrl(c echo.Context) error {
+	tokesResponse := map[string]any{
+		"url": u.Service.GetSSOGoogleUrl(),
+	}
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", tokesResponse))
+}
+
+func (u *AuthHandler) LoginSSOGoogle(c echo.Context) error {
+	callbackSSORequest := CallbackSSORequest{}
+	if err := c.Bind(&callbackSSORequest); err != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
+	}
+
+	if !callbackSSORequest.VerifiedEmail {
+		return c.JSON(http.StatusUnauthorized, helpers.ResponseFail("email not verified yet at google"))
+	}
+
+	maping := CallbackSSORequestToUserEntity(callbackSSORequest)
+	token, user, err := u.Service.LoginSSOGoogle(maping)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, helpers.ResponseFail(err.Error()))
+	}
+
+	tokesResponse := map[string]any{
+		"token": token,
+		"user":  delivery.UserEntityToUserResponse(user),
+	}
+
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("login success", tokesResponse))
 }

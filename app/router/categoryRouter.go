@@ -16,10 +16,9 @@ func CategoryRouter(db *gorm.DB, e *echo.Echo) {
 	handler := categoryHandler.New(service)
 
 	g := e.Group("/categories")
-	g.Use(middlewares.Authentication)
 	g.GET("", handler.GetAll)
 	g.GET("/:id", handler.GetById)
-	g.POST("", handler.Create)
-	g.PUT("/:id", handler.Update)
-	g.DELETE("/:id", handler.Delete)
+	g.POST("", handler.Create, middlewares.Authentication)
+	g.PUT("/:id", handler.Update, middlewares.Authentication)
+	g.DELETE("/:id", handler.Delete, middlewares.Authentication)
 }

@@ -42,3 +42,14 @@ func (q *query) EditPassword(id uint, pass string) error {
 	}
 	return nil
 }
+
+func (q *query) EditData(request users.UserEntity) error {
+	user := data.User{
+		PhotoProfile: request.PhotoProfile,
+	}
+	if err := q.db.Where("email = ?", request.Email).Updates(&user); err.Error != nil {
+		return err.Error
+	}
+
+	return nil
+}

@@ -25,7 +25,7 @@ func (h *ProductHandler) GetAll(c echo.Context) error {
 	priceMax, _ := strconv.Atoi(c.QueryParam("price_max"))
 	rating, _ := strconv.Atoi(c.QueryParam("rating"))
 	categoryId, _ := strconv.Atoi(c.QueryParam("category_id"))
-	userId, _ := strconv.Atoi(c.QueryParam("userId"))
+	userId, _ := strconv.Atoi(c.QueryParam("user_id"))
 
 	productFilter := products.ProductFilter{
 		PriceMin:   priceMin,
@@ -66,7 +66,7 @@ func (h *ProductHandler) Create(c echo.Context) error {
 
 	team, err := h.Service.Create(userEntity)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
 
 	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", ProductEntityToProductResponse(team)))

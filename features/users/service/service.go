@@ -110,10 +110,10 @@ func (s *userService) UpdateToProfile(id uint, file *multipart.FileHeader) (stri
 	helpers.UploadPhotoProfile(blobFile, newFileName)
 
 	var request users.UserEntity
-	request.PhotoProfile = newFileName
+	request.PhotoProfile = "https://storage.googleapis.com/images_lapak_umkm/profile/" + newFileName
 	if _, err := s.Data.Edit(request, id); err != nil {
 		return "", err
 	}
 
-	return "https://storage.googleapis.com/images_lapak_umkm/profile/" + newFileName, nil
+	return request.PhotoProfile, nil
 }
