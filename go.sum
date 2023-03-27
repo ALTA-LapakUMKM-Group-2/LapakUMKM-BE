@@ -50,6 +50,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/Findryankp/goGcs v0.0.0-20230322085857-658f49e93ad9 h1:NzGQrgRiVgr//NfJOitYJ/x8KnqOBgSDvgwVFUOtMfc=
 github.com/Findryankp/goGcs v0.0.0-20230322085857-658f49e93ad9/go.mod h1:ecF9cE0Z86lHeWHv+FraO933DTDAr4X115KO8Qrj1Fk=
+github.com/Findryankp/snapMidtransGo v1.0.1 h1:ATQ9DslqqUzp78BITkqaECMpG2AmEioM/2ee4g1n+es=
+github.com/Findryankp/snapMidtransGo v1.0.1/go.mod h1:RvDad/bm3lx/9hHT5TzCrsyy+zmUD2Xje+qzCFpays0=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
