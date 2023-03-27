@@ -17,7 +17,7 @@ type RequestCallbackSSO struct {
 }
 
 var OauthConfig = &oauth2.Config{
-	RedirectURL: "http://localhost:8080/auth/sso-response-callback",
+	RedirectURL: "http://localhost:5173/auth/sso-response-callback",
 	Scopes: []string{
 		"https://www.googleapis.com/auth/userinfo.email",
 	},
