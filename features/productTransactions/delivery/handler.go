@@ -36,7 +36,7 @@ func (ht *TransactionHandler) Create(c echo.Context) error {
 	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", TransactionEntityToTransactionResponse(transaction)))
 }
 
-func (ht *TransactionHandler) MyAllFeedback(c echo.Context) error {
+func (ht *TransactionHandler) MyTransactionHistory(c echo.Context) error {
 	myId := middlewares.ClaimsToken(c).Id
 	userId, _ := strconv.Atoi(c.Param("id"))
 	feedbackEntity, err := ht.service.MyTransactionHistory(uint(userId), uint(myId))

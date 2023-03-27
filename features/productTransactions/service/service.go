@@ -65,3 +65,7 @@ func (st *transactionService) Create(transactionEntity productTransactions.Produ
 func (st *transactionService) MyTransactionHistory(myId, userId uint) ([]productTransactions.ProductTransactionEntity, error) {
 	return st.Data.SelectAll(userId)
 }
+
+func (st *transactionService) GetById(id uint) (productTransactions.ProductTransactionEntity, error) {
+	return st.Data.SelectById(id)
+}

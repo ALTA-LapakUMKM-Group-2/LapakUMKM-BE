@@ -21,6 +21,7 @@ type ProductTransactionEntity struct {
 type ProductTransactionServiceInterface interface {
 	Create(transctionEntity ProductTransactionEntity) (ProductTransactionEntity, error)
 	MyTransactionHistory(myId, userId uint) ([]ProductTransactionEntity, error)
+	GetById(id uint) (ProductTransactionEntity, error)
 }
 
 type ProductTransactionDataInterface interface {
