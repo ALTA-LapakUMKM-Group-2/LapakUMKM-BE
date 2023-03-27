@@ -66,3 +66,46 @@ func (u *authService) ChangePassword(id uint, oldPassword, newPassword, confirmP
 	hash, _ := helpers.HashPassword(newPassword)
 	return u.data.EditPassword(id, hash)
 }
+
+func (s *authService) GetSSOGoogleUrl() string {
+	return helpers.GetSSOGoogleUrl()
+}
+
+func (s *authService) LoginSSOGoogle(userEntity users.UserEntity) (string, users.UserEntity, error) {
+	request := users.UserEntity{
+		Email:        userEntity.Email,
+		PhotoProfile: userEntity.PhotoProfile,
+		FullName:     userEntity.Email,
+		Password:     "google-password",
+		Role:         "user",
+	}
+
+	user, _ := s.data.GetUserByEmailOrId(userEntity.Email, 0)
+	s.validate = validator.New()
+	errValidate := s.validate.Struct(request)
+	if errValidate != nil {
+		return "", users.UserEntity{}, errValidate
+	}
+
+	if user.Id == 0 {
+		s.data.Register(request)
+	} else {
+		request.Id = user.Id
+		request.Password = user.Password
+		request.Role = user.Role
+		request.FullName = user.FullName
+	}
+	//edit data from google
+	if err := s.data.EditData(userEntity); err != nil {
+		return "", users.UserEntity{}, err
+	}
+
+	//login
+	userLogin, _ := s.data.GetUserByEmailOrId(userEntity.Email, 0)
+	token, errToken := middlewares.CreateToken(int(userLogin.Id), userLogin.Role)
+	if errToken != nil {
+		return "", users.UserEntity{}, errToken
+	}
+
+	return token, userLogin, nil
+}

@@ -42,6 +42,12 @@ func (s *CategoryService) Create(categoryEntity categories.CategoryEntity) (cate
 }
 
 func (s *CategoryService) Update(categoryEntity categories.CategoryEntity, id uint) (categories.CategoryEntity, error) {
+	s.validate = validator.New()
+	errValidate := s.validate.StructExcept(categoryEntity, "User")
+	if errValidate != nil {
+		return categories.CategoryEntity{}, errValidate
+	}
+
 	if checkDataExist, err := s.Data.SelectById(id); err != nil {
 		return checkDataExist, err
 	}

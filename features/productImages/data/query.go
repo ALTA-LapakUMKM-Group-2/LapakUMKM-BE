@@ -42,7 +42,7 @@ func (q *query) Destroy(id uint) error {
 
 func (q *query) SelectByProductId(productId uint) ([]productImages.ProductImagesEntity, error) {
 	var data []ProductImages
-	if err := q.db.Find(&data); err.Error != nil {
+	if err := q.db.Where("product_id = ?", productId).Find(&data); err.Error != nil {
 		return nil, err.Error
 	}
 

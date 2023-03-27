@@ -18,8 +18,11 @@ func AuthRouter(db *gorm.DB, e *echo.Echo) {
 	g := e.Group("/auth")
 	g.POST("/register", handler.Register)
 	g.POST("/login", handler.Login)
+
+	g.GET("/sso-get-url", handler.GetSSOGoogleUrl)
+	g.GET("/sso-response-callback", handler.GetSSOGoogleUrl)
+	g.POST("/sso-response-callback", handler.LoginSSOGoogle)
 	// g.POST("/forget-password", handler.Create)
 
-	g.Use(middlewares.Authentication)
-	g.POST("/change-password", handler.ChangePassword)
+	g.POST("/change-password", handler.ChangePassword, middlewares.Authentication)
 }

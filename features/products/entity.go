@@ -9,13 +9,13 @@ import (
 
 type ProductEntity struct {
 	Id             uint
-	UserId         uint
-	CategoryId     uint
-	ProductName    string
-	Description    string
-	Size           string
-	Price          int
-	StockRemaining int
+	UserId         uint   `validate:"required"`
+	CategoryId     uint   `validate:"required"`
+	ProductName    string `validate:"required"`
+	Description    string `validate:"required"`
+	Price          int    `validate:"required"`
+	StockRemaining int    `validate:"required"`
+	Size           string `validate:"required"`
 	StockSold      int
 	CreatedAt      time.Time
 	UpdatedAt      time.Time

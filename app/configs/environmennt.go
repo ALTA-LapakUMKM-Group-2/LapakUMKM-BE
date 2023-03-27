@@ -36,6 +36,16 @@ func InitEnv() *AppConfig {
 		isRead = false
 	}
 
+	if val, found := os.LookupEnv("CLIENTIDGOOGLE"); found {
+		app.CLIENTIDGOOGLE = val
+		isRead = false
+	}
+
+	if val, found := os.LookupEnv("CLIENTSECRETGOOGLE"); found {
+		app.CLIENTSECRETGOOGLE = val
+		isRead = false
+	}
+
 	err2 := viper.Unmarshal(&app)
 	if err2 != nil {
 		log.Println("error parse config : ", err2.Error())
@@ -59,6 +69,9 @@ func InitEnv() *AppConfig {
 		app.DBHOST = viper.Get("DBHOST").(string)
 		app.DBPORT, _ = viper.Get("DBPORT").(string)
 		app.DBNAME = viper.Get("DBNAME").(string)
+
+		app.CLIENTIDGOOGLE = viper.Get("CLIENTIDGOOGLE").(string)
+		app.CLIENTSECRETGOOGLE = viper.Get("CLIENTSECRETGOOGLE").(string)
 	}
 
 	return &app
