@@ -5,6 +5,7 @@ import (
 	"lapakUmkm/features/productTransactions"
 	"lapakUmkm/utils/helpers"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -33,4 +34,15 @@ func (ht *TransactionHandler) Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
 	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", TransactionEntityToTransactionResponse(transaction)))
+}
+
+func (ht *TransactionHandler) MyAllFeedback(c echo.Context) error {
+	myId := middlewares.ClaimsToken(c).Id
+	userId, _ := strconv.Atoi(c.Param("id"))
+	feedbackEntity, err := ht.service.MyTransactionHistory(uint(userId), uint(myId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
+	}
+	listFeedbackResponse := ListTransactionToTransactionResponse(feedbackEntity)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your feedbacks", listFeedbackResponse))
 }
