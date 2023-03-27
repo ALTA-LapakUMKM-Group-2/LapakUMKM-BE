@@ -42,3 +42,11 @@ func (qt *query) Edit(transactionEntity productTransactions.ProductTransactionEn
 	}
 	return nil
 }
+
+func (qt *query) SelectAll(userId uint) ([]productTransactions.ProductTransactionEntity, error) {
+	var transaction []ProductTransaction
+	if err := qt.db.Where("user_id = ?", userId).Preload("User").Order("created_at desc").Find(&transaction); err.Error != nil {
+		return nil, err.Error
+	}
+	return ListTransactionToTransactionEntity(transaction), nil
+}
