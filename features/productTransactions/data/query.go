@@ -46,5 +46,5 @@ func (qt *query) SelectProductPcs(transactionEntity productTransactions.ProductT
 	if err.Error != nil {
 		return nil, err.Error
 	}
-	return L
+	return ListTransactionToTransactionEntity(transactions), nil
 }
