@@ -17,6 +17,7 @@ func main() {
 	//clientSSO
 	helpers.OauthConfig.ClientID = cfg.CLIENTIDGOOGLE
 	helpers.OauthConfig.ClientSecret = cfg.CLIENTSECRETGOOGLE
+	helpers.ServerKey = cfg.SERVER_KEY_MIDTRANS
 
 	e := echo.New()
 	router.InitRouter(db, e)
