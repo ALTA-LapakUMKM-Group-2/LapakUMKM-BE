@@ -46,3 +46,13 @@ func (ht *TransactionHandler) MyTransactionHistory(c echo.Context) error {
 	listFeedbackResponse := ListTransactionToTransactionResponse(feedbackEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your feedbacks", listFeedbackResponse))
 }
+
+func (hf *TransactionHandler) GetById(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	transactionEntity, err := hf.service.GetById(uint(id))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data not found"))
+	}
+	transactioResponse := TransactionEntityToTransactionResponse(transactionEntity)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedbacks detail", transactioResponse))
+}
