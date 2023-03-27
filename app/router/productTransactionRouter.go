@@ -15,8 +15,8 @@ func TransactionRouter(db *gorm.DB, e *echo.Echo) {
 	service := _transactionsService.New(data)
 	handler := _transactionsHandler.New(service)
 
-	// e.GET("/feedbacks", handler.MyAllFeedback)
-	// e.GET("/feedbacks/:id", handler.GetById)
+	e.GET("/transactions", handler.MyTransactionHistory, middlewares.Authentication)
+	e.GET("/transactions/:id", handler.GetById)
 	// e.GET("/products/:id/feedbacks", handler.GetFeedbackByProductId)
 
 	g := e.Group("/transactions")
