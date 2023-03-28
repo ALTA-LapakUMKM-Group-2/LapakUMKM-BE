@@ -10,6 +10,7 @@ type ProductTransactionDetailEntity struct {
 	ProductId            uint
 	Product              products.ProductEntity
 	TotalProduct         int
+	Address              string
 }
 
 type ProductTransactionDetailServiceInterface interface {
