@@ -43,15 +43,6 @@ func (s *productService) Create(productEntity products.ProductEntity) (products.
 }
 
 func (s *productService) Update(productEntity products.ProductEntity, id, userId uint) (products.ProductEntity, error) {
-	checkDataExist, errData := s.Data.SelectById(id)
-	if errData != nil {
-		return checkDataExist, errData
-	}
-
-	if checkDataExist.UserId != userId {
-		return products.ProductEntity{}, errors.New("can't update this product id")
-	}
-
 	err := s.Data.Edit(productEntity, id)
 	if err != nil {
 		return products.ProductEntity{}, err

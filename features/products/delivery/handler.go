@@ -80,9 +80,19 @@ func (h *ProductHandler) Update(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	userId := middlewares.ClaimsToken(c).Id
 
+	//check data exist
+	checkDataExist, errExist := h.Service.GetById(uint(id))
+	if errExist != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(errExist.Error()))
+	}
+
+	if checkDataExist.UserId != uint(userId) {
+		return c.JSON(http.StatusUnauthorized, helpers.ResponseFail("can't update this product id"))
+	}
+
 	product, err := h.Service.Update(ProductRequestToProductEntity(&formInput), uint(id), uint(userId))
 	if err != nil {
-		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err.Error()))
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
 
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Update Data Success", ProductEntityToProductResponse(product)))

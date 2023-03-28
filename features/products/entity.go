@@ -9,7 +9,7 @@ import (
 
 type ProductEntity struct {
 	Id             uint
-	UserId         uint   `validate:"required"`
+	UserId         uint
 	CategoryId     uint   `validate:"required"`
 	ProductName    string `validate:"required"`
 	Description    string `validate:"required"`
