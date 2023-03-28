@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"lapakUmkm/features/productImages"
+	"lapakUmkm/features/products"
 	"lapakUmkm/utils/helpers"
 	"net/http"
 	"path/filepath"
@@ -12,17 +13,23 @@ import (
 )
 
 type ProductImagesHandler struct {
-	Service productImages.ProductServiceInterface
+	Service        productImages.ProductServiceInterface
+	ServiceProduct products.ProductServiceInterface
 }
 
-func New(srv productImages.ProductServiceInterface) *ProductImagesHandler {
+func New(srv productImages.ProductServiceInterface, srv2 products.ProductServiceInterface) *ProductImagesHandler {
 	return &ProductImagesHandler{
-		Service: srv,
+		Service:        srv,
+		ServiceProduct: srv2,
 	}
 }
 
 func (h *ProductImagesHandler) Create(c echo.Context) error {
 	productId, _ := strconv.Atoi(c.Param("id"))
+	_, err1 := h.ServiceProduct.GetById(uint(productId))
+	if err1 != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err1.Error()))
+	}
 
 	const maxFileSize = 1024 * 1024
 
@@ -60,6 +67,12 @@ func (h *ProductImagesHandler) Create(c echo.Context) error {
 }
 
 func (h *ProductImagesHandler) Delete(c echo.Context) error {
+	productId, _ := strconv.Atoi(c.Param("id"))
+	_, err1 := h.ServiceProduct.GetById(uint(productId))
+	if err1 != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err1.Error()))
+	}
+
 	id, _ := strconv.Atoi(c.Param("photo_id"))
 	if err := h.Service.Delete(uint(id)); err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
@@ -68,8 +81,13 @@ func (h *ProductImagesHandler) Delete(c echo.Context) error {
 }
 
 func (h *ProductImagesHandler) GetByProductId(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
-	data, err := h.Service.GetByProductId(uint(id))
+	productId, _ := strconv.Atoi(c.Param("id"))
+	_, err1 := h.ServiceProduct.GetById(uint(productId))
+	if err1 != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err1.Error()))
+	}
+
+	data, err := h.Service.GetByProductId(uint(productId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}
