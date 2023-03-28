@@ -14,10 +14,12 @@ type Core struct {
 }
 
 type CartService interface {
-	Add(newCart Core) (Core, error)
+	Add(cart Core) (Core, error)
 	MyCart(userID uint) ([]Core, error)
 	Update(updateCart Core) (Core, error)
 	Delete(userID, cartID uint) error
+	CartByID(userID uint, cart []uint) ([]Core, error)
+	BuyNow(cart Core) (Core, error)
 }
 
 type CartData interface {
@@ -25,4 +27,6 @@ type CartData interface {
 	MyCart(userID uint) ([]Core, error)
 	Update(updateCart Core) (Core, error)
 	Delete(userID, cartID uint) error
+	CartByID(userID uint, cart []uint) ([]Core, error)
+	BuyNow(cart Core) (Core, error)
 }
