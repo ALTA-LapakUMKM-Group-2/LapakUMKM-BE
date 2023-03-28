@@ -22,7 +22,7 @@ func New(srv productImages.ProductServiceInterface) *ProductImagesHandler {
 }
 
 func (h *ProductImagesHandler) Create(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+	productId, _ := strconv.Atoi(c.Param("id"))
 
 	const maxFileSize = 1024 * 1024
 
@@ -40,10 +40,19 @@ func (h *ProductImagesHandler) Create(c echo.Context) error {
 	fileExtension = strings.ToLower(fileExtension)
 
 	if fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".jpeg" {
-		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("only image extention (png,jpg, or jpeg)"))
+		return c.JSON(http.StatusUnsupportedMediaType, helpers.ResponseFail("only image extention (png,jpg, or jpeg)"))
 	}
 
-	data, err1 := h.Service.Create(uint(id), file)
+	data2, err1 := h.Service.GetByProductId(uint(productId))
+	if err1 != nil {
+		if len(data2) >= 5 {
+			return c.JSON(http.StatusBadRequest, helpers.ResponseFail("max 5 images for 1 product"))
+		}
+
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
+	}
+
+	data, err1 := h.Service.Create(uint(productId), file)
 	if err1 != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}

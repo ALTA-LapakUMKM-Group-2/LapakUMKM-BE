@@ -43,6 +43,12 @@ func (s *productService) Create(productEntity products.ProductEntity) (products.
 }
 
 func (s *productService) Update(productEntity products.ProductEntity, id, userId uint) (products.ProductEntity, error) {
+	s.validate = validator.New()
+	errValidate := s.validate.StructExcept(productEntity, "User", "Category")
+	if errValidate != nil {
+		return products.ProductEntity{}, errValidate
+	}
+
 	err := s.Data.Edit(productEntity, id)
 	if err != nil {
 		return products.ProductEntity{}, err
