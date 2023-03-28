@@ -9,6 +9,8 @@ type TransactionRequest struct {
 	TotalPayment int  `json:"total_payment" form:"total_payment"`
 }
 
+// type Product
+
 func TransactionRequestToTransactionEntity(transactionRequest *TransactionRequest) productTransactions.ProductTransactionEntity {
 	return productTransactions.ProductTransactionEntity{
 		// UserId: transactionRequest.UserId,
