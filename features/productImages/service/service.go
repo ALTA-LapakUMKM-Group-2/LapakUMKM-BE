@@ -55,7 +55,6 @@ func (s *ProductImagesService) Delete(id uint) error {
 	return s.Data.Destroy(id)
 }
 
-// GetByProductId implements productImages.ProductServiceInterface
 func (s *ProductImagesService) GetByProductId(productId uint) ([]productImages.ProductImagesEntity, error) {
 	return s.Data.SelectByProductId(productId)
 }

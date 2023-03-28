@@ -2,21 +2,26 @@ package delivery
 
 import (
 	"lapakUmkm/app/middlewares"
+	"lapakUmkm/features/productImages"
 	"lapakUmkm/features/products"
 	"lapakUmkm/utils/helpers"
 	"net/http"
+	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
 
 type ProductHandler struct {
-	Service products.ProductServiceInterface
+	Service       products.ProductServiceInterface
+	ServiceImages productImages.ProductServiceInterface
 }
 
-func New(srv products.ProductServiceInterface) *ProductHandler {
+func New(srv products.ProductServiceInterface, srv2 productImages.ProductServiceInterface) *ProductHandler {
 	return &ProductHandler{
-		Service: srv,
+		Service:       srv,
+		ServiceImages: srv2,
 	}
 }
 
@@ -61,15 +66,40 @@ func (h *ProductHandler) Create(c echo.Context) error {
 	}
 
 	userId := middlewares.ClaimsToken(c).Id
-	userEntity := ProductRequestToProductEntity(&formInput)
-	userEntity.UserId = uint(userId)
+	productEntity := ProductRequestToProductEntity(&formInput)
+	productEntity.UserId = uint(userId)
 
-	team, err := h.Service.Create(userEntity)
+	const maxFileSize = 1024 * 1024
+	file, err := c.FormFile("photo_product")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
 
-	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", ProductEntityToProductResponse(team)))
+	size := file.Size
+	if size > maxFileSize {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("file too large (max 1 MB)"))
+	}
+
+	fileExtension := filepath.Ext(file.Filename)
+	fileExtension = strings.ToLower(fileExtension)
+
+	if fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".jpeg" {
+		return c.JSON(http.StatusUnsupportedMediaType, helpers.ResponseFail("only image extention (png,jpg, or jpeg)"))
+	}
+
+	product, err := h.Service.Create(productEntity)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
+	}
+
+	_, err1 := h.ServiceImages.Create(product.Id, file)
+	if err1 != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+	}
+
+	products, _ := h.Service.GetById(product.Id)
+
+	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", ProductEntityToProductResponse(products)))
 }
 
 func (h *ProductHandler) Update(c echo.Context) error {
