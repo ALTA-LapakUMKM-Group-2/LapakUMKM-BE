@@ -21,4 +21,6 @@ func CartRouter(db *gorm.DB, e *echo.Echo) {
 	g.GET("", handler.MyCart)
 	g.PUT("/:id", handler.Update)
 	g.DELETE("/:id", handler.Delete)
+	e.GET("/checkout", handler.GetById)
+	e.GET("/buynow", handler.BuyNow)
 }
