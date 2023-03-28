@@ -16,6 +16,15 @@ func New(db *gorm.DB) productTransactionDetails.ProductTransactionDetailDataInte
 	}
 }
 
+func (q *query) SelectById(id uint) (productTransactionDetails.ProductTransactionDetailEntity, error) {
+	var data ProductTransactionDetail
+	if err := q.db.Preload("Product").Find(&data); err.Error != nil {
+		return productTransactionDetails.ProductTransactionDetailEntity{}, err.Error
+	}
+
+	return ModelToEntity(data), nil
+}
+
 func (q *query) SelectByProductId(productId uint) ([]productTransactionDetails.ProductTransactionDetailEntity, error) {
 	var data []ProductTransactionDetail
 	if err := q.db.Preload("Product").Find(&data); err.Error != nil {

@@ -15,11 +15,13 @@ type ProductTransactionDetailEntity struct {
 }
 
 type ProductTransactionDetailServiceInterface interface {
-	GetByProductId(productId uint) (ProductTransactionDetailEntity, error)
+	GetById(id uint) (ProductTransactionDetailEntity, error)
+	GetByProductId(productId uint) ([]ProductTransactionDetailEntity, error)
 	Create(productTransactionDetailEntity ProductTransactionDetailEntity) (ProductTransactionDetailEntity, error)
 }
 
 type ProductTransactionDetailDataInterface interface {
+	SelectById(id uint) (ProductTransactionDetailEntity, error)
 	SelectByProductId(productId uint) ([]ProductTransactionDetailEntity, error)
 	Store(productTransactionDetailEntity ProductTransactionDetailEntity) (uint, error)
 }
