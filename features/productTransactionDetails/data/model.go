@@ -17,7 +17,7 @@ type ProductTransactionDetail struct {
 
 func EntityToModel(p productTransactionDetails.ProductTransactionDetailEntity) ProductTransactionDetail {
 	return ProductTransactionDetail{
-		ProductTransactionID: p.ProductTransactionId,
+		ProductTransactionID: p.ProductTransactionID,
 		ProductId:            p.ProductId,
 		TotalProduct:         p.TotalProduct,
 	}
@@ -26,7 +26,7 @@ func EntityToModel(p productTransactionDetails.ProductTransactionDetailEntity) P
 func ModelToEntity(p ProductTransactionDetail) productTransactionDetails.ProductTransactionDetailEntity {
 	result := productTransactionDetails.ProductTransactionDetailEntity{
 		Id:                   p.Id,
-		ProductTransactionId: p.ProductTransactionID,
+		ProductTransactionID: p.ProductTransactionID,
 		ProductId:            p.ProductId,
 		TotalProduct:         p.TotalProduct,
 	}

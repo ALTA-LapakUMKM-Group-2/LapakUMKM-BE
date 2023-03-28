@@ -19,12 +19,6 @@ func New(data productTransactionDetails.ProductTransactionDetailDataInterface) p
 }
 
 func (s *ProductTransactionDetailsService) Create(productTransactionDetailEntity productTransactionDetails.ProductTransactionDetailEntity) (productTransactionDetails.ProductTransactionDetailEntity, error) {
-	s.validate = validator.New()
-	errValidate := s.validate.Struct(productTransactionDetailEntity)
-	if errValidate != nil {
-		return productTransactionDetails.ProductTransactionDetailEntity{}, errValidate
-	}
-
 	id, err := s.Data.Store(productTransactionDetailEntity)
 	if err != nil {
 		return productTransactionDetails.ProductTransactionDetailEntity{}, err

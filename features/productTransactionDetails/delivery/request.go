@@ -12,7 +12,7 @@ type ProductTransactionDetailsRequest struct {
 
 func RequestToEntity(r *ProductTransactionDetailsRequest) productTransactionDetails.ProductTransactionDetailEntity {
 	return productTransactionDetails.ProductTransactionDetailEntity{
-		ProductTransactionId: r.ProductTransactionId,
+		ProductTransactionID: r.ProductTransactionId,
 		ProductId:            r.ProductId,
 		TotalProduct:         r.TotalProduct,
 	}

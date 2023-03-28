@@ -1,14 +1,12 @@
 package productTransactionDetails
 
 import (
-	"lapakUmkm/features/productTransactions"
 	"lapakUmkm/features/products"
 )
 
 type ProductTransactionDetailEntity struct {
 	Id                   uint
-	ProductTransactionId uint
-	ProductTransaction   productTransactions.ProductTransactionEntity
+	ProductTransactionID uint
 	ProductId            uint
 	Product              products.ProductEntity
 	TotalProduct         int

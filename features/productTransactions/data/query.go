@@ -11,7 +11,7 @@ type query struct {
 	db *gorm.DB
 }
 
-func New(db *gorm.DB) productTransactions.ProductTransactionDataInterface{
+func New(db *gorm.DB) productTransactions.ProductTransactionDataInterface {
 	return &query{
 		db: db,
 	}
@@ -19,8 +19,6 @@ func New(db *gorm.DB) productTransactions.ProductTransactionDataInterface{
 
 func (qt *query) Store(transactionEntity productTransactions.ProductTransactionEntity) (uint, error) {
 	transaction := TransactionEntityToTransaction(transactionEntity)
-	// var product 
-	// if 
 	if err := qt.db.Create(&transaction); err.Error != nil {
 		return 0, err.Error
 	}

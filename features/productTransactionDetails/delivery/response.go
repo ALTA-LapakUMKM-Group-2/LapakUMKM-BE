@@ -17,7 +17,7 @@ type ProductTransactionDetailResponse struct {
 func EntityToResponse(e productTransactionDetails.ProductTransactionDetailEntity) ProductTransactionDetailResponse {
 	result := ProductTransactionDetailResponse{
 		Id:                   e.Id,
-		ProductTransactionID: e.ProductTransaction.Id,
+		ProductTransactionID: e.ProductTransactionID,
 		ProductId:            e.ProductId,
 		TotalProduct:         e.TotalProduct,
 	}

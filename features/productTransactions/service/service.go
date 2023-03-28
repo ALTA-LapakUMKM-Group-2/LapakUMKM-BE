@@ -22,7 +22,7 @@ func New(data productTransactions.ProductTransactionDataInterface) productTransa
 
 func (st *transactionService) Create(transactionEntity productTransactions.ProductTransactionEntity) (productTransactions.ProductTransactionEntity, error) {
 	st.validate = validator.New()
-	errValidate := st.validate.StructExcept(transactionEntity, "User", "Product")
+	errValidate := st.validate.StructExcept(transactionEntity, "User")
 	if errValidate != nil {
 		return productTransactions.ProductTransactionEntity{}, errValidate
 	}
@@ -35,8 +35,9 @@ func (st *transactionService) Create(transactionEntity productTransactions.Produ
 	totalPayment := transactionEntity.TotalPayment
 
 	//call midtrans
+	orderId := "lapakumkm-" + strconv.Itoa(int(transactionId))
 	postData := map[string]any{
-		"order_id":  "lapakumkm-" + strconv.Itoa(int(transactionId)),
+		"order_id":  orderId,
 		"nominal":   totalPayment,
 		"firstname": "LapakUMKM",
 		"lastname":  "Product",
@@ -54,6 +55,7 @@ func (st *transactionService) Create(transactionEntity productTransactions.Produ
 			TotalPayment:  totalPayment,
 			PaymentStatus: "pending",
 			PaymentLink:   paymentLink,
+			OrderId:       orderId,
 		}
 		//if ok
 		st.Data.Edit(update, transactionId)
