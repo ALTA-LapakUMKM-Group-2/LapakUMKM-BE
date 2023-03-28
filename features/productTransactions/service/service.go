@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"lapakUmkm/features/productTransactions"
 	"lapakUmkm/utils/helpers"
 	"strconv"
@@ -21,11 +22,14 @@ func New(data productTransactions.ProductTransactionDataInterface) productTransa
 }
 
 func (st *transactionService) Create(transactionEntity productTransactions.ProductTransactionEntity) (productTransactions.ProductTransactionEntity, error) {
+	fmt.Println("1")
 	st.validate = validator.New()
 	errValidate := st.validate.StructExcept(transactionEntity, "User")
 	if errValidate != nil {
 		return productTransactions.ProductTransactionEntity{}, errValidate
 	}
+
+	fmt.Println("2")
 	transactionId, err := st.Data.Store(transactionEntity)
 	if err != nil {
 		return productTransactions.ProductTransactionEntity{}, err
@@ -47,9 +51,10 @@ func (st *transactionService) Create(transactionEntity productTransactions.Produ
 
 	paymentLink, err1 := helpers.PostMidtrans(postData)
 	if err1 != nil {
+		fmt.Println("3")
 		return productTransactions.ProductTransactionEntity{}, err
 	} else {
-		//midtrans
+		fmt.Println("4")
 		update := productTransactions.ProductTransactionEntity{
 			TotalProduct:  totalProduct,
 			TotalPayment:  totalPayment,
@@ -60,6 +65,8 @@ func (st *transactionService) Create(transactionEntity productTransactions.Produ
 		//if ok
 		st.Data.Edit(update, transactionId)
 	}
+
+	fmt.Println("5")
 
 	return st.Data.SelectById(transactionId)
 }

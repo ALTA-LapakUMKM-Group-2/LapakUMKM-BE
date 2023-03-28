@@ -25,6 +25,7 @@ func EntityToResponse(e productTransactionDetails.ProductTransactionDetailEntity
 	if !reflect.ValueOf(e.Product).IsZero() {
 		result.Product = delivery.ProductResponse{
 			ProductName: e.Product.ProductName,
+			Price:       e.Product.Price,
 		}
 	}
 

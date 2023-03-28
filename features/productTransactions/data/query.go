@@ -27,7 +27,7 @@ func (qt *query) Store(transactionEntity productTransactions.ProductTransactionE
 
 func (qt *query) SelectById(id uint) (productTransactions.ProductTransactionEntity, error) {
 	var transaction ProductTransaction
-	if err := qt.db.Preload("User").Preload("Product").First(&transaction, id); err.Error != nil {
+	if err := qt.db.Preload("User").First(&transaction, id); err.Error != nil {
 		return productTransactions.ProductTransactionEntity{}, err.Error
 	}
 	return TransactionToTransactionEntity(transaction), nil

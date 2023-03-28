@@ -40,6 +40,7 @@ func (ht *TransactionHandler) Create(c echo.Context) error {
 	}
 
 	for _, v := range trans.ProductTransactionDetail {
+		v.ProductTransactionID = transaction.Id
 		ht.serviceDetail.Create(v)
 	}
 
