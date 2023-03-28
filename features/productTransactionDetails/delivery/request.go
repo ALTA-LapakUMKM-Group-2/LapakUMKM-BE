@@ -1,6 +1,8 @@
 package delivery
 
-import "lapakUmkm/features/productTransactionDetails/data"
+import (
+	"lapakUmkm/features/productTransactionDetails"
+)
 
 type ProductTransactionDetailsRequest struct {
 	ProductTransactionId uint `json:"product_transaction_id" form:"product_transaction_id"`
@@ -8,9 +10,9 @@ type ProductTransactionDetailsRequest struct {
 	TotalProduct         int  `json:"total_product" form:"total_product"`
 }
 
-func RequestToModel(r ProductTransactionDetailsRequest) data.ProductTransactionDetail {
-	return data.ProductTransactionDetail{
-		ProductTransactionID: r.ProductTransactionId,
+func RequestToEntity(r *ProductTransactionDetailsRequest) productTransactionDetails.ProductTransactionDetailEntity {
+	return productTransactionDetails.ProductTransactionDetailEntity{
+		ProductTransactionId: r.ProductTransactionId,
 		ProductId:            r.ProductId,
 		TotalProduct:         r.TotalProduct,
 	}
