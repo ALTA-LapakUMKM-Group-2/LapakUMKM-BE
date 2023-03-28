@@ -34,5 +34,4 @@ type DiscussionDataInterface interface {
 	Destroy(id uint) error
 	SelectDiscussionByProductId(productId uint) ([]DiscussionEntity, error)
 	SelectAll(userId uint) ([]DiscussionEntity, error)
-
 }

@@ -9,19 +9,19 @@ import (
 )
 
 type ProductResponse struct {
-	Id             uint                                  `json:"id"`
-	UserId         uint                                  `json:"user_id"`
-	CategoryId     uint                                  `json:"category_id"`
-	ProductName    string                                `json:"product_name"`
-	Description    string                                `json:"description"`
-	Size           string                                `json:"size"`
-	Price          int                                   `json:"price"`
-	StockRemaining int                                   `json:"stock_remaining"`
-	StockSold      int                                   `json:"stock_sold"`
-	User           user.UserResponse                     `json:"user"`
-	Category       category.CategoryResponse             `json:"category"`
-	ProductImage   []productsimage.ProductImagesResponse `json:"product_image"`
-	Rating         float64                               `json:"rating"`
+	Id             uint                                  `json:"id,omitempty"`
+	UserId         uint                                  `json:"user_id,omitempty"`
+	CategoryId     uint                                  `json:"category_id,omitempty"`
+	ProductName    string                                `json:"product_name,omitempty"`
+	Description    string                                `json:"description,omitempty"`
+	Size           string                                `json:"size,omitempty"`
+	Price          int                                   `json:"price,omitempty"`
+	StockRemaining int                                   `json:"stock_remaining,omitempty"`
+	StockSold      int                                   `json:"stock_sold,omitempty"`
+	User           user.UserResponse                     `json:"user,omitempty"`
+	Category       category.CategoryResponse             `json:"category,omitempty"`
+	ProductImage   []productsimage.ProductImagesResponse `json:"product_image,omitempty"`
+	Rating         float64                               `json:"rating,omitempty"`
 }
 
 func ProductEntityToProductResponse(productEntity products.ProductEntity) ProductResponse {
