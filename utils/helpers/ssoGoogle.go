@@ -3,7 +3,7 @@ package helpers
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -43,7 +43,7 @@ func CallbackSSO(code string) (RequestCallbackSSO, error) {
 	}
 	defer response.Body.Close()
 
-	data, err := ioutil.ReadAll(response.Body)
+	data, err := io.ReadAll(response.Body)
 	if err != nil {
 		return dataSSO, err
 	}
