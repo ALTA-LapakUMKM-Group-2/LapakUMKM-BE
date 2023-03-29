@@ -39,11 +39,11 @@ func (s *ProductImagesService) Create(productId uint, file *multipart.FileHeader
 		return empty, err
 	}
 
-	return s.Data.SelectById(id)
+	return s.Data.SelectById(productId, id)
 }
 
-func (s *ProductImagesService) Delete(id uint) error {
-	dataImage, err := s.Data.SelectById(id)
+func (s *ProductImagesService) Delete(productId, id uint) error {
+	dataImage, err := s.Data.SelectById(productId, id)
 	if err != nil {
 		return err
 	}

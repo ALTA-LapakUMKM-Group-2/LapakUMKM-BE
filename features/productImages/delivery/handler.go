@@ -68,14 +68,9 @@ func (h *ProductImagesHandler) Create(c echo.Context) error {
 
 func (h *ProductImagesHandler) Delete(c echo.Context) error {
 	productId, _ := strconv.Atoi(c.Param("id"))
-	_, err1 := h.ServiceProduct.GetById(uint(productId))
-	if err1 != nil {
-		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err1.Error()))
-	}
-
 	id, _ := strconv.Atoi(c.Param("photo_id"))
-	if err := h.Service.Delete(uint(id)); err != nil {
-		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+	if err := h.Service.Delete(uint(productId), uint(id)); err != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err.Error()))
 	}
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success delete image", nil))
 }

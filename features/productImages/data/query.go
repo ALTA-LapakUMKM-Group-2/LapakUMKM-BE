@@ -16,9 +16,9 @@ func New(db *gorm.DB) productImages.ProductDataInterface {
 	}
 }
 
-func (q *query) SelectById(id uint) (productImages.ProductImagesEntity, error) {
+func (q *query) SelectById(productId, id uint) (productImages.ProductImagesEntity, error) {
 	var productImage ProductImages
-	if err := q.db.First(&productImage, id); err.Error != nil {
+	if err := q.db.Where("product_id = ? AND id = ?", productId, id).First(&productImage); err.Error != nil {
 		return productImages.ProductImagesEntity{}, err.Error
 	}
 	return ProductImagesToProductImagesEntity(productImage), nil

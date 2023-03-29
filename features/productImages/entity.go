@@ -16,11 +16,11 @@ type ProductImagesEntity struct {
 type ProductServiceInterface interface {
 	GetByProductId(productId uint) ([]ProductImagesEntity, error)
 	Create(productId uint, file *multipart.FileHeader) (ProductImagesEntity, error)
-	Delete(id uint) error
+	Delete(productId uint, id uint) error
 }
 
 type ProductDataInterface interface {
-	SelectById(id uint) (ProductImagesEntity, error)
+	SelectById(productId uint, id uint) (ProductImagesEntity, error)
 	SelectByProductId(productId uint) ([]ProductImagesEntity, error)
 	Store(productImagesEntity ProductImagesEntity) (uint, error)
 	Destroy(id uint) error
