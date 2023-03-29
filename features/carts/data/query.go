@@ -62,7 +62,7 @@ func (cq *CartQuery) MyCart(userID uint) ([]carts.Core, error) {
 		Joins("JOIN users ON products.user_id = users.id").
 		Where("users.deleted_at IS NULL").
 		Joins("JOIN product_images ON carts.product_id = product_images.product_id").
-		Select("carts.id, carts.user_id, carts.product_id, carts.product_pcs, products.product_name AS product_name, products.price AS product_price, COALESCE(MIN(CONCAT('https://storage.googleapis.com/images_lapak_umkm/product/', product_images.image)), null) AS product_image, users.shop_name AS lapak_name, users.address AS lapak_address").
+		Select("carts.id, carts.user_id, carts.product_id, carts.product_pcs, products.product_name AS product_name, products.price AS product_price, COALESCE(MIN(CONCAT('https://storage.googleapis.com/images_lapak_umkm/product/', product_images.image)), null) AS product_image, users.shop_name AS lapak_name, users.address AS lapak_address, CONCAT('https://storage.googleapis.com/images_lapak_umkm/profile/', users.photo_profile) AS photo_profile").
 		Group("carts.id").
 		Find(&tmp)
 	if tx.Error != nil {
@@ -107,7 +107,7 @@ func (cq *CartQuery) Delete(userID, cartID uint) error {
 // CartByID implements carts.CartData
 func (cq *CartQuery) CartByID(userID uint, cart []uint) ([]carts.Core, error) {
 	tmp := []Cart{}
-	tx := cq.db.Where("carts.user_id = ? AND carts.id IN ?", userID, cart).Select("carts.id, carts.user_id, carts.product_id, carts.product_pcs, products.product_name AS product_name, products.price AS product_price, COALESCE(MIN(product_images.image), null) AS product_image, users.shop_name AS lapak_name, users.address AS lapak_address").Joins("JOIN products ON carts.product_id = products.id").Joins("JOIN users ON products.user_id = users.id").Joins("JOIN product_images ON carts.product_id = product_images.product_id").Group("carts.id").Find(&tmp)
+	tx := cq.db.Where("carts.user_id = ? AND carts.id IN ?", userID, cart).Select("carts.id, carts.user_id, carts.product_id, carts.product_pcs, products.product_name AS product_name, products.price AS product_price, COALESCE(MIN(CONCAT('https://storage.googleapis.com/images_lapak_umkm/product/', product_images.image)), null) AS product_image, users.shop_name AS lapak_name, users.address AS lapak_address, CONCAT('https://storage.googleapis.com/images_lapak_umkm/profile/', users.photo_profile) AS photo_profile").Joins("JOIN products ON carts.product_id = products.id").Joins("JOIN users ON products.user_id = users.id").Joins("JOIN product_images ON carts.product_id = product_images.product_id").Group("carts.id").Find(&tmp)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -129,7 +129,7 @@ func (cq *CartQuery) BuyNow(input carts.Core) (carts.Core, error) {
 	}
 	copier.Copy(&cart, &data)
 	cart.SubTotal = data.ProductPcs * int64(product.Price)
-	tx := cq.db.Where("products.id = ?", data.ProductId).Select("products.product_name AS product_name, products.price AS product_price, COALESCE(MIN(product_images.image), null) AS product_image, users.shop_name AS lapak_name, users.address AS lapak_address").Joins("JOIN products ON carts.product_id = products.id").Joins("JOIN users ON products.user_id = users.id").Joins("JOIN product_images ON products.id = product_images.product_id").Group("products.id").Find(&cart)
+	tx := cq.db.Where("products.id = ?", data.ProductId).Select("products.product_name AS product_name, products.price AS product_price, COALESCE(MIN(CONCAT('https://storage.googleapis.com/images_lapak_umkm/product/', product_images.image)), null) AS product_image, users.shop_name AS lapak_name, users.address AS lapak_address, CONCAT('https://storage.googleapis.com/images_lapak_umkm/profile/', users.photo_profile) AS photo_profile").Joins("JOIN products ON carts.product_id = products.id").Joins("JOIN users ON products.user_id = users.id").Joins("JOIN product_images ON products.id = product_images.product_id").Group("products.id").Find(&cart)
 	if tx.Error != nil {
 		return carts.Core{}, tx.Error
 	}

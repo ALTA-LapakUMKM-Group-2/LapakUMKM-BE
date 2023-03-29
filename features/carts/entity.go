@@ -11,6 +11,7 @@ type Core struct {
 	ProductImage string
 	LapakName    string
 	LapakAddress string
+	PhotoProfile string
 }
 
 type CartService interface {

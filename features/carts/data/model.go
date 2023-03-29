@@ -21,6 +21,7 @@ type Cart struct {
 	ProductImage string
 	LapakName    string
 	LapakAddress string
+	PhotoProfile string
 }
 
 func CoreToCart(data carts.Core) Cart {
@@ -35,6 +36,7 @@ func CoreToCart(data carts.Core) Cart {
 		ProductImage: data.ProductImage,
 		LapakName:    data.LapakName,
 		LapakAddress: data.LapakAddress,
+		PhotoProfile: data.PhotoProfile,
 	}
 }
 
@@ -50,6 +52,7 @@ func CartToCore(data Cart) carts.Core {
 		ProductImage: data.ProductImage,
 		LapakName:    data.LapakName,
 		LapakAddress: data.LapakAddress,
+		PhotoProfile: data.PhotoProfile,
 	}
 }
 

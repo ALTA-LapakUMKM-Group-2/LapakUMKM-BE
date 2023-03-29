@@ -1,9 +1,9 @@
 package delivery
 
 type AddResponse struct {
-	Id           uint   `json:"id"`
-	ProductId    uint   `json:"product_id"`
-	ProductPcs   int    `json:"product_pcs"`
+	Id         uint `json:"id"`
+	ProductId  uint `json:"product_id"`
+	ProductPcs int  `json:"product_pcs"`
 }
 
 type GetResponse struct {
@@ -16,11 +16,12 @@ type GetResponse struct {
 	ProductImage string `json:"product_image"`
 	LapakName    string `json:"lapak_name"`
 	LapakAddress string `json:"lapak_address"`
+	PhotoProfile string `json:"photo_profile"`
 }
 
 type ListCartResponse []GetResponse
 
 type UpdateResponse struct {
-	Id           uint   `json:"id"`
-	ProductPcs   int    `json:"product_pcs"`
+	Id         uint `json:"id"`
+	ProductPcs int  `json:"product_pcs"`
 }
