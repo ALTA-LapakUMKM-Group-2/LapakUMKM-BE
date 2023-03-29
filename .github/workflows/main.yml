@@ -11,7 +11,6 @@ jobs:
       - name: Connect to server using SSH
         uses: appleboy/ssh-action@master
         with:
-          timeout-minutes: 30
           command_timeout: 200m
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
