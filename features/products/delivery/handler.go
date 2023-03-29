@@ -44,6 +44,11 @@ func (h *ProductHandler) GetAll(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
+
+	if len(products) == 0 {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data null"))
+	}
+
 	listProductsResponse := ListProductEntityToProductResponse(products)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", listProductsResponse))
 }
