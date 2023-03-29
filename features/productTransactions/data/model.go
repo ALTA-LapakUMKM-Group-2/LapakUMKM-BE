@@ -1,9 +1,8 @@
 package data
 
 import (
+	"lapakUmkm/features/productTransactionDetails/data"
 	"lapakUmkm/features/productTransactions"
-	"lapakUmkm/features/products"
-	dataProduct "lapakUmkm/features/products/data"
 	"lapakUmkm/features/users"
 	dataUser "lapakUmkm/features/users/data"
 	"reflect"
@@ -13,52 +12,46 @@ import (
 
 type ProductTransaction struct {
 	gorm.Model
-	UserId        uint
-	User          *dataUser.User `gorm:"foreignKey:UserId"`
-	ProductId     uint
-	Product       *dataProduct.Product `gorm:"foreignKey:ProductId"`
-	OrderId       string
-	PaymentStatus string
-	PaymentLink   string
-	TotalProduct  int
-	TotalPayment  int
+	UserId                   uint
+	User                     *dataUser.User `gorm:"foreignKey:UserId"`
+	OrderId                  string
+	PaymentStatus            string
+	PaymentLink              string
+	TotalProduct             int
+	TotalPayment             int
+	ProductTransactionDetail []data.ProductTransactionDetail `gorm:"foreignKey:ProductTransactionID"`
 }
 
 func TransactionEntityToTransaction(transactionEntity productTransactions.ProductTransactionEntity) ProductTransaction {
 	return ProductTransaction{
 		UserId:        transactionEntity.UserId,
-		ProductId:     transactionEntity.ProductId,
 		TotalProduct:  transactionEntity.TotalProduct,
 		TotalPayment:  transactionEntity.TotalPayment,
 		PaymentStatus: transactionEntity.PaymentStatus,
 		PaymentLink:   transactionEntity.PaymentLink,
+		OrderId:       transactionEntity.OrderId,
 	}
 }
 
 func TransactionToTransactionEntity(transaction ProductTransaction) productTransactions.ProductTransactionEntity {
 	result := productTransactions.ProductTransactionEntity{
-		Id: transaction.ID,
-		UserId: transaction.UserId,
-		ProductId: transaction.ProductId,
-		TotalProduct: transaction.TotalProduct,
-		TotalPayment: transaction.TotalPayment,
+		Id:            transaction.ID,
+		UserId:        transaction.UserId,
+		TotalProduct:  transaction.TotalProduct,
+		TotalPayment:  transaction.TotalPayment,
 		PaymentStatus: transaction.PaymentStatus,
-		PaymentLink: transaction.PaymentLink,
+		PaymentLink:   transaction.PaymentLink,
+		OrderId:       transaction.OrderId,
 	}
 	if !reflect.ValueOf(transaction.User).IsZero() {
 		result.User = users.UserEntity{
 			FullName: transaction.User.FullName,
 		}
 	}
-	if !reflect.ValueOf(transaction.Product).IsZero() {
-		result.Product = products.ProductEntity{
-			ProductName: transaction.Product.ProductName,
-		}
-	}
 	return result
 }
 
-func ListTransactionToTransactionEntity(transaction []ProductTransaction) []productTransactions.ProductTransactionEntity{
+func ListTransactionToTransactionEntity(transaction []ProductTransaction) []productTransactions.ProductTransactionEntity {
 	var transactionEntity []productTransactions.ProductTransactionEntity
 	for _, v := range transaction {
 		transactionEntity = append(transactionEntity, TransactionToTransactionEntity(v))

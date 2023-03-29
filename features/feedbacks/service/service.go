@@ -21,7 +21,7 @@ func New(data feedbacks.FeedbackDataInterface) feedbacks.FeedbackServiceInterfac
 
 func (sf *feedbackService) Create(feedbackEntity feedbacks.FeedbackEntity) (feedbacks.FeedbackEntity, error) {
 	sf.validate = validator.New()
-	errValidate := sf.validate.StructExcept(feedbackEntity, "User", "Product")
+	errValidate := sf.validate.StructExcept(feedbackEntity, "User", "Product", "ProductTransaction")
 	if errValidate != nil {
 		return feedbacks.FeedbackEntity{}, errValidate
 	}

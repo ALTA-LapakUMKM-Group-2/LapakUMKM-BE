@@ -11,7 +11,7 @@ type query struct {
 	db *gorm.DB
 }
 
-func New(db *gorm.DB) productTransactions.ProductTransactionDataInterface{
+func New(db *gorm.DB) productTransactions.ProductTransactionDataInterface {
 	return &query{
 		db: db,
 	}
@@ -19,8 +19,6 @@ func New(db *gorm.DB) productTransactions.ProductTransactionDataInterface{
 
 func (qt *query) Store(transactionEntity productTransactions.ProductTransactionEntity) (uint, error) {
 	transaction := TransactionEntityToTransaction(transactionEntity)
-	// var product 
-	// if 
 	if err := qt.db.Create(&transaction); err.Error != nil {
 		return 0, err.Error
 	}
@@ -29,7 +27,7 @@ func (qt *query) Store(transactionEntity productTransactions.ProductTransactionE
 
 func (qt *query) SelectById(id uint) (productTransactions.ProductTransactionEntity, error) {
 	var transaction ProductTransaction
-	if err := qt.db.Preload("User").Preload("Product").First(&transaction, id); err.Error != nil {
+	if err := qt.db.Preload("User").First(&transaction, id); err.Error != nil {
 		return productTransactions.ProductTransactionEntity{}, err.Error
 	}
 	return TransactionToTransactionEntity(transaction), nil

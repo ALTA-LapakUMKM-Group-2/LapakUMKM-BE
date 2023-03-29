@@ -26,9 +26,11 @@ func (qd *query) Store(discussionEntity discussions.DiscussionEntity) (uint, err
 
 func (qd *query) SelectById(id uint) (discussions.DiscussionEntity, error) {
 	var discussion Discussion
-	if err := qd.db.Preload("User").Preload("Product").First(&discussion, id); err.Error != nil {
+	if err := qd.db.Preload("User").Preload("Product").
+		First(&discussion, id); err.Error != nil {
 		return discussions.DiscussionEntity{}, err.Error
 	}
+
 	return DiscussionToDiscussionEntity(discussion), nil
 }
 
@@ -50,16 +52,12 @@ func (qd *query) Destroy(id uint) error {
 
 func (qd *query) SelectDiscussionByProductId(productId uint) ([]discussions.DiscussionEntity, error) {
 	discussion := []Discussion{}
-	if err := qd.db.Where("product_id = ?", productId).Preload("User").Order("created_at desc").Find(&discussion).Error; err != nil {
+	if err := qd.db.Where("product_id = ?", productId).Preload("User").
+		Select("id,product_id,CASE WHEN parent_id = 0 THEN id ELSE parent_id END AS parent_id,discussion,user_id").
+		Order("parent_id,id").Find(&discussion).Error; err != nil {
 		return []discussions.DiscussionEntity{}, err
 	}
-	res := []discussions.DiscussionEntity{}
-	for _, v := range discussion {
-		if v.ParentId == 0 {
-			res = append(res, DiscussionToDiscussionEntity(v))
-		}
-	}
-	return res, nil
+	return ListDiscussionToDiscussionEntity(discussion), nil
 }
 
 func (qd *query) SelectAll(userId uint) ([]discussions.DiscussionEntity, error) {

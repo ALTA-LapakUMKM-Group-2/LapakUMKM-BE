@@ -16,8 +16,13 @@ import (
 
 func ProductRouter(db *gorm.DB, e *echo.Echo) {
 	data := _productsData.New(db)
-	service := _productsService.New(data)
-	handler := _productsHandler.New(service)
+	serviceProduct := _productsService.New(data)
+
+	data2 := _productImagesData.New(db)
+	serviceImage := _productImagesService.New(data2)
+
+	handler := _productsHandler.New(serviceProduct, serviceImage)
+	handler2 := _productImagesHandler.New(serviceImage, serviceProduct)
 
 	e.GET("/products", handler.GetAll)
 	e.GET("/products/:id", handler.GetById)
@@ -26,10 +31,6 @@ func ProductRouter(db *gorm.DB, e *echo.Echo) {
 	g.POST("", handler.Create, middlewares.Authentication)
 	g.PUT("/:id", handler.Update, middlewares.Authentication)
 	g.DELETE("/:id", handler.Delete, middlewares.Authentication)
-
-	data2 := _productImagesData.New(db)
-	service2 := _productImagesService.New(data2)
-	handler2 := _productImagesHandler.New(service2, service)
 
 	g.GET("/:id/images", handler2.GetByProductId)
 	g.POST("/:id/upload-photo", handler2.Create, middlewares.Authentication)

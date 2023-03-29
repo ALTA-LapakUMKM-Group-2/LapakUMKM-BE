@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"lapakUmkm/app/middlewares"
+	"lapakUmkm/features/productTransactionDetails"
 	"lapakUmkm/features/productTransactions"
 	"lapakUmkm/utils/helpers"
 	"net/http"
@@ -12,12 +13,14 @@ import (
 )
 
 type TransactionHandler struct {
-	service productTransactions.ProductTransactionServiceInterface
+	service       productTransactions.ProductTransactionServiceInterface
+	serviceDetail productTransactionDetails.ProductTransactionDetailServiceInterface
 }
 
-func New(srv productTransactions.ProductTransactionServiceInterface) *TransactionHandler {
+func New(srv productTransactions.ProductTransactionServiceInterface, srv2 productTransactionDetails.ProductTransactionDetailServiceInterface) *TransactionHandler {
 	return &TransactionHandler{
-		service: srv,
+		service:       srv,
+		serviceDetail: srv2,
 	}
 }
 
@@ -26,15 +29,23 @@ func (ht *TransactionHandler) Create(c echo.Context) error {
 	if err := c.Bind(&formInput); err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
 	}
-	userId := middlewares.ClaimsToken(c).Id
-	user := TransactionRequestToTransactionEntity(&formInput)
-	user.UserId = uint(userId)
 
-	transaction, err := ht.service.Create(user)
+	trans := TransactionRequestToTransactionEntity(&formInput)
+	userId := middlewares.ClaimsToken(c).Id
+	trans.UserId = uint(userId)
+
+	transaction, err := ht.service.Create(trans)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
-	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", TransactionEntityToTransactionResponse(transaction)))
+
+	for _, v := range trans.ProductTransactionDetail {
+		v.ProductTransactionID = transaction.Id
+		ht.serviceDetail.Create(v)
+	}
+
+	transactionEntity, _ := ht.service.GetById(transaction.Id)
+	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", TransactionEntityToTransactionResponse(transactionEntity)))
 }
 
 func (ht *TransactionHandler) MyTransactionHistory(c echo.Context) error {
