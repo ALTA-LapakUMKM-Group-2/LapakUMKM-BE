@@ -56,9 +56,13 @@ func (hd *DiscussionHandler) Update(c echo.Context) error {
 func (hd *DiscussionHandler) Delete(c echo.Context) error {
 	userId := middlewares.ClaimsToken(c).Id
 	id, _ := strconv.Atoi(c.Param("id"))
+	_, errId := hd.Service.GetById(uint(id))
+	if errId != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(errId.Error()))
+	}
 
 	if err := hd.Service.Delete(uint(id), uint(userId)); err != nil {
-		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err.Error()))
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
 	}
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Delete Data Success", nil))
 }
