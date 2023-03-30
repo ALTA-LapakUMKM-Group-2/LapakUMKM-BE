@@ -6,13 +6,13 @@ import (
 )
 
 type DashboardResponse struct {
-	Id                        uint
-	UserId                    uint
-	User                      delivery.UserResponse
-	FavoriteProductNameInWeek string
-	TotalProductNameInWeek    uint
-	TotalSellInWeek           uint
-	TotalCashInWeek           uint
+	Id                        uint                  `json:"id"`
+	UserId                    uint                  `json:"user_id"`
+	User                      delivery.UserResponse `json:"user,omitempty"`
+	FavoriteProductNameInWeek string                `json:"favorite_product_name_in_week"`
+	TotalProductNameInWeek    uint                  `json:"total_product_name_in_week"`
+	TotalSellInWeek           uint                  `json:"total_sell_in_week"`
+	TotalCashInWeek           uint                  `json:"total_cash_in_week"`
 }
 
 func EntityToResponse(entity dashboards.DashboardEntity) DashboardResponse {

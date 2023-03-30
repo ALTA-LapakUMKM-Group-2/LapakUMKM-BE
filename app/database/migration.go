@@ -4,6 +4,7 @@ import (
 	"fmt"
 	carts "lapakUmkm/features/carts/data"
 	categories "lapakUmkm/features/categories/data"
+	dashboard "lapakUmkm/features/dashboards/data"
 	discussions "lapakUmkm/features/discussions/data"
 	feedbacks "lapakUmkm/features/feedbacks/data"
 	productImages "lapakUmkm/features/productImages/data"
@@ -26,6 +27,7 @@ func InitMigration(db *gorm.DB) {
 		&discussions.Discussion{},
 		&productImages.ProductImages{},
 		&productTransactionDetails.ProductTransactionDetail{},
+		&dashboard.Dashboard{},
 	)
 
 	if err != nil {

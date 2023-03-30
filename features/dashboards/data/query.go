@@ -28,7 +28,7 @@ func (q *query) Create(userId uint) error {
 
 func (q *query) SelectByUserId(id uint) (dashboards.DashboardEntity, error) {
 	var dashboard Dashboard
-	if err := q.db.First(&dashboard, id); err.Error != nil {
+	if err := q.db.Where("user_id", id).First(&dashboard); err.Error != nil {
 		return dashboards.DashboardEntity{}, err.Error
 	}
 
@@ -38,10 +38,9 @@ func (q *query) SelectByUserId(id uint) (dashboards.DashboardEntity, error) {
 func (q *query) Update(userId uint) error {
 	var products data.Product
 	q.db.Select("sum(product_transaction_details.total_product) as price,products.id, products.product_name").
-		InnerJoins("ProductTransactionDetail").
-		InnerJoins("ProductTransaction").
+		Joins("inner join product_transaction_details on product_transaction_details.product_id = products.id").
 		Where("products.user_id = ?", userId).
-		Group("product.id").
+		Group("products.id").
 		Order("price desc").
 		First(&products)
 
@@ -50,16 +49,16 @@ func (q *query) Update(userId uint) error {
 	update.TotalProductNameInWeek = uint(products.Price)
 
 	q.db.Select("sum(product_transaction_details.total_product) as price").
-		InnerJoins("ProductTransactionDetail").
-		InnerJoins("ProductTransaction").
+		Joins("inner join product_transaction_details on product_transaction_details.product_id = products.id").
 		Where("products.user_id = ?", userId).
+		Order("price desc").
 		First(&products)
 	update.TotalSellInWeek = uint(products.Price)
 
-	q.db.Select("sum(product_transaction.total_payment) as price").
-		InnerJoins("ProductTransactionDetail").
-		InnerJoins("ProductTransaction").
+	q.db.Select("sum(product_transaction_details.total_product * products.price) as price").
+		Joins("inner join product_transaction_details on product_transaction_details.product_id = products.id").
 		Where("products.user_id = ?", userId).
+		Order("price desc").
 		First(&products)
 	update.TotalCashInWeek = uint(products.Price)
 
