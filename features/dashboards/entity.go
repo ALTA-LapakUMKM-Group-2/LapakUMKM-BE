@@ -17,5 +17,5 @@ type DashboardDataInterface interface {
 
 type DashboardServiceInterface interface {
 	GetByUserId(id uint) (DashboardEntity, error)
-	UpdateData() error
+	UpdateData(userId uint) error
 }

@@ -2,6 +2,7 @@ package data
 
 import (
 	"lapakUmkm/features/dashboards"
+	"lapakUmkm/features/productTransactions/data"
 
 	"gorm.io/gorm"
 )
@@ -18,7 +19,7 @@ func New(db *gorm.DB) dashboards.DashboardDataInterface {
 
 func (q *query) SelectByUserId(id uint) (dashboards.DashboardEntity, error) {
 	var dashboard Dashboard
-	if err := q.db.First(&dashboard); err.Error != nil {
+	if err := q.db.First(&dashboard, id); err.Error != nil {
 		return dashboards.DashboardEntity{}, err.Error
 	}
 
@@ -26,6 +27,12 @@ func (q *query) SelectByUserId(id uint) (dashboards.DashboardEntity, error) {
 }
 
 func (q *query) UpdateFavoriteProductInWeek(userId, value uint) error {
+	var products data.ProductTransaction
+	q.db.Select("*").
+		InnerJoins("ProductTransactionDetail").
+		InnerJoins("Product").
+		Find(&products)
+
 	var dashboard Dashboard
 	err := q.db.Model(&dashboard).
 		Where("user_id = ?", userId).
