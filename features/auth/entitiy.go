@@ -11,6 +11,9 @@ type AuthServiceInterface interface {
 
 	GetSSOGoogleUrl() string
 	LoginSSOGoogle(userEntity users.UserEntity) (string, users.UserEntity, error)
+	ForgetPassword(email string) error
+	IsUserExist(email string) error
+	NewPassword(token, newPassword, confirmPassword string) error
 }
 
 type AuthDataInterface interface {

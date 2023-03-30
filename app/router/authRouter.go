@@ -23,7 +23,10 @@ func AuthRouter(db *gorm.DB, e *echo.Echo) {
 	g.GET("/sso-response-callback", handler.GetSSOGoogleUrl)
 
 	g.POST("/sso-response-callback", handler.LoginSSOGoogle)
-	// g.POST("/forget-password", handler.Create)
+
+	g.GET("/forget-password", handler.ForgetPassword)
+	g.GET("/user-exist", handler.IsUserExist)
+	g.POST("/new-password", handler.NewPassword)
 
 	g.POST("/change-password", handler.ChangePassword, middlewares.Authentication)
 }

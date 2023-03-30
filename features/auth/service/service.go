@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"lapakUmkm/app/middlewares"
 	"lapakUmkm/features/auth"
 	"lapakUmkm/features/users"
@@ -108,4 +109,46 @@ func (s *authService) LoginSSOGoogle(userEntity users.UserEntity) (string, users
 	}
 
 	return token, userLogin, nil
+}
+
+// cekemailexist
+func (s *authService) IsUserExist(email string) error {
+	if _, err := s.data.GetUserByEmailOrId(email, 0); err != nil {
+		return errors.New("email not found")
+	}
+	return nil
+}
+
+func (s *authService) ForgetPassword(email string) error {
+	if _, err := s.data.GetUserByEmailOrId(email, 0); err != nil {
+		return errors.New("email not found")
+	}
+	token := helpers.EncryptText(email)
+	urlLink := "https://lapak-umkm-test-pase1.vercel.app/new-password?token=" + token
+
+	//send URL to Email
+	if errSendmail := helpers.SendMail(email, urlLink); errSendmail != nil {
+		return errSendmail
+	}
+
+	return nil
+}
+
+func (s *authService) NewPassword(token, newPassword, confirmPssword string) error {
+	if token == "" || newPassword == "" || confirmPssword == "" {
+		return errors.New("token,new password, and confirm password cannot be empty")
+	}
+
+	if newPassword != confirmPssword {
+		return errors.New("new password and confirm password must be similarity")
+	}
+
+	email := helpers.DecryptText(token)
+	fmt.Println(email)
+	user, err := s.data.GetUserByEmailOrId(email, 0)
+	if err != nil {
+		return errors.New("not valid")
+	}
+	hash, _ := helpers.HashPassword(newPassword)
+	return s.data.EditPassword(user.Id, hash)
 }

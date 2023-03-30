@@ -100,3 +100,36 @@ func (u *AuthHandler) LoginSSOGoogle(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("login success", tokesResponse))
 }
+
+func (u *AuthHandler) ForgetPassword(c echo.Context) error {
+	email := c.QueryParam("email")
+
+	if err := u.Service.ForgetPassword(email); err != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("email was sended", nil))
+}
+
+func (u *AuthHandler) IsUserExist(c echo.Context) error {
+	email := c.QueryParam("email")
+
+	if err := u.Service.IsUserExist(email); err != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("email found", email))
+}
+
+func (u *AuthHandler) NewPassword(c echo.Context) error {
+	req := NewPasswordRequest{}
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
+	}
+
+	if err := u.Service.NewPassword(req.Token, req.NewPassword, req.ConfirmPassword); err != nil {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("new password success", nil))
+}

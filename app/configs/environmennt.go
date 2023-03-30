@@ -51,6 +51,11 @@ func InitEnv() *AppConfig {
 		isRead = false
 	}
 
+	if val, found := os.LookupEnv("GMAILPASSWORD"); found {
+		app.GMAILPASSWORD = val
+		isRead = false
+	}
+
 	err2 := viper.Unmarshal(&app)
 	if err2 != nil {
 		log.Println("error parse config : ", err2.Error())
@@ -78,9 +83,9 @@ func InitEnv() *AppConfig {
 		app.CLIENTIDGOOGLE = viper.Get("CLIENTIDGOOGLE").(string)
 		app.CLIENTSECRETGOOGLE = viper.Get("CLIENTSECRETGOOGLE").(string)
 		app.SERVER_KEY_MIDTRANS = viper.Get("SERVER_KEY_MIDTRANS").(string)
+
+		app.GMAILPASSWORD = viper.Get("GMAILPASSWORD").(string)
 	}
-
-
 
 	return &app
 }

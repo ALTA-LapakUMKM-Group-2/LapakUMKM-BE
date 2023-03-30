@@ -13,6 +13,12 @@ type ChangePasswordRequest struct {
 	ConfirmPassword string `json:"confirm_password" form:"confirm_password"`
 }
 
+type NewPasswordRequest struct {
+	Token           string `json:"token" form:"token"`
+	NewPassword     string `json:"new_password" form:"new_password"`
+	ConfirmPassword string `json:"confirm_password" form:"confirm_password"`
+}
+
 type CallbackSSORequest struct {
 	Id            string `json:"id"`
 	Email         string `json:"email"`
