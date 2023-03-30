@@ -55,6 +55,10 @@ func (hf *FeedbackHandler) Update(c echo.Context) error {
 func (hf *FeedbackHandler) Delete(c echo.Context) error {
 	userId := middlewares.ClaimsToken(c).Id
 	id, _ := strconv.Atoi(c.Param("id"))
+	_, errId := hf.service.GetById(uint(id))
+	if errId != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(errId.Error()))
+	}
 
 	if err := hf.service.Delete(uint(id), uint(userId)); err != nil {
 		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err.Error()))
@@ -65,6 +69,10 @@ func (hf *FeedbackHandler) Delete(c echo.Context) error {
 
 func (hf *FeedbackHandler) GetFeedbackByProductId(c echo.Context) error {
 	productId, _ := strconv.Atoi(c.Param("id"))
+	_, errId := hf.service.GetById(uint(productId))
+	if errId != nil {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(errId.Error()))
+	}
 	feedbacks, err := hf.service.GetFeedbackByProductId(uint(productId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
