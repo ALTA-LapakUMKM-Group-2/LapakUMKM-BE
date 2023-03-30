@@ -13,6 +13,7 @@ type ProductTransactionDetail struct {
 	ProductId            uint
 	Product              product.Product
 	TotalProduct         int
+	Rating               float64
 }
 
 func EntityToModel(p productTransactionDetails.ProductTransactionDetailEntity) ProductTransactionDetail {
@@ -29,6 +30,7 @@ func ModelToEntity(p ProductTransactionDetail) productTransactionDetails.Product
 		ProductTransactionID: p.ProductTransactionID,
 		ProductId:            p.ProductId,
 		TotalProduct:         p.TotalProduct,
+		Rating:               p.Rating,
 	}
 
 	if !reflect.ValueOf(p.Product).IsZero() {

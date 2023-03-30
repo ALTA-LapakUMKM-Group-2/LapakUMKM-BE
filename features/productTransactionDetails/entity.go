@@ -11,6 +11,7 @@ type ProductTransactionDetailEntity struct {
 	Product              products.ProductEntity
 	TotalProduct         int
 	Address              string
+	Rating               float64
 }
 
 type ProductTransactionDetailServiceInterface interface {

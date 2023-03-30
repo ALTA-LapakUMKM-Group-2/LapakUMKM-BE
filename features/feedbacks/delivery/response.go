@@ -9,23 +9,23 @@ import (
 )
 
 type FeedbackResponse struct {
-	Id            uint              `json:"id"`
-	ParentId      uint              `json:"parent_id"`
-	TransactionId uint              `json:"transaction_id"`
-	ProductId     uint              `json:"product_id"`
-	Rating        float64           `json:"rating"`
-	Feedback      string            `json:"feedback"`
-	User          user.UserResponse `json:"user"`
+	Id                         uint              `json:"id"`
+	ParentId                   uint              `json:"parent_id"`
+	ProductTransactionDetailId uint              `json:"product_transaction_detail_id"`
+	ProductId                  uint              `json:"product_id"`
+	Rating                     float64           `json:"rating"`
+	Feedback                   string            `json:"feedback"`
+	User                       user.UserResponse `json:"user"`
 }
 
 func FeedbackEntityToFeedbackResponse(feedbackEntity feedbacks.FeedbackEntity) FeedbackResponse {
 	feedbackResponse := FeedbackResponse{
-		Id:            feedbackEntity.Id,
-		ParentId:      feedbackEntity.ParentId,
-		TransactionId: feedbackEntity.TransactionId,
-		ProductId:     feedbackEntity.ProductId,
-		Rating:        feedbackEntity.Rating,
-		Feedback:      feedbackEntity.Feedback,
+		Id:                         feedbackEntity.Id,
+		ParentId:                   feedbackEntity.ParentId,
+		ProductTransactionDetailId: feedbackEntity.ProductTransactionDetailId,
+		ProductId:                  feedbackEntity.ProductId,
+		Rating:                     feedbackEntity.Rating,
+		Feedback:                   feedbackEntity.Feedback,
 	}
 	if !reflect.ValueOf(feedbackEntity.User).IsZero() {
 		feedbackResponse.User = user.UserResponse{
@@ -43,5 +43,3 @@ func ListFeedbackToFeedbackResponse(feedbackEntity []feedbacks.FeedbackEntity) [
 	}
 	return dataRes
 }
-
-

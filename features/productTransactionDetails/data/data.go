@@ -27,7 +27,9 @@ func (q *query) SelectById(id uint) (productTransactionDetails.ProductTransactio
 
 func (q *query) SelectByTransaksiId(productId uint) ([]productTransactionDetails.ProductTransactionDetailEntity, error) {
 	var data []ProductTransactionDetail
-	if err := q.db.Preload("Product").Where("product_transaction_id = ?", productId).Find(&data); err.Error != nil {
+	if err := q.db.Preload("Product").
+		Select("product_transaction_details.id,product_transaction_details.product_transaction_id,product_transaction_details.product_id,product_transaction_details.total_product,CASE WHEN feedbacks.rating IS NULL THEN 0 ELSE feedbacks.rating END AS rating").
+		Joins("left join feedbacks on feedbacks.product_transaction_detail_id = product_transaction_details.id").Where("product_transaction_id = ?", productId).Find(&data); err.Error != nil {
 		return nil, err.Error
 	}
 

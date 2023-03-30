@@ -4,24 +4,25 @@ import (
 	"errors"
 	"lapakUmkm/features/feedbacks"
 	"log"
+
 	"github.com/go-playground/validator/v10"
 )
 
 type feedbackService struct {
-	Data feedbacks.FeedbackDataInterface
+	Data     feedbacks.FeedbackDataInterface
 	validate *validator.Validate
 }
 
 func New(data feedbacks.FeedbackDataInterface) feedbacks.FeedbackServiceInterface {
 	return &feedbackService{
-		Data: data,
+		Data:     data,
 		validate: validator.New(),
 	}
 }
 
 func (sf *feedbackService) Create(feedbackEntity feedbacks.FeedbackEntity) (feedbacks.FeedbackEntity, error) {
 	sf.validate = validator.New()
-	errValidate := sf.validate.StructExcept(feedbackEntity, "User", "Product", "ProductTransaction")
+	errValidate := sf.validate.StructExcept(feedbackEntity, "User", "Product", "ProductTransactionDetails")
 	if errValidate != nil {
 		return feedbacks.FeedbackEntity{}, errValidate
 	}
@@ -39,7 +40,7 @@ func (sf *feedbackService) Update(feedbackEntity feedbacks.FeedbackEntity, id, u
 	}
 
 	if checkDataExist.UserId != userId {
-		return feedbacks.FeedbackEntity{} , errors.New("access denied")
+		return feedbacks.FeedbackEntity{}, errors.New("access denied")
 	}
 
 	err := sf.Data.Edit(feedbackEntity, id)
@@ -60,7 +61,7 @@ func (sf *feedbackService) Delete(id, userId uint) error {
 	return sf.Data.Destroy(id)
 }
 
-func (sf *feedbackService) GetFeedbackByProductId(productId uint) ([]feedbacks.FeedbackEntity, error){
+func (sf *feedbackService) GetFeedbackByProductId(productId uint) ([]feedbacks.FeedbackEntity, error) {
 	res, err := sf.Data.SelectFeedbackByProductId(productId)
 	if err != nil {
 		log.Println("query error", err.Error())

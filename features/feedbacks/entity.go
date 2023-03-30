@@ -1,27 +1,26 @@
 package feedbacks
 
 import (
-	"lapakUmkm/features/productTransactions"
+	"lapakUmkm/features/productTransactionDetails"
 	"lapakUmkm/features/products"
 	"lapakUmkm/features/users"
 	"time"
 )
 
 type FeedbackEntity struct {
-	Id                 uint
-	ParentId           uint
-	UserId             uint
-	User               users.UserEntity
-	ProductId          uint
-	Product            products.ProductEntity
-	TransactionId      uint
-	ProductTransaction productTransactions.ProductTransactionEntity
-	Rating             float64
-	Feedback           string
-	CreatedAt          time.Time
-	UpdatedAt          time.Time
+	Id                         uint
+	ParentId                   uint
+	UserId                     uint
+	User                       users.UserEntity
+	ProductId                  uint
+	Product                    products.ProductEntity
+	ProductTransactionDetailId uint
+	ProductTransactionDetails  productTransactionDetails.ProductTransactionDetailEntity
+	Rating                     float64
+	Feedback                   string
+	CreatedAt                  time.Time
+	UpdatedAt                  time.Time
 }
-
 
 type FeedbackServiceInterface interface {
 	Create(feedbackEntity FeedbackEntity) (FeedbackEntity, error)

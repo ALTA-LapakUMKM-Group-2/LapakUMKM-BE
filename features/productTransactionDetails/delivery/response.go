@@ -13,6 +13,7 @@ type ProductTransactionDetailResponse struct {
 	Product              delivery.ProductResponse `json:"product"`
 	TotalProduct         int                      `json:"total_product"`
 	Address              string                   `json:"address"`
+	Rating               float64                  `json:"rating"`
 }
 
 func EntityToResponse(e productTransactionDetails.ProductTransactionDetailEntity) ProductTransactionDetailResponse {
@@ -22,6 +23,7 @@ func EntityToResponse(e productTransactionDetails.ProductTransactionDetailEntity
 		ProductId:            e.ProductId,
 		TotalProduct:         e.TotalProduct,
 		Address:              e.Address,
+		Rating:               e.Rating,
 	}
 
 	if !reflect.ValueOf(e.Product).IsZero() {
