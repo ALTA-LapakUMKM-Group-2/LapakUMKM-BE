@@ -2,6 +2,7 @@ package data
 
 import (
 	"lapakUmkm/features/dashboards"
+	"lapakUmkm/features/users/data"
 
 	"gorm.io/gorm"
 )
@@ -9,6 +10,7 @@ import (
 type Dashboard struct {
 	gorm.Model
 	UserId                uint
+	User                  *data.User `gorm:"foreignKey:UserId"`
 	FavoriteProductInWeek uint
 	TotalSellInWeek       uint
 	TotalCashInWeek       uint

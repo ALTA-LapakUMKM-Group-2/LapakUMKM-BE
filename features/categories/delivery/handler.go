@@ -76,7 +76,7 @@ func (t *CategoryHandler) Delete(c echo.Context) error {
 	id := uint(_id)
 
 	if err := t.Service.Delete(id); err != nil {
-		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err.Error()))
 	}
 
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("Delete Data Success", nil))
