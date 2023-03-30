@@ -24,7 +24,7 @@ func TransactionRouter(db *gorm.DB, e *echo.Echo) {
 
 	e.GET("/transactions", handler.MyTransactionHistory, middlewares.Authentication)
 	e.GET("/transactions/:id", handler.GetById, middlewares.Authentication)
-	e.GET("/transactions/:id/details", handler2.GetByProductId, middlewares.Authentication)
+	e.GET("/transactions/:id/details", handler2.GetByTransaksiId, middlewares.Authentication)
 
 	g := e.Group("/transactions")
 	g.POST("", handler.Create, middlewares.Authentication)

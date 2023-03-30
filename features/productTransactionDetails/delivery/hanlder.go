@@ -28,9 +28,9 @@ func (h *ProductTransactionDetailHandler) GetById(c echo.Context) error {
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", EntityToResponse(productDetail)))
 }
 
-func (h *ProductTransactionDetailHandler) GetByProductId(c echo.Context) error {
+func (h *ProductTransactionDetailHandler) GetByTransaksiId(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	productDetail, _ := h.Service.GetByProductId(uint(id))
+	productDetail, _ := h.Service.GetByTransaksiId(uint(id))
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", ListEntityToResponse(productDetail)))
 }
 

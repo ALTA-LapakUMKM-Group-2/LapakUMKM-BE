@@ -31,6 +31,6 @@ func (s *ProductTransactionDetailsService) GetById(id uint) (productTransactionD
 	return s.Data.SelectById(id)
 }
 
-func (s *ProductTransactionDetailsService) GetByProductId(productId uint) ([]productTransactionDetails.ProductTransactionDetailEntity, error) {
-	return s.Data.SelectByProductId(productId)
+func (s *ProductTransactionDetailsService) GetByTransaksiId(productId uint) ([]productTransactionDetails.ProductTransactionDetailEntity, error) {
+	return s.Data.SelectByTransaksiId(productId)
 }
