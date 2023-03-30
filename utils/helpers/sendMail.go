@@ -9,7 +9,7 @@ import (
 
 var GMAILPASS = ""
 
-func SendMail(email, urllink string) error {
+func SendMail(title, email, urllink string) error {
 	const CONFIG_SMTP_HOST = "smtp.gmail.com"
 	const CONFIG_SMTP_PORT = 587
 	const CONFIG_SENDER_NAME = "Lapak UMKM <findryankpradana@gmail.com>"
@@ -23,14 +23,14 @@ func SendMail(email, urllink string) error {
 
 	mailer := gomail.NewMessage()
 	mailer.SetHeader("From", CONFIG_SENDER_NAME)
-	mailer.SetHeader("To", "findryankurnia@gmail.com")
-	mailer.SetAddressHeader("Cc", "findryankurnia@gmail.com", "Tra Lala La")
+	mailer.SetHeader("To", email)
+	mailer.SetAddressHeader("Cc", email, title)
 	mailer.SetHeader("Subject", "Forget Password")
 
 	contentStr := string(content)
+	contentStr = strings.Replace(contentStr, "{{title}}", title, -1)
 	contentStr = strings.Replace(contentStr, "{{email}}", email, -1)
 	contentStr = strings.Replace(contentStr, "{{urllink}}", urllink, -1)
-
 	mailer.SetBody("text/html", contentStr)
 
 	dialer := gomail.NewDialer(

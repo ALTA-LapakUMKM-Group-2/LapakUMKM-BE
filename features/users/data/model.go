@@ -16,9 +16,11 @@ type User struct {
 	Address      string
 	ShopName     string
 	PhotoProfile string
+	Status       string
 }
 
 func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
 	user.Password, err = helpers.HashPassword(user.Password)
+	user.Status = "inactive"
 	return
 }

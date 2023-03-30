@@ -47,7 +47,16 @@ func (h *authService) Register(request users.UserEntity) error {
 	if errValidate := h.validate.Struct(request); errValidate != nil {
 		return errValidate
 	}
-	return h.data.Register(request)
+
+	if err := h.data.Register(request); err != nil {
+		return err
+	}
+
+	// baseUrl := "https://lapak-umkm-test-pase1.vercel.app"
+	// redirect := baseUrl + "/confirmation"
+	// helpers.SendMail("Activation Email", request.Email, redirect)
+
+	return nil
 }
 
 func (u *authService) ChangePassword(id uint, oldPassword, newPassword, confirmPssword string) error {
@@ -127,7 +136,7 @@ func (s *authService) ForgetPassword(email string) error {
 	urlLink := "https://lapak-umkm-test-pase1.vercel.app/new-password?token=" + token
 
 	//send URL to Email
-	if errSendmail := helpers.SendMail(email, urlLink); errSendmail != nil {
+	if errSendmail := helpers.SendMail("Forget Password", email, urlLink); errSendmail != nil {
 		return errSendmail
 	}
 
