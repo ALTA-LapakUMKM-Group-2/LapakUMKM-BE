@@ -70,7 +70,7 @@ func (hd *DiscussionHandler) GetDiscussionByProductId(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
 	listDiscussionsResponse := ListDiscussionEntityToDiscussionResponse(discussions)
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedback by product id", listDiscussionsResponse))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("discussion by product id", listDiscussionsResponse))
 }
 
 func (hd *DiscussionHandler) GetAll(c echo.Context) error {
@@ -91,5 +91,5 @@ func (hd *DiscussionHandler) GetById(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data not found"))
 	}
 	discussionResponse := DiscussionEntityToDiscussionResponse(discussionEntity)
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedbacks detail", discussionResponse))
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("discussion detail", discussionResponse))
 }

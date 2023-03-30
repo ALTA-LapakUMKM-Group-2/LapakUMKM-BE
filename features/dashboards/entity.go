@@ -1,18 +1,18 @@
 package dashboards
 
 type DashboardEntity struct {
-	Id                    uint
-	UserId                uint
-	FavoriteProductInWeek uint
-	TotalSellInWeek       uint
-	TotalCashInWeek       uint
+	Id                        uint
+	UserId                    uint
+	FavoriteProductNameInWeek string
+	TotalProductNameInWeek    uint
+	TotalSellInWeek           uint
+	TotalCashInWeek           uint
 }
 
 type DashboardDataInterface interface {
 	SelectByUserId(id uint) (DashboardEntity, error)
-	UpdateFavoriteProductInWeek(userId, value uint) error
-	UpdateTotalSellInWeek(userId, value uint) error
-	UpdateTotalCashInWeek(userId, value uint) error
+	Create(userId uint) error
+	Update(userId uint) error
 }
 
 type DashboardServiceInterface interface {

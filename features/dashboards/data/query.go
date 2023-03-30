@@ -2,7 +2,7 @@ package data
 
 import (
 	"lapakUmkm/features/dashboards"
-	"lapakUmkm/features/productTransactions/data"
+	"lapakUmkm/features/products/data"
 
 	"gorm.io/gorm"
 )
@@ -17,6 +17,15 @@ func New(db *gorm.DB) dashboards.DashboardDataInterface {
 	}
 }
 
+func (q *query) Create(userId uint) error {
+	var dashboard Dashboard
+	dashboard.UserId = userId
+	if err := q.db.Create(&dashboard); err.Error != nil {
+		return err.Error
+	}
+	return nil
+}
+
 func (q *query) SelectByUserId(id uint) (dashboards.DashboardEntity, error) {
 	var dashboard Dashboard
 	if err := q.db.First(&dashboard, id); err.Error != nil {
@@ -26,41 +35,40 @@ func (q *query) SelectByUserId(id uint) (dashboards.DashboardEntity, error) {
 	return ModelToEntity(dashboard), nil
 }
 
-func (q *query) UpdateFavoriteProductInWeek(userId, value uint) error {
-	var products data.ProductTransaction
-	q.db.Select("*").
+func (q *query) Update(userId uint) error {
+	var products data.Product
+	q.db.Select("sum(product_transaction_details.total_product) as price,products.id, products.product_name").
 		InnerJoins("ProductTransactionDetail").
-		InnerJoins("Product").
-		Find(&products)
+		InnerJoins("ProductTransaction").
+		Where("products.user_id = ?", userId).
+		Group("product.id").
+		Order("price desc").
+		First(&products)
 
-	var dashboard Dashboard
+	var dashboard, update Dashboard
+	update.FavoriteProductNameInWeek = products.ProductName
+	update.TotalProductNameInWeek = uint(products.Price)
+
+	q.db.Select("sum(product_transaction_details.total_product) as price").
+		InnerJoins("ProductTransactionDetail").
+		InnerJoins("ProductTransaction").
+		Where("products.user_id = ?", userId).
+		First(&products)
+	update.TotalSellInWeek = uint(products.Price)
+
+	q.db.Select("sum(product_transaction.total_payment) as price").
+		InnerJoins("ProductTransactionDetail").
+		InnerJoins("ProductTransaction").
+		Where("products.user_id = ?", userId).
+		First(&products)
+	update.TotalCashInWeek = uint(products.Price)
+
 	err := q.db.Model(&dashboard).
 		Where("user_id = ?", userId).
-		Update("favorite_product_in_week", value)
+		Updates(update)
 	if err.Error != nil {
 		return err.Error
 	}
-	return nil
-}
 
-func (q *query) UpdateTotalCashInWeek(userId uint, value uint) error {
-	var dashboard Dashboard
-	err := q.db.Model(&dashboard).
-		Where("user_id = ?", userId).
-		Update("total_cash_in_week", value)
-	if err.Error != nil {
-		return err.Error
-	}
-	return nil
-}
-
-func (q *query) UpdateTotalSellInWeek(userId uint, value uint) error {
-	var dashboard Dashboard
-	err := q.db.Model(&dashboard).
-		Where("user_id = ?", userId).
-		Update("total_sell_in_week", value)
-	if err.Error != nil {
-		return err.Error
-	}
 	return nil
 }

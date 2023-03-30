@@ -18,14 +18,17 @@ func New(data dashboards.DashboardDataInterface) dashboards.DashboardServiceInte
 	}
 }
 
+func (s *DashboardService) Create(userId uint) error {
+	return s.data.Create(userId)
+}
+
 func (s *DashboardService) GetByUserId(userId uint) (dashboards.DashboardEntity, error) {
 	return s.data.SelectByUserId(userId)
 }
 
 func (s *DashboardService) UpdateData(userId uint) error {
-	if err := s.data.UpdateFavoriteProductInWeek(userId, 10); err != nil {
+	if err := s.data.Update(userId); err != nil {
 		return err
 	}
-
 	return nil
 }
