@@ -62,7 +62,9 @@ func (qd *query) SelectDiscussionByProductId(productId uint) ([]discussions.Disc
 
 func (qd *query) SelectAll(userId uint) ([]discussions.DiscussionEntity, error) {
 	var discussions []Discussion
-	if err := qd.db.Where("user_id = ?", userId).Preload("User").Order("id").Find(&discussions); err.Error != nil {
+	if err := qd.db.Where("user_id = ?", userId).Preload("User").Order("id").
+		Select("id,product_id,CASE WHEN parent_id = 0 THEN id ELSE parent_id END AS parent_id,discussion,user_id").
+		Find(&discussions); err.Error != nil {
 		return nil, err.Error
 	}
 	return ListDiscussionToDiscussionEntity(discussions), nil

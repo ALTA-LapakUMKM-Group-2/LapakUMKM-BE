@@ -71,11 +71,11 @@ func ListDiscussionEntityToDiscussionResponse(discussionEntity []discussions.Dis
 
 	j := 0
 	var flag uint
-	for i := 0; i < len(discussionEntity); i++ {
-		if i == 0 {
-			flag = discussionEntity[j].ParentId
-		}
+	if len(discussionEntity) > 0 {
+		flag = discussionEntity[j].ParentId
+	}
 
+	for i := 0; i < len(discussionEntity); i++ {
 		if flag != discussionEntity[i].ParentId {
 			j++
 			flag = discussionEntity[i].ParentId
