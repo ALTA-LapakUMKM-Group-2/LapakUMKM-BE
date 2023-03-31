@@ -89,6 +89,11 @@ func (hd *DiscussionHandler) GetAll(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
+
+	if len(feedbackEntity) == 0 {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data null"))
+	}
+
 	listDiscussionsResponse := ListDiscussionEntityToDiscussionResponse(feedbackEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your discussions", listDiscussionsResponse))
 }

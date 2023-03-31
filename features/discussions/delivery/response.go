@@ -70,8 +70,12 @@ func ListDiscussionEntityToDiscussionResponse(discussionEntity []discussions.Dis
 	var dataResponse []DiscussionResponse
 
 	j := 0
-	flag := discussionEntity[j].ParentId
+	var flag uint
 	for i := 0; i < len(discussionEntity); i++ {
+		if i == 0 {
+			flag = discussionEntity[j].ParentId
+		}
+
 		if flag != discussionEntity[i].ParentId {
 			j++
 			flag = discussionEntity[i].ParentId

@@ -9,13 +9,13 @@ import (
 )
 
 type DiscussionService struct {
-	Data discussions.DiscussionDataInterface
+	Data     discussions.DiscussionDataInterface
 	validate *validator.Validate
 }
 
-func New(data discussions.DiscussionDataInterface) discussions.DiscussionServiceInterface{
+func New(data discussions.DiscussionDataInterface) discussions.DiscussionServiceInterface {
 	return &DiscussionService{
-		Data: data,
+		Data:     data,
 		validate: validator.New(),
 	}
 }
@@ -30,7 +30,7 @@ func (sd *DiscussionService) Create(discussionEntity discussions.DiscussionEntit
 	//insertion
 	discussionId, err := sd.Data.Store(discussionEntity)
 	if err != nil {
-		return discussions.DiscussionEntity{}, err 
+		return discussions.DiscussionEntity{}, err
 	}
 	return sd.Data.SelectById(discussionId)
 }
@@ -42,7 +42,7 @@ func (sd *DiscussionService) Update(discussionEntity discussions.DiscussionEntit
 	}
 
 	if checkDataExist.UserId != userId {
-		return discussions.DiscussionEntity{} , errors.New("data can't be updated")
+		return discussions.DiscussionEntity{}, errors.New("data can't be updated")
 	}
 
 	err := sd.Data.Edit(discussionEntity, id)
@@ -63,7 +63,7 @@ func (sd *DiscussionService) Delete(id uint, userId uint) error {
 	return sd.Data.Destroy(id)
 }
 
-func (sd *DiscussionService) GetDiscussionByProductId(productId uint) ([]discussions.DiscussionEntity, error){
+func (sd *DiscussionService) GetDiscussionByProductId(productId uint) ([]discussions.DiscussionEntity, error) {
 	res, err := sd.Data.SelectDiscussionByProductId(productId)
 	if err != nil {
 		log.Println("query error", err.Error())
