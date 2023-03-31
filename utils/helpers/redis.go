@@ -43,3 +43,13 @@ func GetRedis(setname string) (string, bool, error) {
 
 	return val, true, nil
 }
+
+func DeleteRedis(setname string) error {
+	redisClient := ConfigRedis()
+	err := redisClient.Del(setname).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
