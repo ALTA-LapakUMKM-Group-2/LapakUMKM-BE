@@ -69,7 +69,7 @@ func (hd *DiscussionHandler) Delete(c echo.Context) error {
 
 func (hd *DiscussionHandler) GetDiscussionByProductId(c echo.Context) error {
 	productId, _ := strconv.Atoi(c.Param("id"))
-	_, errId := hd.Service.GetDiscussionByProductId(uint(productId))
+	_, errId := hd.Service.GetById(uint(productId))
 	if errId != nil {
 		return c.JSON(http.StatusNotFound, helpers.ResponseFail(errId.Error()))
 	}
