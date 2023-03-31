@@ -25,7 +25,7 @@ func (h *UserHandler) GetUser(c echo.Context) error {
 	userId := middlewares.ClaimsToken(c).Id
 	users, err := h.Service.GetUser(uint(userId))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail(err.Error()))
 	}
 
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", UserEntityToUserResponse(users)))
