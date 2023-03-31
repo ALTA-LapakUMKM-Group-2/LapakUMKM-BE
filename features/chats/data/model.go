@@ -38,9 +38,9 @@ type Chat struct {
 func (chat *Chat) BeforeCreate(tx *gorm.DB) error {
 	var roomId string
 	if chat.SenderId < chat.RecipientId {
-		roomId = fmt.Sprintf("%d%d", chat.SenderId, chat.RecipientId)
+		roomId = fmt.Sprintf("R%d%d", chat.SenderId, chat.RecipientId)
 	} else {
-		roomId = fmt.Sprintf("%d%d", chat.RecipientId, chat.SenderId)
+		roomId = fmt.Sprintf("R%d%d", chat.RecipientId, chat.SenderId)
 	}
 	chat.RoomId = roomId
 	return nil
