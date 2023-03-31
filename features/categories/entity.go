@@ -6,7 +6,7 @@ import (
 
 type CategoryEntity struct {
 	Id        uint
-	Category  string `validate:"required,min=4,max=20"`
+	Category  string `validate:"required,min=3,max=20"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
