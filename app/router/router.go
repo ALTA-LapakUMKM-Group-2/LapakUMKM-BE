@@ -22,6 +22,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	DiscussionRouter(db, e)
 	TransactionRouter(db, e)
 	DashboardRouter(db, e)
+	ChatRouter(db, e)
 }
 
 func index(c echo.Context) error {
