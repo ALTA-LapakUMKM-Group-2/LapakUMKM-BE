@@ -12,6 +12,7 @@ import (
 	productTransactions "lapakUmkm/features/productTransactions/data"
 	products "lapakUmkm/features/products/data"
 	user "lapakUmkm/features/users/data"
+	chat "lapakUmkm/features/chats/data"
 
 	"gorm.io/gorm"
 )
@@ -28,6 +29,7 @@ func InitMigration(db *gorm.DB) {
 		&productImages.ProductImages{},
 		&productTransactionDetails.ProductTransactionDetail{},
 		&dashboard.Dashboard{},
+		&chat.Chat{},
 	)
 
 	if err != nil {
