@@ -23,7 +23,7 @@ func New(data dashboards.DashboardDataInterface) dashboards.DashboardServiceInte
 }
 
 func (s *DashboardService) GetByUserId(userId uint) (dashboards.DashboardEntity, error) {
-	redisName := "dashboardSS" + strconv.Itoa(int(userId))
+	redisName := "dashboard" + strconv.Itoa(int(userId))
 	valueRedis, flag, err := helpers.GetRedis(redisName)
 	if err != nil && !flag {
 		return dashboards.DashboardEntity{}, err

@@ -27,6 +27,7 @@ func PushNotifFirebase(title, body, topic string) error {
 			Body:  body,
 		},
 		Topic: topic,
+		Token: "<client_token>",
 	}
 
 	// Send the message
