@@ -1,7 +1,11 @@
 package service
 
 import (
+	"encoding/json"
 	"lapakUmkm/features/dashboards"
+	"lapakUmkm/utils/helpers"
+	"runtime"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -18,20 +22,36 @@ func New(data dashboards.DashboardDataInterface) dashboards.DashboardServiceInte
 	}
 }
 
-func (s *DashboardService) Create(userId uint) error {
-	return s.data.Create(userId)
-}
-
 func (s *DashboardService) GetByUserId(userId uint) (dashboards.DashboardEntity, error) {
-	if err := s.data.Create(userId); err != nil {
-		return dashboards.DashboardEntity{}, nil
+	redisName := "dashboardSS" + strconv.Itoa(int(userId))
+	valueRedis, flag, err := helpers.GetRedis(redisName)
+	if err != nil && !flag {
+		return dashboards.DashboardEntity{}, err
 	}
-	return s.data.SelectByUserId(userId)
-}
 
-func (s *DashboardService) UpdateData(userId uint) error {
-	if err := s.data.Update(userId); err != nil {
-		return err
+	//empty redis
+	if err != nil && flag {
+		runtime.GOMAXPROCS(2)
+		if err := s.data.Create(userId); err != nil {
+			return dashboards.DashboardEntity{}, err
+		}
+		data, _ := s.data.SelectByUserId(userId)
+
+		var setRedis = func() {
+			jsonByte, _ := json.Marshal(data)
+			helpers.SetRedis(redisName, jsonByte)
+		}
+
+		go setRedis()
+
+		return data, nil
 	}
-	return nil
+
+	var data dashboards.DashboardEntity
+	err = json.Unmarshal([]byte(valueRedis), &data)
+	if err != nil {
+		panic(err)
+	}
+
+	return data, nil
 }

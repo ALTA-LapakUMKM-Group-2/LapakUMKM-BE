@@ -24,10 +24,3 @@ func (h *DiscussionHandler) Get(c echo.Context) error {
 	data, _ := h.Service.GetByUserId(uint(userId))
 	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Dashboard Success", EntityToResponse(data)))
 }
-
-func (h *DiscussionHandler) Create(c echo.Context) error {
-	userId := middlewares.ClaimsToken(c).Id
-	h.Service.Create(uint(userId))
-	h.Service.UpdateData(uint(userId))
-	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Dashboard Success", nil))
-}

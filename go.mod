@@ -57,6 +57,7 @@ require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/Findryankp/snapMidtransGo v1.0.1
 	github.com/go-playground/validator/v10 v10.12.0
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/jinzhu/copier v0.3.5
 	github.com/labstack/echo-jwt/v4 v4.1.0
