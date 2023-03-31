@@ -18,11 +18,37 @@ func New(db *gorm.DB) dashboards.DashboardDataInterface {
 }
 
 func (q *query) Create(userId uint) error {
+	var products data.Product
+	q.db.Select("sum(product_transaction_details.total_product) as price,products.id, products.product_name").
+		Joins("inner join product_transaction_details on product_transaction_details.product_id = products.id").
+		Where("products.user_id = ?", userId).
+		Group("products.id").
+		Order("price desc").
+		First(&products)
+
 	var dashboard Dashboard
 	dashboard.UserId = userId
+	dashboard.FavoriteProductNameInWeek = products.ProductName
+	dashboard.TotalProductNameInWeek = uint(products.Price)
+
+	q.db.Select("sum(product_transaction_details.total_product) as price").
+		Joins("inner join product_transaction_details on product_transaction_details.product_id = products.id").
+		Where("products.user_id = ?", userId).
+		Order("price desc").
+		First(&products)
+	dashboard.TotalSellInWeek = uint(products.Price)
+
+	q.db.Select("sum(product_transaction_details.total_product * products.price) as price").
+		Joins("inner join product_transaction_details on product_transaction_details.product_id = products.id").
+		Where("products.user_id = ?", userId).
+		Order("price desc").
+		First(&products)
+	dashboard.TotalCashInWeek = uint(products.Price)
+
 	if err := q.db.Create(&dashboard); err.Error != nil {
 		return err.Error
 	}
+
 	return nil
 }
 
@@ -44,28 +70,26 @@ func (q *query) Update(userId uint) error {
 		Order("price desc").
 		First(&products)
 
-	var dashboard, update Dashboard
-	update.FavoriteProductNameInWeek = products.ProductName
-	update.TotalProductNameInWeek = uint(products.Price)
+	var dashboard Dashboard
+	dashboard.UserId = userId
+	dashboard.FavoriteProductNameInWeek = products.ProductName
+	dashboard.TotalProductNameInWeek = uint(products.Price)
 
 	q.db.Select("sum(product_transaction_details.total_product) as price").
 		Joins("inner join product_transaction_details on product_transaction_details.product_id = products.id").
 		Where("products.user_id = ?", userId).
 		Order("price desc").
 		First(&products)
-	update.TotalSellInWeek = uint(products.Price)
+	dashboard.TotalSellInWeek = uint(products.Price)
 
 	q.db.Select("sum(product_transaction_details.total_product * products.price) as price").
 		Joins("inner join product_transaction_details on product_transaction_details.product_id = products.id").
 		Where("products.user_id = ?", userId).
 		Order("price desc").
 		First(&products)
-	update.TotalCashInWeek = uint(products.Price)
+	dashboard.TotalCashInWeek = uint(products.Price)
 
-	err := q.db.Model(&dashboard).
-		Where("user_id = ?", userId).
-		Updates(update)
-	if err.Error != nil {
+	if err := q.db.Create(&dashboard); err.Error != nil {
 		return err.Error
 	}
 

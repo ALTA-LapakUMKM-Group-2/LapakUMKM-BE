@@ -16,5 +16,4 @@ func DashboardRouter(db *gorm.DB, e *echo.Echo) {
 	handler := _discussionsHandler.New(service)
 
 	e.GET("/dashboard", handler.Get, middlewares.Authentication)
-	e.GET("/dashboard/create", handler.Create, middlewares.Authentication)
 }

@@ -23,6 +23,9 @@ func (s *DashboardService) Create(userId uint) error {
 }
 
 func (s *DashboardService) GetByUserId(userId uint) (dashboards.DashboardEntity, error) {
+	if err := s.data.Create(userId); err != nil {
+		return dashboards.DashboardEntity{}, nil
+	}
 	return s.data.SelectByUserId(userId)
 }
 
