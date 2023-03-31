@@ -69,11 +69,12 @@ func (hf *FeedbackHandler) Delete(c echo.Context) error {
 
 func (hf *FeedbackHandler) GetFeedbackByProductId(c echo.Context) error {
 	productId, _ := strconv.Atoi(c.Param("id"))
-	_, errId := hf.service.GetById(uint(productId))
-	if errId != nil {
-		return c.JSON(http.StatusNotFound, helpers.ResponseFail(errId.Error()))
-	}
 	feedbacks, err := hf.service.GetFeedbackByProductId(uint(productId))
+
+	if len(feedbacks) == 0 {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data null"))
+	}
+
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
@@ -101,4 +102,3 @@ func (hf *FeedbackHandler) MyAllFeedback(c echo.Context) error {
 	listFeedbackResponse := ListFeedbackToFeedbackResponse(feedbackEntity)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your feedbacks", listFeedbackResponse))
 }
-
