@@ -60,6 +60,10 @@ func (t *CategoryHandler) Update(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
 	}
 
+	if formInput.Category == "" {
+		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("category is require"))
+	}
+
 	_id, _ := strconv.Atoi(c.Param("id"))
 	id := uint(_id)
 
