@@ -33,4 +33,5 @@ type UserDataInterface interface {
 	Store(userEntity UserEntity) (uint, error)
 	Edit(userEntity UserEntity, id uint) (uint, error)
 	Destroy(id uint) error
+	SelectDistinctUser(userId uint) ([]UserEntity, error)
 }

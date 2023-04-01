@@ -16,6 +16,15 @@ func New(db *gorm.DB) users.UserDataInterface {
 	}
 }
 
+func (q *query) SelectUserChatTo(userId uint) ([]users.UserEntity, error) {
+	var users []User
+	err := q.db.Distinct("users.id,users.full_name,users.shop_name,users.photo_profile").Joins("inner join chats on chats.sender_id = users.id").Where("chats.recipient_id = ?", userId).Find(&users)
+	if err.Error != nil {
+		return nil, err.Error
+	}
+	return ListUserToUserEntity(users), nil
+}
+
 func (q *query) SelectAll() ([]users.UserEntity, error) {
 	var users []User
 	if err := q.db.Find(&users); err.Error != nil {
