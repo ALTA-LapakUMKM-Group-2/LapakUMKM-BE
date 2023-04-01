@@ -6,6 +6,7 @@ import (
 	"lapakUmkm/utils/helpers"
 	"net/http"
 	"path/filepath"
+	// "strconv"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -30,6 +31,17 @@ func (h *UserHandler) GetUser(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", UserEntityToUserResponse(users)))
 }
+
+// func (h *UserHandler) GetSenderMessage(c echo.Context) error {
+// 	myId := middlewares.ClaimsToken(c).Id
+// 	userId, _ := strconv.Atoi(c.Param("id"))
+// 	feedbackEntity, err := h.Service.GetSenderMessage(uint(userId), uint(myId))
+// 	if err != nil {
+// 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
+// 	}
+// 	listFeedbackResponse := ListUserEntityToUserResponse(feedbackEntity)
+// 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your feedbacks", listFeedbackResponse))
+// }
 
 func (h *UserHandler) Update(c echo.Context) error {
 	userId := middlewares.ClaimsToken(c).Id

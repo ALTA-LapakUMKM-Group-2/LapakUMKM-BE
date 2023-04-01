@@ -54,6 +54,14 @@ func ChatToEntity(chat Chat) chats.ChatEntity {
 		Text:        chat.Text,
 		CreatedAt:   chat.CreatedAt,
 	}
+
+	if !reflect.ValueOf(chat.Sender).IsZero() {
+		result.Sender = users.UserEntity{
+			FullName: chat.Sender.FullName,
+			PhotoProfile: chat.Sender.PhotoProfile,
+		}
+	}
+
 	if !reflect.ValueOf(chat.Recipient).IsZero() {
 		result.Recipient = users.UserEntity{
 			FullName:     chat.Recipient.FullName,
@@ -70,3 +78,4 @@ func ListToEntity(chat []Chat) []chats.ChatEntity {
 	}
 	return chatEntity
 }
+

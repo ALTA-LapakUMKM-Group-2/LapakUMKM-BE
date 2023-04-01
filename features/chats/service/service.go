@@ -44,3 +44,11 @@ func (s *Service) GetByRoomId(roomId string) ([]chats.ChatEntity, error){
 func (s *Service) GetById(id uint) (chats.ChatEntity, error) {
 	return s.Data.SelectById(id)
 }
+
+func (s *Service) GetSenderUser(myId, userId uint) ([]chats.ChatEntity, error) {
+	return s.Data.SelectAll(userId)
+}
+
+func (s *Service) AllMessageToMe(myId, userId uint) ([]chats.ChatEntity, error) {
+	return s.Data.SelectAllMessageToMe(userId)
+}

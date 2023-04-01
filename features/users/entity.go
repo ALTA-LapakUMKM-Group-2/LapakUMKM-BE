@@ -25,6 +25,7 @@ type UserServiceInterface interface {
 	Delete(id uint) error
 	UpdateToProfile(id uint, file *multipart.FileHeader) (string, error)
 	UpdateToSeller(id uint, userEntity UserEntity) (UserEntity, error)
+	// GetSenderMessage(myId, userId uint) ([]UserEntity, error)
 }
 
 type UserDataInterface interface {
@@ -33,5 +34,6 @@ type UserDataInterface interface {
 	Store(userEntity UserEntity) (uint, error)
 	Edit(userEntity UserEntity, id uint) (uint, error)
 	Destroy(id uint) error
-	SelectDistinctUser(userId uint) ([]UserEntity, error)
+	// SelectDistinctUser(userId uint) ([]UserEntity, error)
+	// SelectUserChatTo(userId uint) ([]UserEntity, error)
 }
