@@ -17,6 +17,7 @@ func UserRouter(db *gorm.DB, e *echo.Echo) {
 
 	g := e.Group("/users")
 	g.Use(middlewares.Authentication)
+	// g.GET("/chat", handler.GetSenderMessage)
 	g.GET("", handler.GetUser)
 	g.POST("", handler.Update)
 	g.DELETE("", handler.Delete)

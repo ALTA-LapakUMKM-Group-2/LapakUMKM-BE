@@ -15,12 +15,14 @@ func ChatRouter(db *gorm.DB, e *echo.Echo) {
 	service := _chatsService.New(data)
 	handler := _chatsHandler.New(service)
 
-	// e.GET("/chats", handler.MyAllchat)
-	// e.GET("/chats/:id", handler.GetById)
 	e.GET("/rooms/:id/chats", handler.GetByRoomId)
+
+	// get last message from each senders. contains their sender_id 
+	e.GET("chats/users", handler.GetSenderUser, middlewares.Authentication)
+
+	// get all messages from all users who sent message to me (login user id)
+	e.GET("chats", handler.AllMessageToMe, middlewares.Authentication)
 
 	g := e.Group("/chats")
 	g.POST("", handler.Create, middlewares.Authentication)
-	// g.PUT("/:id", handler.Update, middlewares.Authentication)
-	// g.DELETE("/:id", handler.Delete, middlewares.Authentication)
 }

@@ -5,6 +5,7 @@ import (
 	"lapakUmkm/features/chats"
 	"lapakUmkm/utils/helpers"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -49,4 +50,26 @@ func (h *ChatHandler) GetByRoomId(c echo.Context) error {
 	}
 	listChatsResponse := ListEntityToResponse(chatss)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("chats by room id", listChatsResponse))
+}
+
+func (h *ChatHandler) GetSenderUser(c echo.Context) error {
+	myId := middlewares.ClaimsToken(c).Id
+	userId, _ := strconv.Atoi(c.Param("id"))
+	feedbackEntity, err := h.service.GetSenderUser(uint(userId), uint(myId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
+	}
+	listFeedbackResponse := ListEntityToResponse(feedbackEntity)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your customer messages", listFeedbackResponse))
+}
+
+func (h *ChatHandler) AllMessageToMe(c echo.Context) error {
+	myId := middlewares.ClaimsToken(c).Id
+	userId, _ := strconv.Atoi(c.Param("id"))
+	feedbackEntity, err := h.service.AllMessageToMe(uint(userId), uint(myId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
+	}
+	listFeedbackResponse := ListEntityToResponse(feedbackEntity)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your customer messages", listFeedbackResponse))
 }
