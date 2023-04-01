@@ -24,17 +24,6 @@ type Chat struct {
 	CreatedAt   time.Time
 }
 
-// func (chat *Chat) BeforeCreate(tx *gorm.DB) error {
-//     var roomId uint64
-//     if chat.SenderId < chat.RecipientId {
-//         roomId, _ = strconv.ParseUint(fmt.Sprintf("%d%d", chat.SenderId, chat.RecipientId), 10, 64)
-//     } else {
-//         roomId, _ = strconv.ParseUint(fmt.Sprintf("%d%d", chat.RecipientId, chat.SenderId), 10, 64)
-//     }
-//     chat.RoomId = uint(roomId)
-//     return nil
-// }
-
 func (chat *Chat) BeforeCreate(tx *gorm.DB) error {
 	var roomId string
 	if chat.SenderId < chat.RecipientId {
