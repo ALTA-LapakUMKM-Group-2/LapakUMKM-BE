@@ -51,11 +51,6 @@ func (h *authService) Register(request users.UserEntity) error {
 	if err := h.data.Register(request); err != nil {
 		return err
 	}
-
-	// baseUrl := "https://lapak-umkm-test-pase1.vercel.app"
-	// redirect := baseUrl + "/confirmation"
-	// helpers.SendMail("Activation Email", request.Email, redirect)
-
 	return nil
 }
 
@@ -90,7 +85,11 @@ func (s *authService) LoginSSOGoogle(userEntity users.UserEntity) (string, users
 		Role:         "user",
 	}
 
-	user, _ := s.data.GetUserByEmailOrId(userEntity.Email, 0)
+	user, errEx := s.data.GetUserByEmailOrId(userEntity.Email, 0)
+	if errEx != nil {
+		return "", users.UserEntity{}, errors.New("user is not active anymore")
+	}
+
 	s.validate = validator.New()
 	errValidate := s.validate.Struct(request)
 	if errValidate != nil {
@@ -133,7 +132,7 @@ func (s *authService) ForgetPassword(email string) error {
 		return errors.New("email not found")
 	}
 	token := helpers.EncryptText(email)
-	urlLink := "https://lapak-umkm-test-pase1.vercel.app/new-password?token=" + token
+	urlLink := "https://lapak-umkm-test2.netlify.app/new-password?token=" + token
 
 	//send URL to Email
 	if errSendmail := helpers.SendMail("Forget Password", email, urlLink); errSendmail != nil {
