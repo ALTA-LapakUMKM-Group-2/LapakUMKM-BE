@@ -19,8 +19,6 @@ type CartService interface {
 	MyCart(userID uint) ([]Core, error)
 	Update(updateCart Core) (Core, error)
 	Delete(userID, cartID uint) error
-	CartByID(userID uint, cart []uint) ([]Core, error)
-	BuyNow(cart Core) (Core, error)
 }
 
 type CartData interface {
@@ -28,6 +26,4 @@ type CartData interface {
 	MyCart(userID uint) ([]Core, error)
 	Update(updateCart Core) (Core, error)
 	Delete(userID, cartID uint) error
-	CartByID(userID uint, cart []uint) ([]Core, error)
-	BuyNow(cart Core) (Core, error)
 }

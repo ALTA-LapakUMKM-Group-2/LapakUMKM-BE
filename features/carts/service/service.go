@@ -57,25 +57,3 @@ func (cs *CartService) Delete(userID, cartID uint) error {
 	}
 	return nil
 }
-
-// CartByID implements carts.CartService
-func (cs *CartService) CartByID(userID uint, cart []uint) ([]carts.Core, error) {
-	tmp, err := cs.data.CartByID(userID, cart)
-	if err != nil {
-		return nil, err
-	}
-	return tmp, nil
-}
-
-// BuyNow implements carts.CartService
-func (cs *CartService) BuyNow(buyNow carts.Core) (carts.Core, error) {
-	errVld := cs.vld.Struct(buyNow)
-	if errVld != nil {
-		return carts.Core{}, errVld
-	}
-	tmp, err := cs.data.BuyNow(buyNow)
-	if err != nil {
-		return carts.Core{}, err
-	}
-	return tmp, nil
-}
