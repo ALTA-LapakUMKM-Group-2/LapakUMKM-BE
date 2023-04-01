@@ -69,12 +69,13 @@ func (hd *DiscussionHandler) Delete(c echo.Context) error {
 
 func (hd *DiscussionHandler) GetDiscussionByProductId(c echo.Context) error {
 	productId, _ := strconv.Atoi(c.Param("id"))
-	_, errId := hd.Service.GetById(uint(productId))
-	if errId != nil {
-		return c.JSON(http.StatusNotFound, helpers.ResponseFail(errId.Error()))
+	
+	discussions, err := hd.Service.GetDiscussionByProductId(uint(productId))
+	
+	if len(discussions) == 0 {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data not found"))
 	}
 
-	discussions, err := hd.Service.GetDiscussionByProductId(uint(productId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
