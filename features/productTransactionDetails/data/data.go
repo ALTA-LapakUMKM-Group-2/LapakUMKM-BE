@@ -2,6 +2,7 @@ package data
 
 import (
 	"lapakUmkm/features/productTransactionDetails"
+	"lapakUmkm/features/products/data"
 
 	"gorm.io/gorm"
 )
@@ -41,5 +42,15 @@ func (q *query) Store(productTransactionDetailEntity productTransactionDetails.P
 	if err := q.db.Create(&productTransactionDetail); err.Error != nil {
 		return 0, err.Error
 	}
+
+	var product data.Product
+	q.db.Model(&product).
+		Where("id = ?", productTransactionDetail.ProductId).
+		UpdateColumn("stock_remaining", gorm.Expr("stock_remaining - ?", productTransactionDetail.TotalProduct))
+
+	q.db.Model(&product).
+		Where("id = ?", productTransactionDetail.ProductId).
+		UpdateColumn("stock_sold", gorm.Expr("stock_sold + ?", productTransactionDetail.TotalProduct))
+
 	return productTransactionDetail.Id, nil
 }

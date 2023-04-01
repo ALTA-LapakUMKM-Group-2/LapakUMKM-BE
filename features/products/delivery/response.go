@@ -16,8 +16,8 @@ type ProductResponse struct {
 	Description    string                                `json:"description,omitempty"`
 	Size           string                                `json:"size,omitempty"`
 	Price          int                                   `json:"price,omitempty"`
-	StockRemaining int                                   `json:"stock_remaining,omitempty"`
-	StockSold      int                                   `json:"stock_sold,omitempty"`
+	StockRemaining int                                   `json:"stock_remaining"`
+	StockSold      int                                   `json:"stock_sold"`
 	User           user.UserResponse                     `json:"user,omitempty"`
 	Category       category.CategoryResponse             `json:"category,omitempty"`
 	ProductImage   []productsimage.ProductImagesResponse `json:"product_image,omitempty"`
