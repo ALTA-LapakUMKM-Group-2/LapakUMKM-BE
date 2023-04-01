@@ -81,37 +81,3 @@ func (ch *CartHandler) Delete(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success delete item from product", nil))
 }
-
-func (ch *CartHandler) GetById(c echo.Context) error {
-	var formInput CheckoutRequest
-	if err := c.Bind(&formInput); err != nil {
-		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
-	}
-	claim := middlewares.ClaimsToken(c)
-	userId := uint(claim.Id)
-	data, err := ch.srv.CartByID(userId, formInput.Id)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
-	}
-	res := ListCartResponse{}
-	copier.Copy(&res, &data)
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("success show your cart", res))
-}
-
-func (ch *CartHandler) BuyNow(c echo.Context) error {
-	var formInput NewCartRequest
-	if err := c.Bind(&formInput); err != nil {
-		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
-	}
-	claim := middlewares.ClaimsToken(c)
-	formInput.UserId = uint(claim.Id)
-	buyNow := carts.Core{}
-	copier.Copy(&buyNow, &formInput)
-	data, err := ch.srv.BuyNow(buyNow)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(err.Error()))
-	}
-	res := GetResponse{}
-	copier.Copy(&res, &data)
-	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("success add product to cart", res))
-}
