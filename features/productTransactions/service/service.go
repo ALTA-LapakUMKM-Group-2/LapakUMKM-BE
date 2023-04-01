@@ -1,8 +1,8 @@
 package service
 
 import (
-	"fmt"
 	"lapakUmkm/features/productTransactions"
+	"lapakUmkm/utils/helpers"
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
@@ -46,22 +46,22 @@ func (st *transactionService) Create(transactionEntity productTransactions.Produ
 		"phone":     "000",
 	}
 
-	fmt.Println(totalPayment, postData, totalProduct)
+	// fmt.Println(totalPayment, postData, totalProduct)
 
-	// paymentLink, err1 := helpers.PostMidtrans(postData)
-	// if err1 != nil {
-	// 	return productTransactions.ProductTransactionEntity{}, err
-	// } else {
-	// 	update := productTransactions.ProductTransactionEntity{
-	// 		TotalProduct:  totalProduct,
-	// 		TotalPayment:  totalPayment,
-	// 		PaymentStatus: "pending",
-	// 		PaymentLink:   paymentLink,
-	// 		OrderId:       orderId,
-	// 	}
-	// 	//if ok
-	// 	st.Data.Edit(update, transactionId)
-	// }
+	paymentLink, err1 := helpers.PostMidtrans(postData)
+	if err1 != nil {
+		return productTransactions.ProductTransactionEntity{}, err
+	} else {
+		update := productTransactions.ProductTransactionEntity{
+			TotalProduct:  totalProduct,
+			TotalPayment:  totalPayment,
+			PaymentStatus: "pending",
+			PaymentLink:   paymentLink,
+			OrderId:       orderId,
+		}
+		//if ok
+		st.Data.Edit(update, transactionId)
+	}
 
 	return st.Data.SelectById(transactionId)
 }
