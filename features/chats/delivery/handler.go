@@ -5,9 +5,6 @@ import (
 	"lapakUmkm/features/chats"
 	"lapakUmkm/utils/helpers"
 	"net/http"
-	// "strconv"
-
-	// "strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -39,38 +36,13 @@ func (h *ChatHandler) Create(c echo.Context) error {
 	return c.JSON(http.StatusCreated, helpers.ResponseSuccess("Create Data Success", EntityToResponse(chat)))
 }
 
-// func (h *ChatHandler) GetByRoomId(c echo.Context) error {
-// 	roomId:= (c.Param("id"))
-
-// 	// roomId, _ := strconv.Atoi(c.Param("id"))
-// 	// _, errId := h.service.GetById(uint(roomId))
-// 	// _, errId := h.service.GetByIdroomId())
-
-// 	// if errId != nil {
-// 	// 	return c.JSON(http.StatusNotFound, helpers.ResponseFail(errId.Error()))
-// 	// }
-// 	// chatss, err := h.service.GetByRoomId(uint(roomId))
-// 	chatss, err := h.service.GetByRoomId(roomId)
-
-// 	if err != nil {
-// 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
-// 	}
-// 	listChatsResponse := ListEntityToResponse(chatss)
-// 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("chats by room id", listChatsResponse))
-// }
-
 func (h *ChatHandler) GetByRoomId(c echo.Context) error {
-	roomId:= (c.Param("id"))
-
-	// roomId, _ := strconv.Atoi(c.Param("id"))
-	// _, errId := h.service.GetById(uint(roomId))
-	// _, errId := h.service.GetByIdroomId())
-
-	// if errId != nil {
-	// 	return c.JSON(http.StatusNotFound, helpers.ResponseFail(errId.Error()))
-	// }
-	// chatss, err := h.service.GetByRoomId(uint(roomId))
+	roomId := (c.Param("id"))
 	chatss, err := h.service.GetByRoomId(roomId)
+
+	if len(chatss) == 0 {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail("messages not found"))
+	}
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
