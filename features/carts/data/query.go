@@ -61,8 +61,8 @@ func (cq *CartQuery) MyCart(userID uint) ([]carts.Core, error) {
 		Where("products.deleted_at IS NULL").
 		Joins("JOIN users ON products.user_id = users.id").
 		Where("users.deleted_at IS NULL").
-		Joins("JOIN product_images ON carts.product_id = product_images.product_id").
-		Select("carts.id, carts.user_id, carts.product_id, carts.product_pcs, products.product_name AS product_name, products.price AS product_price, COALESCE(MIN(CONCAT('https://storage.googleapis.com/images_lapak_umkm/product/', product_images.image)), null) AS product_image, users.shop_name AS lapak_name, users.address AS lapak_address, users.photo_profile AS photo_profile").
+		Joins("LEFT JOIN product_images ON carts.product_id = product_images.product_id AND product_images.deleted_at IS NULL").
+		Select("carts.id, carts.user_id, carts.product_id, carts.product_pcs, products.product_name AS product_name, products.price AS product_price, COALESCE(CONCAT('https://storage.googleapis.com/images_lapak_umkm/product/', MIN(product_images.image)), null) AS product_image, users.shop_name AS lapak_name, users.address AS lapak_address, users.photo_profile AS photo_profile").
 		Group("carts.id").
 		Find(&tmp)
 	if tx.Error != nil {
