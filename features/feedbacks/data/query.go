@@ -49,9 +49,17 @@ func (qf *query) Destroy(id uint) error{
 	return nil
 }
 
-func (qf *query) SelectFeedbackByProductId(productId uint) ([]feedbacks.FeedbackEntity, error) {
+func (qf *query) SelectFeedbackByProductId(detailTransactionId uint) ([]feedbacks.FeedbackEntity, error) {
 	feedback := []Feedback{}
-	if err := qf.db.Where("product_id = ?", productId).Preload("User").Order("created_at desc").Find(&feedback).Error; err != nil {
+	if err := qf.db.Where("product_transaction_detail_id = ?", detailTransactionId).Preload("User").Order("created_at desc").Find(&feedback).Error; err != nil {
+		return []feedbacks.FeedbackEntity{}, err
+	}
+	return ListFeedbackProductToFeedbackEntity(feedback), nil
+}
+
+func (qf *query) SelectFeedbackByDetailTransactionId(detailTransactionId uint) ([]feedbacks.FeedbackEntity, error) {
+	feedback := []Feedback{}
+	if err := qf.db.Where("product_id = ?", detailTransactionId).Preload("User").Order("created_at desc").Find(&feedback).Error; err != nil {
 		return []feedbacks.FeedbackEntity{}, err
 	}
 	return ListFeedbackProductToFeedbackEntity(feedback), nil

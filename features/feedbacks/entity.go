@@ -29,6 +29,7 @@ type FeedbackServiceInterface interface {
 	GetFeedbackByProductId(productId uint) ([]FeedbackEntity, error)
 	MyAllFeedback(myId, userId uint) ([]FeedbackEntity, error)
 	GetById(id uint) (FeedbackEntity, error)
+	GetFeedbackByDetailTransactionId(detailTransactionId uint) ([]FeedbackEntity, error)
 }
 
 type FeedbackDataInterface interface {
@@ -38,4 +39,5 @@ type FeedbackDataInterface interface {
 	Destroy(id uint) error
 	SelectFeedbackByProductId(productId uint) ([]FeedbackEntity, error)
 	SelectAll(userId uint) ([]FeedbackEntity, error)
+	SelectFeedbackByDetailTransactionId(detailTransactionId uint) ([]FeedbackEntity, error)
 }
