@@ -82,6 +82,21 @@ func (hf *FeedbackHandler) GetFeedbackByProductId(c echo.Context) error {
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedback by product id", listFeedbacksResponse))
 }
 
+func (hf *FeedbackHandler) GetFeedbackByDetailTransactionId(c echo.Context) error {
+	detailTransactionId, _ := strconv.Atoi(c.Param("id"))
+	feedbacks, err := hf.service.GetFeedbackByDetailTransactionId(uint(detailTransactionId))
+
+	if len(feedbacks) == 0 {
+		return c.JSON(http.StatusNotFound, helpers.ResponseFail("data null"))
+	}
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
+	}
+	listFeedbacksResponse := ListFeedbackToFeedbackResponse(feedbacks)
+	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedback by product transaction detail id", listFeedbacksResponse))
+}
+
 func (hf *FeedbackHandler) GetById(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	feedbackEntity, err := hf.service.GetById(uint(id))

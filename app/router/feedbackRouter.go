@@ -18,6 +18,7 @@ func FeedbackRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/feedbacks", handler.MyAllFeedback)
 	e.GET("/feedbacks/:id", handler.GetById)
 	e.GET("/products/:id/feedbacks", handler.GetFeedbackByProductId)
+	e.GET("/transactiondetails/:id/feedbacks", handler.GetFeedbackByDetailTransactionId)
 
 	g := e.Group("/feedbacks")
 	g.POST("", handler.Create, middlewares.Authentication)

@@ -70,6 +70,16 @@ func (sf *feedbackService) GetFeedbackByProductId(productId uint) ([]feedbacks.F
 	return res, nil
 }
 
+func (sf *feedbackService) GetFeedbackByDetailTransactionId(detailTransactionId uint) ([]feedbacks.FeedbackEntity, error) {
+	res, err := sf.Data.SelectFeedbackByDetailTransactionId(detailTransactionId)
+	if err != nil {
+		log.Println("query error", err.Error())
+		return []feedbacks.FeedbackEntity{}, errors.New("internal problem")
+	}
+	return res, nil
+}
+
+
 func (sf *feedbackService) MyAllFeedback(myId, userId uint) ([]feedbacks.FeedbackEntity, error) {
 	return sf.Data.SelectAll(userId)
 }
