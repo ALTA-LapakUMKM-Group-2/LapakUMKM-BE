@@ -27,7 +27,7 @@ func (qf *query) Store(feedbackEntity feedbacks.FeedbackEntity) (uint, error) {
 
 func (qf *query) SelectById(id uint) (feedbacks.FeedbackEntity, error) {
 	var feedback Feedback
-	if err := qf.db.Preload("User").Preload("Product").Select("id,product_id,CASE WHEN parent_id = 0 THEN id ELSE parent_id END AS parent_id,product_transaction_detail_id,user_id,rating,feedback").First(&feedback, id); err.Error != nil {
+	if err := qf.db.Preload("User").Preload("Product").Select("id,product_id,CASE WHEN parent_id = 0 THEN id ELSE parent_id END AS parent_id,product_transaction_detail_id,user_id,rating,feedback").Order("parent_id,id").First(&feedback, id); err.Error != nil {
 		return feedbacks.FeedbackEntity{}, err.Error
 	}
 	return FeedbackToFeedbackEntity(feedback), nil
