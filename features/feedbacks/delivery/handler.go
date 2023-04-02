@@ -78,7 +78,7 @@ func (hf *FeedbackHandler) GetFeedbackByProductId(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
-	listFeedbacksResponse := ListFeedbackToFeedbackResponse(feedbacks)
+	listFeedbacksResponse := ListWithChild(feedbacks)
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("feedback by product id", listFeedbacksResponse))
 }
 

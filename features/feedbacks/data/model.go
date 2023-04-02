@@ -19,7 +19,7 @@ type Feedback struct {
 	Product                    *product.Product `gorm:"foreignKey:ProductId"`
 	ProductTransactionDetailId uint
 	ProductTransactionDetail   *data.ProductTransactionDetail `gorm:"foreignKey:ProductTransactionDetailId"`
-	ParentId                   uint
+	ParentId                   uint                           `gorm:"default:0"`
 	Rating                     float64
 	Feedback                   string
 	UserId                     uint
