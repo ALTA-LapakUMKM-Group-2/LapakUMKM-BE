@@ -13,7 +13,7 @@ type UserResponse struct {
 	PhoneNumber  string `json:"phone_number,omitempty"`
 	Address      string `json:"address,omitempty"`
 	ShopName     string `json:"shop_name,omitempty"`
-	PhotoProfile string `json:"photo_profile,omitempty"`
+	PhotoProfile string `json:"photo_profile"`
 }
 
 func UserEntityToUserResponse(userEntity users.UserEntity) UserResponse {

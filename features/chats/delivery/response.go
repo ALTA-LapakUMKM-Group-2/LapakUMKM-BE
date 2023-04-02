@@ -73,3 +73,44 @@ func ListUserResponse(c []chats.ChatEntity) []UserChatResponse {
 	}
 	return dataRes
 }
+
+type TypeResponseChatWithMe struct {
+	UserId       uint   `json:"user_id"`
+	RoomId       string `json:"room_id"`
+	FullName     string `json:"full_name"`
+	PhotoProfile string `json:"photo_profile"`
+}
+
+func ListToResponseChat(chatEntity []chats.ChatEntity, userId uint) []TypeResponseChatWithMe {
+	var dataRes []TypeResponseChatWithMe
+	flag := map[string]bool{}
+
+	for _, v := range chatEntity {
+		_, ok := flag[v.RoomId]
+		if ok {
+			continue
+		}
+		flag[v.RoomId] = true
+
+		if userId == v.SenderId {
+			r := TypeResponseChatWithMe{
+				UserId:       v.RecipientId,
+				RoomId:       v.RoomId,
+				FullName:     v.Recipient.FullName,
+				PhotoProfile: v.Recipient.PhotoProfile,
+			}
+
+			dataRes = append(dataRes, r)
+		} else {
+			r := TypeResponseChatWithMe{
+				UserId:       v.SenderId,
+				RoomId:       v.RoomId,
+				FullName:     v.Sender.FullName,
+				PhotoProfile: v.Sender.PhotoProfile,
+			}
+
+			dataRes = append(dataRes, r)
+		}
+	}
+	return dataRes
+}

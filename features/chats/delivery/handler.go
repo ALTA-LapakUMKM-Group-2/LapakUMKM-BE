@@ -30,6 +30,12 @@ func (h *ChatHandler) Create(c echo.Context) error {
 	user := ReqToEntity(&formInput)
 	user.SenderId = uint(senderId)
 
+	if user.SenderId == user.RecipientId {
+		if err := c.Bind(&formInput); err != nil {
+			return c.JSON(http.StatusBadRequest, helpers.ResponseFail("can't send message to your own"))
+		}
+	}
+
 	chat, err := h.service.Create(user)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
@@ -59,7 +65,7 @@ func (h *ChatHandler) GetSenderUser(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail("error read data"))
 	}
-	listFeedbackResponse := ListEntityToResponse(feedbackEntity)
+	listFeedbackResponse := ListToResponseChat(feedbackEntity, uint(myId))
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("all your customer messages", listFeedbackResponse))
 }
 

@@ -10,7 +10,7 @@ type query struct {
 	db *gorm.DB
 }
 
-func New(db *gorm.DB) chats.DataInterface{
+func New(db *gorm.DB) chats.DataInterface {
 	return &query{
 		db: db,
 	}
@@ -42,18 +42,19 @@ func (q *query) SelectByRoomId(roomId string) ([]chats.ChatEntity, error) {
 }
 
 func (q *query) SelectAll(userId uint) ([]chats.ChatEntity, error) {
-    var chat []Chat
-    if err := q.db.Joins(`
+	var chat []Chat
+	if err := q.db.Joins(`
         INNER JOIN (
           SELECT sender_id, MAX(created_at) AS max_created_at
           FROM chats
-          WHERE recipient_id = ?
+          WHERE recipient_id = ? OR sender_id = ?
           GROUP BY sender_id
         ) AS max_chats ON chats.sender_id = max_chats.sender_id AND chats.created_at = max_chats.max_created_at
-    `, userId).Preload("Sender").Preload("Recipient").Order("created_at desc").Find(&chat).Error; err != nil {
-        return []chats.ChatEntity{}, err
-    }
-    return ListToEntity(chat), nil
+    `, userId, userId).Preload("Sender").Preload("Recipient").
+		Order("created_at desc").Find(&chat).Error; err != nil {
+		return []chats.ChatEntity{}, err
+	}
+	return ListToEntity(chat), nil
 }
 
 func (q *query) SelectAllMessageToMe(userId uint) ([]chats.ChatEntity, error) {
@@ -64,9 +65,6 @@ func (q *query) SelectAllMessageToMe(userId uint) ([]chats.ChatEntity, error) {
 	return ListToEntity(chat), nil
 
 }
-
-
-
 
 // func (q *query) SelectAll(userId uint) ([]chats.ChatEntity, error) {
 //     subquery := q.db.Table("chats").
