@@ -4,11 +4,19 @@ go 1.20
 
 require (
 	github.com/labstack/echo/v4 v4.10.2
+	github.com/stretchr/testify v1.8.2
 	golang.org/x/oauth2 v0.5.0
 	google.golang.org/api v0.110.0
 )
 
-require gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
+require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/onsi/ginkgo v1.16.5 // indirect
+	github.com/onsi/gomega v1.27.6 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/stretchr/objx v0.5.0 // indirect
+	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
+)
 
 require (
 	cloud.google.com/go v0.110.0 // indirect
@@ -24,7 +32,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
