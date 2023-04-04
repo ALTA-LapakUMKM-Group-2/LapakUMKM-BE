@@ -26,6 +26,7 @@ func TestLogin(t *testing.T) {
 
 	hash, _ := helpers.HashPassword("123456")
 	input := users.UserEntity{
+		Id:       uint(1),
 		Email:    "tes@gmail.com",
 		Password: hash,
 	}
@@ -38,6 +39,16 @@ func TestLogin(t *testing.T) {
 		assert.ErrorContains(t, err, "user and password not found")
 		repo.AssertExpectations(t)
 	})
+
+	// t.Run("success", func(t *testing.T) {
+	// 	repo.On("GetUserByEmailOrId", "tes@gmail.com", uint(0)).Return(input, nil).Once()
+	// 	srv := New(repo)
+	// 	token, userID, err := srv.Login("tes@gmail.com", "123456")
+	// 	assert.Nil(t, err)
+	// 	assert.NotEmpty(t, token)
+	// 	assert.Equal(t, userID, input.Id)
+	// 	repo.AssertExpectations(t)
+	// })
 
 }
 
@@ -201,4 +212,33 @@ func TestNewPassword(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 
+}
+
+func TestLoginSSOGoogle(t *testing.T) {
+	// repo := mocks.NewAuthDataInterface(t)
+
+	// request := users.UserEntity{
+	// 	Email:        "tes@gmail.com",
+	// 	PhotoProfile: "photo1",
+	// 	FullName:     "tes@gmail.com",
+	// 	Password:     "google-password",
+	// 	Role:         "user",
+	// }
+
+	// // t.Run("error", func(t *testing.T) {
+	// // 	repo.On("GetUserByEmailOrId", "tes2@gmail.com", uint(0)).Return(request, errors.New("user is not active anymore")).Once()
+	// // 	srv := New(repo)
+	// // 	_, _, err := srv.Login("tes@gmail.com", "google-password")
+	// // 	assert.NotEmpty(t, err)
+	// // 	assert.ErrorContains(t, err, "user and password not found")
+	// // 	repo.AssertExpectations(t)
+	// // })
+
+	// // t.Run("notValid", func(t *testing.T) {
+	// // 	srv := New(repo)
+	// // 	_, _, err := srv.LoginSSOGoogle(request)
+	// // 	assert.NotEmpty(t, err)
+	// // 	assert.ErrorContains(t, err, "required")
+	// // 	repo.AssertExpectations(t)
+	// // })
 }
