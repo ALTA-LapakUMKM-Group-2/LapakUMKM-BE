@@ -124,3 +124,81 @@ func TestChangePassword(t *testing.T) {
 	// 	repo.AssertExpectations(t)
 	// })
 }
+
+func TestIsUserExist(t *testing.T) {
+	repo := mocks.NewAuthDataInterface(t)
+	t.Run("notExist", func(t *testing.T) {
+		repo.On("GetUserByEmailOrId", "haha@mail.com", uint(0)).Return(users.UserEntity{}, errors.New("email not found")).Once()
+		srv := New(repo)
+		err := srv.IsUserExist("haha@mail.com")
+		assert.NotEmpty(t, err)
+		assert.ErrorContains(t, err, "email not found")
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("success", func(t *testing.T) {
+		repo.On("GetUserByEmailOrId", "haha@mail.com", uint(0)).Return(users.UserEntity{}, nil).Once()
+		srv := New(repo)
+		err := srv.IsUserExist("haha@mail.com")
+		assert.Equal(t, err, nil)
+		repo.AssertExpectations(t)
+	})
+}
+
+func TestForgetPasswords(t *testing.T) {
+	repo := mocks.NewAuthDataInterface(t)
+
+	email := "haha@mail.com"
+	t.Run("notExist", func(t *testing.T) {
+		repo.On("GetUserByEmailOrId", "haha@mail.com", uint(0)).Return(users.UserEntity{}, errors.New("email not found")).Once()
+		srv := New(repo)
+		err := srv.IsUserExist("haha@mail.com")
+		assert.NotEmpty(t, err)
+		assert.ErrorContains(t, err, "email not found")
+		repo.AssertExpectations(t)
+	})
+
+	token := helpers.EncryptText(email)
+	urlLink := "https://lapakumkm.netlify.app/new-password?token=" + token
+
+	t.Run("errSendEmail", func(t *testing.T) {
+		repo.On("GetUserByEmailOrId", email, uint(0)).Return(users.UserEntity{}, nil).Once()
+		srv := New(repo)
+		srv.ForgetPassword(email)
+		err := helpers.SendMail("Forget Password", "", urlLink)
+		assert.NotEmpty(t, err)
+		assert.ErrorContains(t, err, "title and email must be fill")
+		repo.AssertExpectations(t)
+	})
+}
+
+func TestNewPassword(t *testing.T) {
+	repo := mocks.NewAuthDataInterface(t)
+	t.Run("val", func(t *testing.T) {
+		pass := "123456"
+		srv := New(repo)
+		err := srv.NewPassword(pass, pass, "")
+		assert.NotEmpty(t, err)
+		assert.EqualError(t, err, "token,new password, and confirm password cannot be empty")
+		repo.AssertExpectations(t)
+	})
+	pass := "123456"
+	t.Run("notSame", func(t *testing.T) {
+		srv := New(repo)
+		err := srv.NewPassword(pass, pass, "123")
+		assert.NotEmpty(t, err)
+		assert.EqualError(t, err, "new password and confirm password must be similarity")
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("notValid", func(t *testing.T) {
+		srv := New(repo)
+		email := helpers.DecryptText(pass)
+		repo.On("GetUserByEmailOrId", email, uint(0)).Return(users.UserEntity{}, errors.New("not valid")).Once()
+		err := srv.NewPassword(pass, pass, pass)
+		assert.NotEmpty(t, err)
+		assert.EqualError(t, err, "not valid")
+		repo.AssertExpectations(t)
+	})
+
+}

@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"errors"
 	"os"
 	"strings"
 
@@ -10,6 +11,9 @@ import (
 var GMAILPASS = ""
 
 func SendMail(title, email, urllink string) error {
+	if title == "" || email == "" {
+		return errors.New("title and email must be fill")
+	}
 	const CONFIG_SMTP_HOST = "smtp.gmail.com"
 	const CONFIG_SMTP_PORT = 587
 	const CONFIG_SENDER_NAME = "Lapak UMKM <findryankpradana@gmail.com>"
