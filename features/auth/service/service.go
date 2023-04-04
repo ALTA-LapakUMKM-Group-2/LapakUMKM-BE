@@ -72,10 +72,6 @@ func (u *authService) ChangePassword(id uint, oldPassword, newPassword, confirmP
 	return u.data.EditPassword(id, hash)
 }
 
-func (s *authService) GetSSOGoogleUrl() string {
-	return helpers.GetSSOGoogleUrl()
-}
-
 func (s *authService) LoginSSOGoogle(userEntity users.UserEntity) (string, users.UserEntity, error) {
 	request := users.UserEntity{
 		Email:        userEntity.Email,
