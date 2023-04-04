@@ -70,13 +70,6 @@ func (u *AuthHandler) ChangePassword(c echo.Context) error {
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("change password Success", nil))
 }
 
-func (u *AuthHandler) GetSSOGoogleUrl(c echo.Context) error {
-	tokesResponse := map[string]any{
-		"url": u.Service.GetSSOGoogleUrl(),
-	}
-	return c.JSON(http.StatusOK, helpers.ResponseSuccess("-", tokesResponse))
-}
-
 func (u *AuthHandler) LoginSSOGoogle(c echo.Context) error {
 	callbackSSORequest := CallbackSSORequest{}
 	if err := c.Bind(&callbackSSORequest); err != nil {

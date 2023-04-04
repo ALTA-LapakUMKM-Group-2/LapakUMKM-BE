@@ -46,6 +46,10 @@ func (qf *query) Destroy(id uint) error {
 	if err := qf.db.Delete(&feedback, id); err.Error != nil {
 		return err.Error
 	}
+
+	if err := qf.db.Where("parent_id = ?", id).Delete(&feedback); err.Error != nil {
+		return err.Error
+	}
 	return nil
 }
 

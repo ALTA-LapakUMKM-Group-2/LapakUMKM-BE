@@ -9,7 +9,6 @@ type AuthServiceInterface interface {
 	Register(request users.UserEntity) error
 	ChangePassword(id uint, old, new, confirm string) error
 
-	GetSSOGoogleUrl() string
 	LoginSSOGoogle(userEntity users.UserEntity) (string, users.UserEntity, error)
 	ForgetPassword(email string) error
 	IsUserExist(email string) error
