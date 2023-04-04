@@ -128,7 +128,7 @@ func (s *authService) ForgetPassword(email string) error {
 		return errors.New("email not found")
 	}
 	token := helpers.EncryptText(email)
-	urlLink := "https://lapak-umkm-test2.netlify.app/new-password?token=" + token
+	urlLink := "https://lapakumkm.netlify.app/new-password?token=" + token
 
 	//send URL to Email
 	if errSendmail := helpers.SendMail("Forget Password", email, urlLink); errSendmail != nil {

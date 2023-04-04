@@ -46,8 +46,6 @@ func (st *transactionService) Create(transactionEntity productTransactions.Produ
 		"phone":     "000",
 	}
 
-	// fmt.Println(totalPayment, postData, totalProduct)
-
 	paymentLink, err1 := helpers.PostMidtrans(postData)
 	if err1 != nil {
 		return productTransactions.ProductTransactionEntity{}, err
