@@ -26,18 +26,6 @@ func (s *userService) GetUser(id uint) (users.UserEntity, error) {
 	return s.Data.SelectById(id)
 }
 
-func (s *userService) GetAll() ([]users.UserEntity, error) {
-	return s.Data.SelectAll()
-}
-
-func (s *userService) GetById(id uint) (users.UserEntity, error) {
-	return s.Data.SelectById(id)
-}
-
-// func (s *userService) GetSenderMessage(myId, userId uint) ([]users.UserEntity, error) {
-// 	return s.Data.SelectUserChatTo(userId)
-// }
-
 func (s *userService) Create(userEntity users.UserEntity) (users.UserEntity, error) {
 	if userEntity.Role != "admin" && userEntity.Role != "user" {
 		return users.UserEntity{}, errors.New("role option only : admin and user")
@@ -121,4 +109,3 @@ func (s *userService) UpdateToProfile(id uint, file *multipart.FileHeader) (stri
 
 	return request.PhotoProfile, nil
 }
-
