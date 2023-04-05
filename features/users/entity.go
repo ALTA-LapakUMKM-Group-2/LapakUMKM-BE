@@ -21,6 +21,7 @@ type UserEntity struct {
 
 type UserServiceInterface interface {
 	GetUser(id uint) (UserEntity, error)
+	Create(request UserEntity) (UserEntity, error)
 	Update(id uint, userEntity UserEntity) (UserEntity, error)
 	Delete(id uint) error
 	UpdateToProfile(id uint, file *multipart.FileHeader) (string, error)
