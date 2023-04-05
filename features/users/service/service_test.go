@@ -179,5 +179,4 @@ func TestUpdateToSeller(t *testing.T) {
 		assert.NotNil(t, err)
 		data.AssertExpectations(t)
 	})
-
 }
