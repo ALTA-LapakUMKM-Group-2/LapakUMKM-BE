@@ -157,27 +157,36 @@ func TestUpdate(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, res.Discussion, inputData.Discussion)
 		repo.AssertExpectations(t)
-	})	
-
-	// t.Run("errVal", func(t *testing.T) {
-	// 	inputData.Discussion = ""
-	// 	_, err := srv.Update(inputData, uint(1), uint(2))
-	// 	assert.ErrorContains(t, err, "required")
-	// 	repo.AssertExpectations(t)
-	// })
+	})
 
 	t.Run("notAuth", func(t *testing.T) {
-        resData.UserId = 10
-        repo.On("SelectById", uint(1)).Return(resData, nil).Once()
-        _, err := srv.Update(inputData, uint(1), uint(2))
-        assert.ErrorContains(t, err, "data can't be updated")
-        repo.AssertExpectations(t)
-    })
-	
+		resData.UserId = 10
+		repo.On("SelectById", uint(1)).Return(resData, nil).Once()
+		_, err := srv.Update(inputData, uint(1), uint(2))
+		assert.ErrorContains(t, err, "data can't be updated")
+		repo.AssertExpectations(t)
+	})
+
 	t.Run("AccessDenied", func(t *testing.T) {
 		repo.On("SelectById", uint(3)).Return(resData, nil).Once()
 		_, err := srv.Update(inputData, uint(3), uint(2))
 		assert.ErrorContains(t, err, "data can't be updated")
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("notfound", func(t *testing.T) {
+		repo.On("SelectById", uint(31)).Return(discussions.DiscussionEntity{}, errors.New("not found")).Once()
+		_, err := srv.Update(inputData, uint(31), uint(2))
+		assert.ErrorContains(t, err, "not found")
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("ErrorEdit", func(t *testing.T) {
+		inputData.Discussion = ""
+		repo.On("Edit", inputData, uint(1)).Return(errors.New("required")).Once()
+		repo.On("SelectById", uint(1)).Return(inputData, nil).Once()
+		_, err := srv.Update(inputData, uint(1), uint(1))
+		assert.ErrorContains(t, err, "required")
 		repo.AssertExpectations(t)
 	})
 }
@@ -200,14 +209,22 @@ func TestDelete(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 
-    t.Run("notAuth", func(t *testing.T) {
-        resData.UserId = 10
-        repo.On("SelectById", uint(1)).Return(resData, nil).Once()
-        err := srv.Delete(uint(1), uint(2))
-        assert.ErrorContains(t, err, "access denied")
-        repo.AssertExpectations(t)
-    })
-	
+	t.Run("notFound", func(t *testing.T) {
+		repo.On("SelectById", uint(1)).Return(discussions.DiscussionEntity{}, errors.New("not found")).Once()
+		srv := New(repo)
+		err := srv.Delete(uint(1), uint(2))
+		assert.NoError(t, err)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("notAuth", func(t *testing.T) {
+		resData.UserId = 10
+		repo.On("SelectById", uint(1)).Return(resData, nil).Once()
+		err := srv.Delete(uint(1), uint(2))
+		assert.ErrorContains(t, err, "access denied")
+		repo.AssertExpectations(t)
+	})
+
 	t.Run("AccessDenied", func(t *testing.T) {
 		repo.On("SelectById", uint(3)).Return(resData, nil).Once()
 		err := srv.Delete(uint(3), uint(2))
@@ -215,4 +232,3 @@ func TestDelete(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
-
