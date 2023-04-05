@@ -41,17 +41,6 @@ func TestCreate(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 
-	t.Run("errorValidation", func(t *testing.T) {
-		expectedErr := errors.New("required")
-		repo.On("Store", mock.Anything).Return(uint(0), expectedErr).Once()
-		srv := New(repo)
-		res, err := srv.Create(inputData)
-		assert.Empty(t, res)
-		assert.Equal(t, feedbacks.FeedbackEntity{}, res)
-		assert.EqualError(t, err, expectedErr.Error())
-		repo.AssertExpectations(t)
-	})
-
 	t.Run("errorDuplicated", func(t *testing.T) {
 		expectedErr := errors.New("duplicated")
 		repo.On("Store", mock.Anything).Return(uint(0), expectedErr).Once()
@@ -59,6 +48,14 @@ func TestCreate(t *testing.T) {
 		res, err := srv.Create(resData)
 		assert.Empty(t, res)
 		assert.EqualError(t, err, expectedErr.Error())
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("errorValidation", func(t *testing.T) {
+		inputData.Feedback = ""
+		srv := New(repo)
+		_, err := srv.Create(inputData)
+		assert.ErrorContains(t, err, "required")
 		repo.AssertExpectations(t)
 	})
 }
@@ -173,19 +170,19 @@ func TestUpdate(t *testing.T) {
 	repo := mocks.NewFeedbackDataInterface(t)
 	srv := New(repo)
 	inputData := feedbacks.FeedbackEntity{
-		ProductId:  uint(1),
-		UserId: uint(1),
-		ParentId:   0,
-		Rating: 3,
-		Feedback: "bagus",
+		ProductId: uint(1),
+		UserId:    uint(1),
+		ParentId:  0,
+		Rating:    3,
+		Feedback:  "bagus",
 	}
 	resData := feedbacks.FeedbackEntity{
-		Id:         uint(1),
-		ProductId:  uint(1),
-		UserId: uint(1),
-		ParentId:   0,
-		Rating: 3,
-		Feedback: "bagus",
+		Id:        uint(1),
+		ProductId: uint(1),
+		UserId:    uint(1),
+		ParentId:  0,
+		Rating:    3,
+		Feedback:  "bagus",
 	}
 
 	t.Run("Success", func(t *testing.T) {
@@ -195,19 +192,35 @@ func TestUpdate(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, res.Feedback, inputData.Feedback)
 		repo.AssertExpectations(t)
-	})	
+	})
 	t.Run("notAuth", func(t *testing.T) {
-        resData.UserId = 10
-        repo.On("SelectById", uint(1)).Return(resData, nil).Once()
-        _, err := srv.Update(inputData, uint(1), uint(2))
-        assert.ErrorContains(t, err, "access denied")
-        repo.AssertExpectations(t)
-    })
-	
+		resData.UserId = 10
+		repo.On("SelectById", uint(1)).Return(resData, nil).Once()
+		_, err := srv.Update(inputData, uint(1), uint(2))
+		assert.ErrorContains(t, err, "access denied")
+		repo.AssertExpectations(t)
+	})
+
 	t.Run("AccessDenied", func(t *testing.T) {
 		repo.On("SelectById", uint(3)).Return(resData, nil).Once()
 		_, err := srv.Update(inputData, uint(3), uint(2))
 		assert.ErrorContains(t, err, "access denied")
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("notfound", func(t *testing.T) {
+		repo.On("SelectById", uint(31)).Return(feedbacks.FeedbackEntity{}, errors.New("not found")).Once()
+		_, err := srv.Update(inputData, uint(31), uint(2))
+		assert.ErrorContains(t, err, "not found")
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("ErrorEdit", func(t *testing.T) {
+		inputData.Feedback = ""
+		repo.On("Edit", inputData, uint(1)).Return(errors.New("required")).Once()
+		repo.On("SelectById", uint(1)).Return(inputData, nil).Once()
+		_, err := srv.Update(inputData, uint(1), uint(1))
+		assert.ErrorContains(t, err, "required")
 		repo.AssertExpectations(t)
 	})
 }
@@ -216,12 +229,12 @@ func TestDelete(t *testing.T) {
 	repo := mocks.NewFeedbackDataInterface(t)
 	srv := New(repo)
 	resData := feedbacks.FeedbackEntity{
-		Id:         uint(1),
-		ProductId:  uint(1),
-		UserId: uint(1),
-		ParentId:   0,
-		Rating: 3,
-		Feedback: "bagus",
+		Id:        uint(1),
+		ProductId: uint(1),
+		UserId:    uint(1),
+		ParentId:  0,
+		Rating:    3,
+		Feedback:  "bagus",
 	}
 	t.Run("Success", func(t *testing.T) {
 		repo.On("SelectById", uint(1)).Return(resData, nil).Once()
@@ -231,18 +244,27 @@ func TestDelete(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 
+	t.Run("notFound", func(t *testing.T) {
+		repo.On("SelectById", uint(1)).Return(feedbacks.FeedbackEntity{}, errors.New("not found")).Once()
+		srv := New(repo)
+		err := srv.Delete(uint(1), uint(2))
+		assert.NoError(t, err)
+		repo.AssertExpectations(t)
+	})
+
 	t.Run("notAuth", func(t *testing.T) {
-        resData.UserId = 10
-        repo.On("SelectById", uint(1)).Return(resData, nil).Once()
-        err := srv.Delete(uint(1), uint(2))
-        assert.ErrorContains(t, err, "access denied")
-        repo.AssertExpectations(t)
-    })
-	
+		resData.UserId = 10
+		repo.On("SelectById", uint(1)).Return(resData, nil).Once()
+		err := srv.Delete(uint(1), uint(2))
+		assert.ErrorContains(t, err, "access denied")
+		repo.AssertExpectations(t)
+	})
+
 	t.Run("AccessDenied", func(t *testing.T) {
 		repo.On("SelectById", uint(3)).Return(resData, nil).Once()
 		err := srv.Delete(uint(3), uint(2))
 		assert.ErrorContains(t, err, "access denied")
 		repo.AssertExpectations(t)
 	})
+
 }

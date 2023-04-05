@@ -17,7 +17,7 @@ type FeedbackEntity struct {
 	ProductTransactionDetailId uint
 	ProductTransactionDetails  productTransactionDetails.ProductTransactionDetailEntity
 	Rating                     float64
-	Feedback                   string
+	Feedback                   string `validate:"required"`
 	CreatedAt                  time.Time
 	UpdatedAt                  time.Time
 }
