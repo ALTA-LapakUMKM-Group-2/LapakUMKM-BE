@@ -46,19 +46,21 @@ func (st *transactionService) Create(transactionEntity productTransactions.Produ
 		"phone":     "000",
 	}
 
+	update := productTransactions.ProductTransactionEntity{
+		TotalProduct:  totalProduct,
+		TotalPayment:  totalPayment,
+		PaymentStatus: "pending",
+		OrderId:       orderId,
+	}
+
 	paymentLink, err1 := helpers.PostMidtrans(postData)
 	if err1 != nil {
 		return productTransactions.ProductTransactionEntity{}, err
-	} else {
-		update := productTransactions.ProductTransactionEntity{
-			TotalProduct:  totalProduct,
-			TotalPayment:  totalPayment,
-			PaymentStatus: "pending",
-			PaymentLink:   paymentLink,
-			OrderId:       orderId,
-		}
-		//if ok
-		st.Data.Edit(update, transactionId)
+	}
+
+	update.PaymentLink = paymentLink
+	if err2 := st.Data.Edit(update, transactionId); err2 != nil {
+		return productTransactions.ProductTransactionEntity{}, err
 	}
 
 	return st.Data.SelectById(transactionId)

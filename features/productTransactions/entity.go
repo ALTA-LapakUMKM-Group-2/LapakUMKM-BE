@@ -9,7 +9,7 @@ type ProductTransactionEntity struct {
 	Id                       uint
 	UserId                   uint
 	User                     users.UserEntity
-	TotalProduct             int
+	TotalProduct             int `validate:"required"`
 	TotalPayment             int
 	OrderId                  string
 	PaymentStatus            string
