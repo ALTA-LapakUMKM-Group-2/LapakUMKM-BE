@@ -9,13 +9,13 @@ import (
 
 type ChatEntity struct {
 	Id          uint
-	RoomId         string
-	SenderId       uint
-	RecipientId    uint
-	Sender         users.UserEntity 
-	Recipient      users.UserEntity
-	Text           string
-	CreatedAt      time.Time
+	RoomId      string
+	SenderId    uint
+	RecipientId uint `validate:"required"`
+	Sender      users.UserEntity
+	Recipient   users.UserEntity
+	Text        string
+	CreatedAt   time.Time
 }
 
 type ServiceInterface interface {

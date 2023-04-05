@@ -19,7 +19,7 @@ lapakUmkm/features/categories/service/service.go:63.49,65.3 1 1
 lapakUmkm/features/categories/service/service.go:67.2,67.27 1 1
 lapakUmkm/features/chats/service/service.go:15.58,20.2 1 1
 lapakUmkm/features/chats/service/service.go:22.81,25.24 3 1
-lapakUmkm/features/chats/service/service.go:25.24,27.3 1 0
+lapakUmkm/features/chats/service/service.go:25.24,27.3 1 1
 lapakUmkm/features/chats/service/service.go:28.2,29.16 2 1
 lapakUmkm/features/chats/service/service.go:29.16,31.3 1 1
 lapakUmkm/features/chats/service/service.go:32.2,32.34 1 1

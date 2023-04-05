@@ -33,7 +33,8 @@ func TestCreate(t *testing.T) {
 	})
 
 	t.Run("errorValidation", func(t *testing.T) {
-		repo.On("Store", mock.Anything).Return(uint(0), errors.New("required")).Once()
+		// repo.On("Store", mock.Anything).Return(uint(0), errors.New("required")).Once()
+		inputData.RecipientId = 0
 		srv := New(repo)
 		_, err := srv.Create(inputData)
 		assert.NotEmpty(t, err)
@@ -76,7 +77,7 @@ func TestGetByRoomId(t *testing.T) {
 		assert.NotEmpty(t, err)
 		assert.ErrorContains(t, err, "internal problem")
 		repo.AssertExpectations(t)
-	})	
+	})
 }
 
 func TestGetSenderUser(t *testing.T) {
