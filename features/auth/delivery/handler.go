@@ -65,7 +65,8 @@ func (u *AuthHandler) ChangePassword(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("rrror bind data"))
 	}
 
-	if err := u.Service.ChangePassword(uint(user_id), r.OldPassword, r.NewPassword, r.ConfirmPassword); err != nil {
+	hash, _ := helpers.HashPassword(r.NewPassword)
+	if err := u.Service.ChangePassword(uint(user_id), r.OldPassword, r.NewPassword, r.ConfirmPassword, hash); err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
 	}
 
@@ -103,6 +104,14 @@ func (u *AuthHandler) ForgetPassword(c echo.Context) error {
 
 	if err := u.Service.ForgetPassword(email); err != nil {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail(err.Error()))
+	}
+
+	token := helpers.EncryptText(email)
+	urlLink := "https://lapakumkm.netlify.app/new-password?token=" + token
+
+	//send URL to Email
+	if errSendmail := helpers.SendMail("Forget Password", email, urlLink); errSendmail != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.ResponseFail(errSendmail.Error()))
 	}
 
 	return c.JSON(http.StatusOK, helpers.ResponseSuccess("email was sended", nil))

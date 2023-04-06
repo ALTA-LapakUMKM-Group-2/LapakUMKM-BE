@@ -40,6 +40,14 @@ func TestLogin(t *testing.T) {
 		assert.ErrorContains(t, err, "user and password not found")
 		repo.AssertExpectations(t)
 	})
+
+	t.Run("success", func(t *testing.T) {
+		repo.On("GetUserByEmailOrId", "tes2@gmail.com", uint(0)).Return(input, nil).Once()
+		srv := New(repo)
+		_, _, err := srv.Login("tes2@gmail.com", "123456")
+		assert.Nil(t, err)
+		repo.AssertExpectations(t)
+	})
 }
 
 func TestRegister(t *testing.T) {
@@ -89,28 +97,9 @@ func TestChangePassword(t *testing.T) {
 		Password: "123456",
 	}
 
-	// t.Run("success", func(t *testing.T) {
-	// 	srv := New(repo)
-	// 	password := "password123"
-	// 	hashedPassword, _ := helpers.HashPassword(password)
-
-	// 	repo.On("GetUserByEmailOrId", ".", uint(1)).Return(&users.UserEntity{
-	// 		Id:       1,
-	// 		Email:    "john@example.com",
-	// 		Password: hashedPassword,
-	// 	}, nil)
-
-	// 	repo.On("EditPassword", uint(1), hashedPassword).Return(nil)
-
-	// 	err := srv.ChangePassword(1, password, password, password)
-	// 	assert.NoError(t, err)
-
-	// 	repo.AssertExpectations(t)
-	// })
-
 	t.Run("notNull", func(t *testing.T) {
 		srv := New(repo)
-		err := srv.ChangePassword(uint(1), "", "", "")
+		err := srv.ChangePassword(uint(1), "", "", "", "")
 		assert.NotEmpty(t, err)
 		assert.ErrorContains(t, err, "cannot be empty")
 		repo.AssertExpectations(t)
@@ -118,7 +107,7 @@ func TestChangePassword(t *testing.T) {
 
 	t.Run("notSamePassword", func(t *testing.T) {
 		srv := New(repo)
-		err := srv.ChangePassword(uint(1), "123456", "1234567", "1234568")
+		err := srv.ChangePassword(uint(1), "123456", "1234567", "1234568", "")
 		assert.NotEmpty(t, err)
 		assert.ErrorContains(t, err, "must be similarity")
 		repo.AssertExpectations(t)
@@ -127,11 +116,22 @@ func TestChangePassword(t *testing.T) {
 	t.Run("notExist", func(t *testing.T) {
 		repo.On("GetUserByEmailOrId", ".", uint(1)).Return(expected, nil).Once()
 		srv := New(repo)
-		err := srv.ChangePassword(uint(1), "123456", "1234567", "1234567")
+		err := srv.ChangePassword(uint(1), "123456", "1234567", "1234567", "")
 		assert.NotEmpty(t, err)
 		assert.ErrorContains(t, err, "old password not match with exist password")
 		repo.AssertExpectations(t)
 	})
+
+	// t.Run("success", func(t *testing.T) {
+	// 	expected.Password = "$2a$14$nhjoBykTETNPs96qhB5BH.ZzvhTVdf6Algo4jNw5U3D5piY3rh84m"
+	// 	hash := expected.Password
+	// 	repo.On("GetUserByEmailOrId", ".", uint(1)).Return(expected, nil).Once()
+	// 	repo.On("EditPassword", uint(1), hash).Return(nil).Once()
+	// 	srv := New(repo)
+	// 	err := srv.ChangePassword(uint(1), "123456", "123", "123", "")
+	// 	assert.Nil(t, err)
+	// 	repo.AssertExpectations(t)
+	// })
 }
 
 func TestIsUserExist(t *testing.T) {
@@ -156,28 +156,7 @@ func TestIsUserExist(t *testing.T) {
 
 func TestForgetPassword(t *testing.T) {
 	email := "haha@mail.com"
-	token := helpers.EncryptText(email)
-	urlLink := "https://lapakumkm.netlify.app/new-password?token=" + token
-
 	repo := mocks.NewAuthDataInterface(t)
-
-	// t.Run("success", func(t *testing.T) {
-	// 	user := users.UserEntity{
-	// 		Id:       uint(123),
-	// 		Email:    email,
-	// 		Password: "hashedpassword",
-	// 		// add other relevant fields as needed
-	// 	}
-	// 	repo.On("GetUserByEmailOrId", email, uint(0)).Return(user, nil).Once()
-	// 	srv := New(repo)
-	// 	err := srv.ForgetPassword(email)
-	// 	assert.NoError(t, err)
-
-	// 	errSendMail := helpers.SendMail("Forget Password", email, urlLink)
-	// 	assert.NoError(t, errSendMail)
-
-	// 	repo.AssertExpectations(t)
-	// })
 
 	t.Run("notExist", func(t *testing.T) {
 		repo.On("GetUserByEmailOrId", "haha@mail.com", uint(0)).Return(users.UserEntity{}, errors.New("email not found")).Once()
@@ -187,14 +166,20 @@ func TestForgetPassword(t *testing.T) {
 		assert.ErrorContains(t, err, "email not found")
 		repo.AssertExpectations(t)
 	})
-
-	t.Run("errSendEmail", func(t *testing.T) {
-		repo.On("GetUserByEmailOrId", email, uint(0)).Return(users.UserEntity{}, nil).Once()
+	input := users.UserEntity{
+		Email:        "findryankurnia@gmail.com",
+		PhotoProfile: "photo1",
+		FullName:     "tes@gmail.com",
+		Password:     "google-password",
+		Role:         "user",
+	}
+	expected := input
+	expected.Id = uint(1)
+	t.Run("success", func(t *testing.T) {
+		repo.On("GetUserByEmailOrId", email, uint(0)).Return(expected, nil).Once()
 		srv := New(repo)
-		srv.ForgetPassword(email)
-		err := helpers.SendMail("Forget Password", "", urlLink)
-		assert.NotEmpty(t, err)
-		assert.ErrorContains(t, err, "title and email must be fill")
+		err := srv.ForgetPassword(email)
+		assert.Nil(t, err)
 		repo.AssertExpectations(t)
 	})
 }
@@ -275,6 +260,17 @@ func TestLoginSSOGoogle(t *testing.T) {
 		srv := New(repo)
 		repo.On("GetUserByEmailOrId", input.Email, uint(0)).Return(expected, nil).Once()
 		repo.On("Register", input).Return(nil).Once()
+		repo.On("EditData", input).Return(nil).Once()
+		repo.On("GetUserByEmailOrId", input.Email, uint(0)).Return(expected, nil).Once()
+		_, _, err := srv.LoginSSOGoogle(input)
+		assert.NoError(t, err)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("edit2", func(t *testing.T) {
+		expected.Id = uint(1)
+		srv := New(repo)
+		repo.On("GetUserByEmailOrId", input.Email, uint(0)).Return(expected, nil).Once()
 		repo.On("EditData", input).Return(nil).Once()
 		repo.On("GetUserByEmailOrId", input.Email, uint(0)).Return(expected, nil).Once()
 		_, _, err := srv.LoginSSOGoogle(input)

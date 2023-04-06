@@ -49,7 +49,7 @@ func (h *authService) Register(request users.UserEntity) error {
 	return nil
 }
 
-func (u *authService) ChangePassword(id uint, oldPassword, newPassword, confirmPssword string) error {
+func (u *authService) ChangePassword(id uint, oldPassword, newPassword, confirmPssword, hash string) error {
 	if oldPassword == "" || newPassword == "" || confirmPssword == "" {
 		return errors.New("old password,new password, and confirm password cannot be empty")
 	}
@@ -58,12 +58,11 @@ func (u *authService) ChangePassword(id uint, oldPassword, newPassword, confirmP
 		return errors.New("new password and confirm password must be similarity")
 	}
 
-	user, err := u.data.GetUserByEmailOrId(".", id)
-	if err != nil || !helpers.CheckPasswordHash(oldPassword, user.Password) {
+	user, _ := u.data.GetUserByEmailOrId(".", id)
+	if !helpers.CheckPasswordHash(oldPassword, user.Password) {
 		return errors.New("old password not match with exist password")
 	}
 
-	hash, _ := helpers.HashPassword(newPassword)
 	return u.data.EditPassword(id, hash)
 }
 
@@ -109,13 +108,6 @@ func (s *authService) IsUserExist(email string) error {
 func (s *authService) ForgetPassword(email string) error {
 	if _, err := s.data.GetUserByEmailOrId(email, 0); err != nil {
 		return errors.New("email not found")
-	}
-	token := helpers.EncryptText(email)
-	urlLink := "https://lapakumkm.netlify.app/new-password?token=" + token
-
-	//send URL to Email
-	if errSendmail := helpers.SendMail("Forget Password", email, urlLink); errSendmail != nil {
-		return errSendmail
 	}
 
 	return nil

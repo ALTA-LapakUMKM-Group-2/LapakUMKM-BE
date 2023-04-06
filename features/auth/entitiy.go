@@ -7,7 +7,7 @@ import (
 type AuthServiceInterface interface {
 	Login(email, password string) (string, users.UserEntity, error)
 	Register(request users.UserEntity) error
-	ChangePassword(id uint, old, new, confirm string) error
+	ChangePassword(id uint, old, new, confirm, hash string) error
 
 	LoginSSOGoogle(userEntity users.UserEntity) (string, users.UserEntity, error)
 	ForgetPassword(email string) error
