@@ -3,7 +3,6 @@ package service
 import (
 	"errors"
 	"fmt"
-	"lapakUmkm/app/middlewares"
 	"lapakUmkm/features/auth"
 	"lapakUmkm/features/users"
 	"lapakUmkm/utils/helpers"
@@ -34,12 +33,8 @@ func (u *authService) Login(email, password string) (string, users.UserEntity, e
 	}
 
 	//make jwt
-	token, errToken := middlewares.CreateToken(int(user.Id), user.Role)
-	if errToken != nil {
-		return "", users.UserEntity{}, errToken
-	}
 
-	return token, user, nil
+	return "token", user, nil
 }
 
 func (h *authService) Register(request users.UserEntity) error {
@@ -86,12 +81,6 @@ func (s *authService) LoginSSOGoogle(userEntity users.UserEntity) (string, users
 		return "", users.UserEntity{}, errors.New("user is not active anymore")
 	}
 
-	s.validate = validator.New()
-	errValidate := s.validate.Struct(request)
-	if errValidate != nil {
-		return "", users.UserEntity{}, errValidate
-	}
-
 	if user.Id == 0 {
 		s.data.Register(request)
 	} else {
@@ -101,18 +90,12 @@ func (s *authService) LoginSSOGoogle(userEntity users.UserEntity) (string, users
 		request.FullName = user.FullName
 	}
 	//edit data from google
-	if err := s.data.EditData(userEntity); err != nil {
-		return "", users.UserEntity{}, err
-	}
+	s.data.EditData(userEntity)
 
 	//login
 	userLogin, _ := s.data.GetUserByEmailOrId(userEntity.Email, 0)
-	token, errToken := middlewares.CreateToken(int(userLogin.Id), userLogin.Role)
-	if errToken != nil {
-		return "", users.UserEntity{}, errToken
-	}
 
-	return token, userLogin, nil
+	return "token", userLogin, nil
 }
 
 // cekemailexist

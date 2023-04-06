@@ -2,13 +2,11 @@ package service
 
 import (
 	"errors"
-	"lapakUmkm/features/auth"
 	"lapakUmkm/features/users"
 	"lapakUmkm/mocks"
 	"lapakUmkm/utils/helpers"
 	"testing"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -254,62 +252,33 @@ func TestNewPassword(t *testing.T) {
 }
 
 func TestLoginSSOGoogle(t *testing.T) {
-	// repo := mocks.NewAuthDataInterface(t)
+	repo := mocks.NewAuthDataInterface(t)
 
-	// request := users.UserEntity{
-	// 	Email:        "tes@gmail.com",
-	// 	PhotoProfile: "photo1",
-	// 	FullName:     "tes@gmail.com",
-	// 	Password:     "google-password",
-	// 	Role:         "user",
-	// }
+	input := users.UserEntity{
+		Email:        "tes@gmail.com",
+		PhotoProfile: "photo1",
+		FullName:     "tes@gmail.com",
+		Password:     "google-password",
+		Role:         "user",
+	}
+	expected := input
 
-	// // t.Run("error", func(t *testing.T) {
-	// // 	repo.On("GetUserByEmailOrId", "tes2@gmail.com", uint(0)).Return(request, errors.New("user is not active anymore")).Once()
-	// // 	srv := New(repo)
-	// // 	_, _, err := srv.Login("tes@gmail.com", "google-password")
-	// // 	assert.NotEmpty(t, err)
-	// // 	assert.ErrorContains(t, err, "user and password not found")
-	// // 	repo.AssertExpectations(t)
-	// // })
+	t.Run("val", func(t *testing.T) {
+		srv := New(repo)
+		repo.On("GetUserByEmailOrId", input.Email, uint(0)).Return(users.UserEntity{}, errors.New("user is not active anymore")).Once()
+		_, _, err := srv.LoginSSOGoogle(input)
+		assert.ErrorContains(t, err, "user is not active anymore")
+		repo.AssertExpectations(t)
+	})
 
-	// // t.Run("notValid", func(t *testing.T) {
-	// // 	srv := New(repo)
-	// // 	_, _, err := srv.LoginSSOGoogle(request)
-	// // 	assert.NotEmpty(t, err)
-	// // 	assert.ErrorContains(t, err, "required")
-	// // 	repo.AssertExpectations(t)
-	// // })
-}
-
-func Test_authService_ChangePassword(t *testing.T) {
-	type fields struct {
-		data     auth.AuthDataInterface
-		validate *validator.Validate
-	}
-	type args struct {
-		id             uint
-		oldPassword    string
-		newPassword    string
-		confirmPssword string
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			u := &authService{
-				data:     tt.fields.data,
-				validate: tt.fields.validate,
-			}
-			if err := u.ChangePassword(tt.args.id, tt.args.oldPassword, tt.args.newPassword, tt.args.confirmPssword); (err != nil) != tt.wantErr {
-				t.Errorf("authService.ChangePassword() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
+	t.Run("editErr", func(t *testing.T) {
+		srv := New(repo)
+		repo.On("GetUserByEmailOrId", input.Email, uint(0)).Return(expected, nil).Once()
+		repo.On("Register", input).Return(nil).Once()
+		repo.On("EditData", input).Return(nil).Once()
+		repo.On("GetUserByEmailOrId", input.Email, uint(0)).Return(expected, nil).Once()
+		_, _, err := srv.LoginSSOGoogle(input)
+		assert.NoError(t, err)
+		repo.AssertExpectations(t)
+	})
 }

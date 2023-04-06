@@ -26,10 +26,12 @@ func (u *AuthHandler) Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helpers.ResponseFail("error bind data"))
 	}
 
-	token, user, err := u.Service.Login(loginRequest.Email, loginRequest.Password)
+	_, user, err := u.Service.Login(loginRequest.Email, loginRequest.Password)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, helpers.ResponseFail(err.Error()))
 	}
+
+	token, _ := middlewares.CreateToken(int(user.Id), user.Role)
 
 	tokesResponse := map[string]any{
 		"token": token,
@@ -81,13 +83,15 @@ func (u *AuthHandler) LoginSSOGoogle(c echo.Context) error {
 	}
 
 	maping := CallbackSSORequestToUserEntity(callbackSSORequest)
-	token, user, err := u.Service.LoginSSOGoogle(maping)
+	_, user, err := u.Service.LoginSSOGoogle(maping)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, helpers.ResponseFail(err.Error()))
 	}
 
+	tokens, _ := middlewares.CreateToken(int(user.Id), user.Role)
+
 	tokesResponse := map[string]any{
-		"token": token,
+		"token": tokens,
 		"user":  delivery.UserEntityToUserResponse(user),
 	}
 
