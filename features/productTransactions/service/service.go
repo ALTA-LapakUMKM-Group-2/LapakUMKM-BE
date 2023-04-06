@@ -54,15 +54,12 @@ func (st *transactionService) Create(transactionEntity productTransactions.Produ
 	}
 
 	paymentLink, err1 := helpers.PostMidtrans(postData)
+	update.PaymentLink = paymentLink
 	if err1 != nil {
 		return productTransactions.ProductTransactionEntity{}, err
 	}
 
-	update.PaymentLink = paymentLink
-	if err2 := st.Data.Edit(update, transactionId); err2 != nil {
-		return productTransactions.ProductTransactionEntity{}, err
-	}
-
+	st.Data.Edit(update, transactionId)
 	return st.Data.SelectById(transactionId)
 }
 
